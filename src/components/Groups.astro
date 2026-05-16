@@ -1,0 +1,53 @@
+---
+import SectionHead from './SectionHead.astro';
+
+const groups = [
+  {
+    idx: '01',
+    name: 'HARDWARE',
+    nameEn: 'DIVISION_01',
+    desc: '> 从电路设计到嵌入式开发。PCB 绘制、传感器调试、单片机编程。每一行代码都运行在真实的芯片上。',
+    tags: ['STM32', 'ESP32', 'PCB', 'LoRa', 'SENSOR'],
+  },
+  {
+    idx: '02',
+    name: 'ALGORITHM',
+    nameEn: 'DIVISION_02',
+    desc: '> 机器学习、计算机视觉、信号处理。让冰冷的数据开口说话，赋予设备"思考"的能力。',
+    tags: ['ML', 'CV', 'SIGNAL', 'PYTHON', 'PYTORCH'],
+  },
+  {
+    idx: '03',
+    name: 'APPLICATION',
+    nameEn: 'DIVISION_03',
+    desc: '> 构建用户界面、开发移动应用、搭建后端服务。让技术真正触手可及。',
+    tags: ['FLUTTER', 'REACT', 'BACKEND', 'UI', 'NODE'],
+  },
+];
+---
+
+<section class="groups" id="divisions">
+  <SectionHead marker="SEC.01" label="DIVISIONS" />
+  {groups.map((g) => (
+    <div class="group-block">
+      <div class="group-header">
+        <div class="group-idx">{g.idx}</div>
+        <div class="group-title-area">
+          <div class="group-name glow">{g.name}</div>
+          <div class="group-name-en">{g.nameEn}</div>
+        </div>
+        <div class="group-status">
+          <div class="status-indicator">
+            <span class="status-dot"></span>ACTIVE
+          </div>
+        </div>
+      </div>
+      <div class="group-body">
+        <div class="group-desc">{g.desc}</div>
+        <div class="group-tags">
+          {g.tags.map((t) => <span class="group-tag">{t}</span>)}
+        </div>
+      </div>
+    </div>
+  ))}
+</section>

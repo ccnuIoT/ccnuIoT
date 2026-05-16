@@ -1,0 +1,14 @@
+---
+interface Props {
+  marker: string;
+  label: string;
+}
+
+const { marker, label } = Astro.props;
+---
+
+<div class="section-head">
+  <span class="marker">{marker}</span>
+  <span class="line"></span>
+  <span class="label">{label}</span>
+</div>
