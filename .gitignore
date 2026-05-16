@@ -11,6 +11,9 @@ dist/
 .claude/
 .superpowers/
 
+# Docs (design specs & plans)
+docs/
+
 # OS
 .DS_Store
 Thumbs.db
