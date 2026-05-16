@@ -7,18 +7,58 @@ dist/
 # Astro
 .astro/
 
-# Claude Code
-.claude/
-.superpowers/
-
 # Docs (design specs & plans)
 docs/
+
+# AI Tools
+.claude/
+.superpowers/
+.codex/
+.gemini/
+.cursor/
+.windsurf/
+aider*
+.claude-code/
+.opencode/
+.agents/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.settings/
+*.code-workspace
 
 # OS
 .DS_Store
 Thumbs.db
+Desktop.ini
+._*
+.Spotlight-V100
+.Trashes
 
-# Editor
-.vscode/
-*.swp
-*.swo
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Misc
+*.tsbuildinfo
+.cache/
+.parcel-cache/
+.vercel/
+.netlify/
+.wrangler/
