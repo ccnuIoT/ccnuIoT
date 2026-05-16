@@ -1,12 +1,93 @@
-<nav>
-  <div class="nav-prompt">
-    <span class="path">ccnu-iot@term</span>:~$ <span class="cursor"></span>
-  </div>
-  <div class="nav-links">
-    <a href="#" class="active">HOME</a>
-    <a href="#divisions">HW</a>
-    <a href="#divisions">ALGO</a>
-    <a href="#divisions">APP</a>
-    <a href="#projects">PROJ</a>
+<nav class="nav-panel" aria-label="Primary">
+  <div class="nav-shell">
+    <!-- Geiger counter wristwatch module -->
+    <div class="nav-device">
+      <div class="geiger-watch" aria-hidden="true">
+        <div class="geiger-watch__bezel">
+          <div class="geiger-watch__tick-marks">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <div class="geiger-watch__face">
+            <div class="geiger-watch__needle" id="geigerNeedle"></div>
+            <div class="geiger-watch__center"></div>
+          </div>
+          <div class="geiger-watch__label">mSv/h</div>
+        </div>
+      </div>
+      <div class="nav-device__leds" aria-hidden="true">
+        <span class="nav-device__led is-live"></span>
+        <span class="nav-device__led"></span>
+      </div>
+      <div class="nav-device__display">
+        <div class="nav-device__eyebrow">PERSONAL DOSIMETER</div>
+        <div class="nav-device__title">GEIGER WATCH // CCNU IOT</div>
+        <div class="nav-device__meta">
+          <span class="nav-device__status">RAD / LIVE / STABLE</span>
+          <span class="nav-device__id">DSTM-01</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-track">
+      <div class="nav-links">
+        <a href="#" class="nav-link active">
+          <span class="nav-link__code">CH-00</span>
+          <span class="nav-link__label">HOME</span>
+          <span class="nav-link__meter" aria-hidden="true"></span>
+        </a>
+        <a href="#divisions" class="nav-link">
+          <span class="nav-link__code">CH-01</span>
+          <span class="nav-link__label">HW</span>
+          <span class="nav-link__meter" aria-hidden="true"></span>
+        </a>
+        <a href="#divisions" class="nav-link">
+          <span class="nav-link__code">CH-02</span>
+          <span class="nav-link__label">ALGO</span>
+          <span class="nav-link__meter" aria-hidden="true"></span>
+        </a>
+        <a href="#divisions" class="nav-link">
+          <span class="nav-link__code">CH-03</span>
+          <span class="nav-link__label">APP</span>
+          <span class="nav-link__meter" aria-hidden="true"></span>
+        </a>
+        <a href="#projects" class="nav-link">
+          <span class="nav-link__code">CH-04</span>
+          <span class="nav-link__label">PROJ</span>
+          <span class="nav-link__meter" aria-hidden="true"></span>
+        </a>
+      </div>
+      <div class="nav-pulsebar" aria-hidden="true"></div>
+    </div>
   </div>
 </nav>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const needle = document.getElementById('geigerNeedle');
+    if (!needle) return;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (reducedMotion.matches) return;
+
+    let baseAngle = -42;
+    let rafId = 0;
+
+    const tick = () => {
+      const jitter = (Math.random() - 0.5) * 18;
+      const spike = Math.random() > 0.94 ? (Math.random() * 50 - 25) : 0;
+      baseAngle += (Math.random() - 0.5) * 3;
+      baseAngle = Math.max(-60, Math.min(60, baseAngle));
+
+      const angle = baseAngle + jitter + spike;
+      needle.style.transform = `rotate(${angle}deg)`;
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+    reducedMotion.addEventListener?.('change', () => {
+      if (reducedMotion.matches) cancelAnimationFrame(rafId);
+    });
+  });
+</script>
