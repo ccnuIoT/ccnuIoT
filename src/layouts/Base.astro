@@ -1,0 +1,42 @@
+---
+interface Props {
+  title?: string;
+}
+
+const { title = 'CCNU IoT — 华中师范大学物联网协会' } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <meta name="description" content="华中师范大学物联网协会官网。硬件感知世界，算法理解数据，应用连接生活。">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" type="image/svg+xml" href="/site/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+</head>
+<body>
+  <slot />
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const boot = document.querySelector('.boot-overlay');
+      if (boot) {
+        boot.addEventListener('animationend', (e) => {
+          if (e.animationName === 'bootFade') {
+            boot.remove();
+          }
+        });
+        setTimeout(() => {
+          if (boot && boot.parentNode) {
+            boot.remove();
+          }
+        }, 6000);
+      }
+    });
+  </script>
+</body>
+</html>
