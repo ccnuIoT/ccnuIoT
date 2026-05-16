@@ -4,16 +4,73 @@
     SYSTEM.LOG
   </div>
   <div class="term-block-body">
-    <div style="font-size:16px;line-height:2;color:var(--green);">
-      [2024-01-15] IoT ASSOC INITIALIZED<br>
-      [2024-01-15] DIVISIONS LOADED: 3 [OK]<br>
-      [2024-01-15] HW_MODULE: ONLINE<br>
-      [2024-01-15] ALGO_MODULE: ONLINE<br>
-      [2024-01-15] APP_MODULE: ONLINE<br>
-      [2024-01-15] NETWORK: CONNECTED<br>
-      [2024-01-15] RAD_MONITOR: 0.12 mSv/h [SAFE]<br>
-      <span style="color:var(--amber);">[2024-06-01] RECRUITMENT: ACTIVE</span><br>
-      [2024-09-01] PROJECTS_LOADED: 12
-    </div>
+    <div class="sys-log" id="sysLog"></div>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const el = document.getElementById('sysLog');
+    if (!el) return;
+
+    const lines = [
+      { text: '[2024-01-15] IoT ASSOC INITIALIZED', color: 'var(--green)' },
+      { text: '[2024-01-15] DIVISIONS LOADED: 3 [OK]', color: 'var(--green)' },
+      { text: '[2024-01-15] HW_MODULE: ONLINE', color: 'var(--green)' },
+      { text: '[2024-01-15] ALGO_MODULE: ONLINE', color: 'var(--green)' },
+      { text: '[2024-01-15] APP_MODULE: ONLINE', color: 'var(--green)' },
+      { text: '[2024-01-15] NETWORK: CONNECTED', color: 'var(--green)' },
+      { text: '[2024-01-15] RAD_MONITOR: 0.12 mSv/h [SAFE]', color: 'var(--green)' },
+      { text: '[2024-06-01] RECRUITMENT: ACTIVE', color: 'var(--amber)' },
+      { text: '[2024-09-01] PROJECTS_LOADED: 12', color: 'var(--green)' },
+    ];
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (reducedMotion.matches) {
+      el.innerHTML = lines.map(l => `<div style="color:${l.color}">${l.text}</div>`).join('');
+      return;
+    }
+
+    let lineIdx = 0;
+    let charIdx = 0;
+    const SPEED = 18;
+    const LINE_DELAY = 200;
+
+    const type = () => {
+      if (lineIdx >= lines.length) return;
+      const line = lines[lineIdx];
+      const currentText = line.text.substring(0, charIdx + 1);
+
+      // update or create line element
+      let lineEl = el.querySelector(`[data-line="${lineIdx}"]`);
+      if (!lineEl) {
+        lineEl = document.createElement('div');
+        lineEl.setAttribute('data-line', String(lineIdx));
+        lineEl.style.color = line.color;
+        lineEl.style.lineHeight = '2';
+        lineEl.style.fontSize = '16px';
+        el.appendChild(lineEl);
+      }
+      lineEl.textContent = currentText;
+
+      charIdx++;
+      if (charIdx < line.text.length) {
+        setTimeout(type, SPEED);
+      } else {
+        lineIdx++;
+        charIdx = 0;
+        setTimeout(type, LINE_DELAY);
+      }
+    };
+
+    // start after boot sequence finishes
+    setTimeout(type, 5500);
+  });
+</script>
+
+<style>
+  .sys-log {
+    min-height: 200px;
+    font-family: 'VT323', monospace;
+  }
+</style>
