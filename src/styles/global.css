@@ -1,17 +1,16 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --green: #7acc8a;
-  --green-bright: #00ff41;
-  --green-dim: #4a8a5a;
-  --green-soft: rgba(122, 204, 138, 0.22);
-  --green-faint: rgba(122, 204, 138, 0.08);
+  --green: #00ff41;
+  --green-dim: #00cc33;
+  --green-soft: rgba(0, 255, 65, 0.22);
+  --green-faint: rgba(0, 255, 65, 0.08);
   --bg: #000;
   --bg-deep: #020402;
   --bg-panel: rgba(2, 8, 3, 0.92);
-  --amber: #c48820;
-  --red: #cc3333;
-  --cyan: #5abfc4;
+  --amber: #ffb000;
+  --red: #ff2222;
+  --cyan: #6bf7ff;
   --rust: #8b4513;
   --metal: #1a1d1e;
   --metal-mid: #2a2d2e;
@@ -28,8 +27,8 @@ html {
 
 body {
   background:
-    radial-gradient(circle at 20% 0%, rgba(122, 204, 138, 0.06), transparent 28%),
-    radial-gradient(circle at 80% 12%, rgba(90, 191, 196, 0.03), transparent 24%),
+    radial-gradient(circle at 20% 0%, rgba(0, 255, 65, 0.08), transparent 28%),
+    radial-gradient(circle at 80% 12%, rgba(107, 247, 255, 0.05), transparent 24%),
     linear-gradient(180deg, #010201 0%, #000000 100%);
   color: var(--green);
   overflow-x: hidden;
@@ -37,7 +36,7 @@ body {
   position: relative;
   font-size: 18px;
   line-height: 1.4;
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%237acc8a' stroke-width='1.5' opacity='0.7'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%237acc8a' opacity='0.9'/%3E%3Cline x1='12' y1='1' x2='12' y2='6' stroke='%237acc8a' stroke-width='1' opacity='0.6'/%3E%3Cline x1='12' y1='18' x2='12' y2='23' stroke='%237acc8a' stroke-width='1' opacity='0.6'/%3E%3Cline x1='1' y1='12' x2='6' y2='12' stroke='%237acc8a' stroke-width='1' opacity='0.6'/%3E%3Cline x1='18' y1='12' x2='23' y2='12' stroke='%237acc8a' stroke-width='1' opacity='0.6'/%3E%3C/svg%3E") 12 12, crosshair;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%2300ff41' stroke-width='1.5' opacity='0.7'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%2300ff41' opacity='0.9'/%3E%3Cline x1='12' y1='1' x2='12' y2='6' stroke='%2300ff41' stroke-width='1' opacity='0.6'/%3E%3Cline x1='12' y1='18' x2='12' y2='23' stroke='%2300ff41' stroke-width='1' opacity='0.6'/%3E%3Cline x1='1' y1='12' x2='6' y2='12' stroke='%2300ff41' stroke-width='1' opacity='0.6'/%3E%3Cline x1='18' y1='12' x2='23' y2='12' stroke='%2300ff41' stroke-width='1' opacity='0.6'/%3E%3C/svg%3E") 12 12, crosshair;
 }
 
 body::before {
@@ -45,8 +44,8 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 45%, rgba(122, 204, 138, 0.04), transparent 45%),
-    linear-gradient(90deg, transparent 0%, rgba(122, 204, 138, 0.02) 50%, transparent 100%);
+    radial-gradient(circle at 50% 45%, rgba(0, 255, 65, 0.06), transparent 45%),
+    linear-gradient(90deg, transparent 0%, rgba(0, 255, 65, 0.03) 50%, transparent 100%);
   pointer-events: none;
   z-index: 0;
 }
@@ -61,11 +60,11 @@ body::after {
 }
 
 .glow {
-  text-shadow: 0 0 3px rgba(122, 204, 138, 0.4);
+  text-shadow: 0 0 3px rgba(0, 255, 65, 0.4);
 }
 
 .glow-hard {
-  text-shadow: 0 0 2px rgba(122, 204, 138, 0.5), 0 0 6px rgba(122, 204, 138, 0.15);
+  text-shadow: 0 0 2px rgba(0, 255, 65, 0.5), 0 0 6px rgba(0, 255, 65, 0.15);
 }
 
 .crt-screen {
@@ -98,7 +97,7 @@ body::after {
       0deg,
       rgba(0, 0, 0, 0) 0px,
       rgba(0, 0, 0, 0) 2px,
-      rgba(122, 204, 138, 0.022) 2px,
+      rgba(0, 255, 65, 0.022) 2px,
       rgba(0, 0, 0, 0.16) 4px,
       rgba(0, 0, 0, 0.05) 5px
     ),
@@ -106,8 +105,8 @@ body::after {
       0deg,
       transparent 0px,
       transparent 18px,
-      rgba(122, 204, 138, 0.04) 18px,
-      rgba(122, 204, 138, 0.015) 22px,
+      rgba(0, 255, 65, 0.04) 18px,
+      rgba(0, 255, 65, 0.015) 22px,
       transparent 25px,
       transparent 44px,
       rgba(255, 176, 0, 0.02) 44px,
@@ -120,7 +119,7 @@ body::after {
 
 .screen-fx::after {
   background:
-    linear-gradient(180deg, transparent 0%, rgba(122, 204, 138, 0.015) 45%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, rgba(0, 255, 65, 0.015) 45%, transparent 100%),
     linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 0.24) 58%, transparent 100%);
   opacity: 0.55;
   animation: scanlineJitter 9s steps(12) infinite;
@@ -128,7 +127,7 @@ body::after {
 
 .screen-fx__noise {
   background:
-    radial-gradient(circle at 17% 28%, rgba(122, 204, 138, 0.05) 0 1px, transparent 1px 100%),
+    radial-gradient(circle at 17% 28%, rgba(0, 255, 65, 0.05) 0 1px, transparent 1px 100%),
     radial-gradient(circle at 74% 62%, rgba(107, 247, 255, 0.04) 0 1px, transparent 1px 100%),
     radial-gradient(circle at 41% 83%, rgba(255, 176, 0, 0.025) 0 1px, transparent 1px 100%);
   background-size: 150px 120px, 210px 170px, 190px 140px;
@@ -138,9 +137,9 @@ body::after {
 
 .screen-fx__bloom {
   background:
-    radial-gradient(circle at 15% 14%, rgba(122, 204, 138, 0.06), transparent 22%),
+    radial-gradient(circle at 15% 14%, rgba(0, 255, 65, 0.06), transparent 22%),
     radial-gradient(circle at 82% 18%, rgba(107, 247, 255, 0.06), transparent 20%),
-    radial-gradient(circle at 50% 100%, rgba(122, 204, 138, 0.06), transparent 35%);
+    radial-gradient(circle at 50% 100%, rgba(0, 255, 65, 0.06), transparent 35%);
   opacity: 0.7;
 }
 
@@ -154,7 +153,7 @@ body::after {
       rgba(107, 247, 255, 0.06) 44%,
       rgba(175, 255, 221, 0.22) 49%,
       rgba(255, 255, 255, 0.08) 52%,
-      rgba(122, 204, 138, 0.12) 56%,
+      rgba(0, 255, 65, 0.12) 56%,
       transparent 64%,
       transparent 100%
     );
@@ -179,14 +178,14 @@ body::after {
   background:
     linear-gradient(90deg,
       transparent 0%,
-      rgba(122, 204, 138, 0.12) 15%,
-      rgba(122, 204, 138, 0.3) 50%,
-      rgba(122, 204, 138, 0.12) 85%,
+      rgba(0, 255, 65, 0.12) 15%,
+      rgba(0, 255, 65, 0.3) 50%,
+      rgba(0, 255, 65, 0.12) 85%,
       transparent 100%
     );
   box-shadow:
-    0 -1px 0 rgba(122, 204, 138, 0.08),
-    0 1px 0 rgba(122, 204, 138, 0.08);
+    0 -1px 0 rgba(0, 255, 65, 0.08),
+    0 1px 0 rgba(0, 255, 65, 0.08);
 }
 
 .screen-fx__scanlines.is-active {
@@ -203,8 +202,8 @@ body::after {
   background:
     radial-gradient(circle,
       rgba(107, 247, 255, 0.5) 0%,
-      rgba(122, 204, 138, 0.2) 30%,
-      rgba(122, 204, 138, 0.05) 60%,
+      rgba(0, 255, 65, 0.2) 30%,
+      rgba(0, 255, 65, 0.05) 60%,
       transparent 100%
     );
   mix-blend-mode: screen;
@@ -222,9 +221,9 @@ body::after {
   opacity: 0;
   background: linear-gradient(90deg,
     transparent,
-    rgba(122, 204, 138, 0.15) 20%,
+    rgba(0, 255, 65, 0.15) 20%,
     rgba(107, 247, 255, 0.08) 50%,
-    rgba(122, 204, 138, 0.15) 80%,
+    rgba(0, 255, 65, 0.15) 80%,
     transparent
   );
   filter: blur(1px);
@@ -306,8 +305,6 @@ body::after {
   display: grid;
   grid-template-columns: 200px 1fr;
   align-items: stretch;
-  /* asymmetric border-radius — each corner different, welded feel */
-  border-radius: 14px 6px 18px 8px;
   /* worn metal surface */
   background:
     /* scratches — diagonal streaks */
@@ -320,16 +317,15 @@ body::after {
     radial-gradient(ellipse 25px 15px at 95% 15%, rgba(139,69,19,0.08), transparent),
     /* base metal gradient */
     linear-gradient(180deg, var(--metal-mid) 0%, var(--metal) 40%, #141718 100%);
-  /* worn border — not clean, irregular color */
-  border: 2px solid rgba(80, 90, 80, 0.5);
-  border-top-color: rgba(100, 110, 100, 0.4);
-  border-bottom-color: rgba(40, 45, 40, 0.6);
-  /* depth: inset for recessed panel feel + outer shadow */
-  box-shadow:
-    inset 0 2px 8px rgba(0, 0, 0, 0.5),
-    inset 0 -1px 4px rgba(0, 0, 0, 0.3),
-    0 4px 20px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(0, 0, 0, 0.8);
+  /* irregular organic shape — not a rectangle, like welded scrap metal */
+  clip-path: polygon(
+    2% 10%, 5% 3%, 14% 0%, 22% 4%, 35% 1%, 48% 0%, 55% 3%, 68% 0%, 78% 2%, 88% 0%, 94% 4%,
+    98% 8%, 100% 18%, 99% 30%, 100% 45%, 98.5% 58%, 100% 72%, 99% 85%, 100% 92%,
+    96% 98%, 88% 100%, 78% 97%, 65% 100%, 52% 98%, 40% 100%, 28% 97%, 15% 100%, 6% 98%,
+    1% 94%, 0% 82%, 2% 68%, 0% 52%, 1.5% 38%, 0% 22%, 1% 12%
+  );
+  /* drop-shadow respects clip-path — gives the irregular shape a shadow */
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
   overflow: hidden;
 }
 
@@ -446,7 +442,7 @@ body::after {
   top: 3px;
   width: 1px;
   height: 5px;
-  background: rgba(122, 204, 138, 0.35);
+  background: rgba(0, 255, 65, 0.5);
   transform-origin: 50% 37px;
 }
 
@@ -454,7 +450,7 @@ body::after {
 .nav-watch__ticks span:nth-child(6n+1) {
   height: 8px;
   width: 1.5px;
-  background: rgba(122, 204, 138, 0.6);
+  background: rgba(0, 255, 65, 0.75);
 }
 
 /* danger zone ticks — red */
@@ -499,7 +495,7 @@ body::after {
   top: 50%;
   font-family: 'Press Start 2P', monospace;
   font-size: 5px;
-  color: rgba(122, 204, 138, 0.4);
+  color: rgba(0, 255, 65, 0.55);
   transform-origin: 0 0;
   transform: rotate(var(--r)) translateY(-30px) rotate(calc(-1 * var(--r)));
 }
@@ -514,7 +510,7 @@ body::after {
   background: linear-gradient(to top, var(--green-bright) 0%, var(--green) 65%, var(--red) 100%);
   transform-origin: 50% 100%;
   transform: rotate(-42deg);
-  box-shadow: 0 0 6px rgba(122, 204, 138, 0.3);
+  box-shadow: 0 0 6px rgba(0, 255, 65, 0.3);
   z-index: 2;
   transition: none;
 }
@@ -528,7 +524,7 @@ body::after {
   border-radius: 50%;
   background: var(--green);
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 8px rgba(122, 204, 138, 0.5);
+  box-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
   z-index: 3;
 }
 
@@ -539,7 +535,7 @@ body::after {
   transform: translateX(-50%);
   font-family: 'Press Start 2P', monospace;
   font-size: 4px;
-  color: rgba(122, 204, 138, 0.35);
+  color: rgba(0, 255, 65, 0.5);
   letter-spacing: 0.5px;
   white-space: nowrap;
 }
@@ -571,21 +567,21 @@ body::after {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  border: 1px solid rgba(122, 204, 138, 0.3);
+  border: 1px solid rgba(0, 255, 65, 0.3);
   background: transparent;
   transition: opacity 60ms;
 }
 
 .nav-watch__led.is-live {
   background: var(--green-bright);
-  box-shadow: 0 0 8px rgba(122, 204, 138, 0.7);
+  box-shadow: 0 0 8px rgba(0, 255, 65, 0.7);
 }
 
 .nav-watch__readout {
   font-family: 'VT323', monospace;
   font-size: 18px;
   color: var(--green-bright);
-  text-shadow: 0 0 8px rgba(122, 204, 138, 0.4);
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.4);
   min-width: 40px;
 }
 
@@ -593,7 +589,7 @@ body::after {
 .nav-watch__plate {
   font-family: 'Press Start 2P', monospace;
   font-size: 5px;
-  color: rgba(122, 204, 138, 0.25);
+  color: rgba(0, 255, 65, 0.4);
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -631,7 +627,7 @@ body::after {
     inset 0 2px 6px rgba(0, 0, 0, 0.5),
     inset 0 -1px 2px rgba(255, 255, 255, 0.03),
     0 1px 2px rgba(0, 0, 0, 0.3);
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='7' fill='none' stroke='%237acc8a' stroke-width='1.2' opacity='0.8'/%3E%3Ccircle cx='10' cy='10' r='1.5' fill='%237acc8a'/%3E%3C/svg%3E") 10 10, pointer;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='7' fill='none' stroke='%2300ff41' stroke-width='1.2' opacity='0.8'/%3E%3Ccircle cx='10' cy='10' r='1.5' fill='%2300ff41'/%3E%3C/svg%3E") 10 10, pointer;
   transition: transform 80ms, box-shadow 80ms, border-color 80ms;
 }
 
@@ -647,7 +643,7 @@ body::after {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  border: 1px solid rgba(122, 204, 138, 0.2);
+  border: 1px solid rgba(0, 255, 65, 0.2);
   background: transparent;
   transition: background 120ms, box-shadow 120ms, opacity 60ms;
 }
@@ -682,20 +678,20 @@ body::after {
 
 /* active channel — lit LED, brighter surface */
 .nav-pusher.active {
-  border-color: rgba(122, 204, 138, 0.35);
+  border-color: rgba(0, 255, 65, 0.35);
   background:
     linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.01) 40.5%, transparent 41%),
     linear-gradient(180deg, rgba(35, 45, 35, 0.9), rgba(25, 32, 25, 0.95));
   box-shadow:
     inset 0 2px 6px rgba(0, 0, 0, 0.4),
-    inset 0 0 8px rgba(122, 204, 138, 0.04),
+    inset 0 0 8px rgba(0, 255, 65, 0.04),
     0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .nav-pusher.active .nav-pusher__led {
   background: var(--green-bright);
-  box-shadow: 0 0 6px rgba(122, 204, 138, 0.7);
-  border-color: rgba(122, 204, 138, 0.5);
+  box-shadow: 0 0 6px rgba(0, 255, 65, 0.7);
+  border-color: rgba(0, 255, 65, 0.5);
 }
 
 .nav-pusher.active .nav-pusher__ch {
@@ -750,7 +746,7 @@ body::after {
   background: transparent;
   color: var(--green);
   border: 2px solid var(--green);
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='7' fill='none' stroke='%237acc8a' stroke-width='1.2' opacity='0.8'/%3E%3Ccircle cx='10' cy='10' r='1.5' fill='%237acc8a'/%3E%3C/svg%3E") 10 10, pointer;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='7' fill='none' stroke='%2300ff41' stroke-width='1.2' opacity='0.8'/%3E%3Ccircle cx='10' cy='10' r='1.5' fill='%2300ff41'/%3E%3C/svg%3E") 10 10, pointer;
   transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
@@ -759,7 +755,7 @@ body::after {
   background: var(--green);
   color: var(--bg);
   border-color: var(--green);
-  box-shadow: 0 0 16px rgba(122, 204, 138, 0.12);
+  box-shadow: 0 0 16px rgba(0, 255, 65, 0.12);
   transform: translateY(-1px);
 }
 
@@ -856,19 +852,19 @@ body::after {
 .group-block {
   border: 2px solid var(--green);
   margin-bottom: -2px;
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='7' fill='none' stroke='%237acc8a' stroke-width='1.2' opacity='0.8'/%3E%3Ccircle cx='10' cy='10' r='1.5' fill='%237acc8a'/%3E%3C/svg%3E") 10 10, pointer;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='7' fill='none' stroke='%2300ff41' stroke-width='1.2' opacity='0.8'/%3E%3Ccircle cx='10' cy='10' r='1.5' fill='%2300ff41'/%3E%3C/svg%3E") 10 10, pointer;
   background: rgba(0, 0, 0, 0.52);
   transition: background-color 160ms ease, box-shadow 160ms ease;
 }
 
 .group-block:hover {
-  background: rgba(122, 204, 138, 0.05);
+  background: rgba(0, 255, 65, 0.05);
   z-index: 2;
   position: relative;
-  box-shadow: inset 0 0 18px rgba(122, 204, 138, 0.05);
+  box-shadow: inset 0 0 18px rgba(0, 255, 65, 0.05);
 }
 
-.group-block:hover .group-idx { background: rgba(122, 204, 138, 0.1); }
+.group-block:hover .group-idx { background: rgba(0, 255, 65, 0.1); }
 
 .group-header {
   display: grid;
@@ -949,19 +945,19 @@ body::after {
   grid-template-columns: 50px 1fr 120px;
   border: 2px solid var(--green);
   margin-bottom: -2px;
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='7' fill='none' stroke='%237acc8a' stroke-width='1.2' opacity='0.8'/%3E%3Ccircle cx='10' cy='10' r='1.5' fill='%237acc8a'/%3E%3C/svg%3E") 10 10, pointer;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='7' fill='none' stroke='%2300ff41' stroke-width='1.2' opacity='0.8'/%3E%3Ccircle cx='10' cy='10' r='1.5' fill='%2300ff41'/%3E%3C/svg%3E") 10 10, pointer;
   background: rgba(0, 0, 0, 0.52);
   transition: background-color 160ms ease, box-shadow 160ms ease;
 }
 
 .project-row:hover {
-  background: rgba(122, 204, 138, 0.05);
+  background: rgba(0, 255, 65, 0.05);
   z-index: 2;
   position: relative;
-  box-shadow: inset 0 0 18px rgba(122, 204, 138, 0.05);
+  box-shadow: inset 0 0 18px rgba(0, 255, 65, 0.05);
 }
 
-.project-row:hover .project-idx { background: rgba(122, 204, 138, 0.1); }
+.project-row:hover .project-idx { background: rgba(0, 255, 65, 0.1); }
 
 .project-idx {
   padding: 12px;
@@ -1083,7 +1079,7 @@ footer a:focus-visible {
   color: var(--bg);
   background: var(--green);
   padding: 2px 4px;
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='7' fill='none' stroke='%237acc8a' stroke-width='1.2' opacity='0.8'/%3E%3Ccircle cx='10' cy='10' r='1.5' fill='%237acc8a'/%3E%3C/svg%3E") 10 10, pointer;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='7' fill='none' stroke='%2300ff41' stroke-width='1.2' opacity='0.8'/%3E%3Ccircle cx='10' cy='10' r='1.5' fill='%2300ff41'/%3E%3C/svg%3E") 10 10, pointer;
 }
 
 footer a:focus-visible {
@@ -1195,6 +1191,12 @@ footer a:focus-visible {
 
   .nav-device {
     grid-template-columns: 160px 1fr;
+    clip-path: polygon(
+      1.5% 8%, 6% 1%, 16% 0%, 30% 3%, 48% 0%, 65% 2%, 80% 0%, 92% 3%,
+      98% 7%, 100% 20%, 99% 40%, 100% 60%, 98.5% 80%, 100% 92%,
+      96% 100%, 82% 97%, 65% 100%, 45% 98%, 25% 100%, 10% 97%,
+      0% 90%, 1% 65%, 0% 40%, 1.5% 20%
+    );
   }
 
   .weld-seam {
@@ -1230,7 +1232,12 @@ footer a:focus-visible {
 
   .nav-device {
     grid-template-columns: 1fr;
-    border-radius: 10px 4px 12px 6px;
+    clip-path: polygon(
+      2% 8%, 8% 0%, 20% 3%, 38% 0%, 55% 2%, 72% 0%, 88% 3%, 96% 0%,
+      100% 10%, 99% 40%, 100% 65%, 98% 90%,
+      95% 100%, 80% 97%, 60% 100%, 40% 98%, 20% 100%, 5% 97%,
+      0% 88%, 1% 55%, 0% 25%
+    );
   }
 
   .weld-seam {
