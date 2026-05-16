@@ -92,81 +92,52 @@ body::after {
 }
 
 .screen-fx::before {
+  /* harsh CRT lines — sharp, not smooth gradients */
   background:
     repeating-linear-gradient(
       0deg,
       rgba(0, 0, 0, 0) 0px,
-      rgba(0, 0, 0, 0) 2px,
-      rgba(0, 255, 65, 0.022) 2px,
-      rgba(0, 0, 0, 0.16) 4px,
-      rgba(0, 0, 0, 0.05) 5px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      transparent 0px,
-      transparent 18px,
-      rgba(0, 255, 65, 0.04) 18px,
-      rgba(0, 255, 65, 0.015) 22px,
-      transparent 25px,
-      transparent 44px,
-      rgba(255, 176, 0, 0.02) 44px,
-      transparent 48px
+      rgba(0, 0, 0, 0) 3px,
+      rgba(0, 0, 0, 0.35) 3px,
+      rgba(0, 0, 0, 0.35) 5px
     );
-  mix-blend-mode: screen;
-  opacity: 0.78;
-  animation: scanlineDrift 14s steps(28) infinite;
+  mix-blend-mode: multiply;
+  opacity: 0.9;
+  animation: scanlineJump 0.4s steps(1) infinite;
 }
 
 .screen-fx::after {
+  /* vignette + subtle tracking roll */
   background:
-    linear-gradient(180deg, transparent 0%, rgba(0, 255, 65, 0.015) 45%, transparent 100%),
-    linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 0.24) 58%, transparent 100%);
-  opacity: 0.55;
-  animation: scanlineJitter 9s steps(12) infinite;
+    linear-gradient(180deg, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.15) 50%, transparent 60%, transparent 100%);
+  opacity: 0.6;
+  animation: trackingRoll 12s steps(4) infinite;
 }
 
 .screen-fx__noise {
-  background:
-    radial-gradient(circle at 17% 28%, rgba(0, 255, 65, 0.05) 0 1px, transparent 1px 100%),
-    radial-gradient(circle at 74% 62%, rgba(107, 247, 255, 0.04) 0 1px, transparent 1px 100%),
-    radial-gradient(circle at 41% 83%, rgba(255, 176, 0, 0.025) 0 1px, transparent 1px 100%);
-  background-size: 150px 120px, 210px 170px, 190px 140px;
-  opacity: 0.2;
-  animation: noiseShift 18s linear infinite;
+  /* harsh static — sharp dots, not soft gradients */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect x='0' y='0' width='1' height='1' fill='%23fff' opacity='0.03'/%3E%3Crect x='2' y='1' width='1' height='1' fill='%23fff' opacity='0.02'/%3E%3Crect x='1' y='3' width='1' height='1' fill='%23fff' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 4px 4px;
+  opacity: 0.8;
+  animation: noiseFlicker 0.15s steps(2) infinite;
 }
 
 .screen-fx__bloom {
+  /* dim phosphor glow — not aurora, just faint CRT warmth */
   background:
-    radial-gradient(circle at 15% 14%, rgba(0, 255, 65, 0.06), transparent 22%),
-    radial-gradient(circle at 82% 18%, rgba(107, 247, 255, 0.06), transparent 20%),
-    radial-gradient(circle at 50% 100%, rgba(0, 255, 65, 0.06), transparent 35%);
-  opacity: 0.7;
+    radial-gradient(ellipse 60% 40% at 50% 50%, rgba(0, 255, 65, 0.02), transparent);
+  opacity: 0.5;
 }
 
 .screen-fx__sweep {
-  inset: -14%;
-  background:
-    linear-gradient(
-      112deg,
-      transparent 0%,
-      transparent 37%,
-      rgba(107, 247, 255, 0.06) 44%,
-      rgba(175, 255, 221, 0.22) 49%,
-      rgba(255, 255, 255, 0.08) 52%,
-      rgba(0, 255, 65, 0.12) 56%,
-      transparent 64%,
-      transparent 100%
-    );
-  opacity: 0;
-  transform: translate3d(-26%, -8%, 0) rotate(-7deg);
-  mix-blend-mode: screen;
+  display: none; /* remove the aurora sweep entirely */
 }
 
 .screen-fx.is-sweeping .screen-fx__sweep {
-  animation: retinalSweep 1.3s ease-out forwards;
+  display: none;
 }
 
-/* --- random scanline interference --- */
+/* --- random scanline interference — harsh single line --- */
 
 .screen-fx__scanlines {
   position: absolute;
@@ -175,36 +146,31 @@ body::after {
   height: 0;
   opacity: 0;
   pointer-events: none;
-  background:
-    linear-gradient(90deg,
-      transparent 0%,
-      rgba(0, 255, 65, 0.12) 15%,
-      rgba(0, 255, 65, 0.3) 50%,
-      rgba(0, 255, 65, 0.12) 85%,
-      transparent 100%
-    );
+  /* sharp solid line, not gradient */
+  background: rgba(0, 255, 65, 0.6);
   box-shadow:
-    0 -1px 0 rgba(0, 255, 65, 0.08),
-    0 1px 0 rgba(0, 255, 65, 0.08);
+    0 -1px 0 rgba(0, 255, 65, 0.3),
+    0 1px 0 rgba(0, 255, 65, 0.15);
 }
 
 .screen-fx__scanlines.is-active {
   z-index: 2;
 }
 
-/* --- radiation burst --- */
+/* --- radiation burst — sharp flash, not smooth gradient --- */
 
 .screen-fx__radburst {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
   opacity: 0;
+  /* sharp center, hard edge — not a soft gradient */
   background:
     radial-gradient(circle,
-      rgba(107, 247, 255, 0.5) 0%,
-      rgba(0, 255, 65, 0.2) 30%,
-      rgba(0, 255, 65, 0.05) 60%,
-      transparent 100%
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(0, 255, 65, 0.6) 15%,
+      rgba(0, 255, 65, 0.1) 40%,
+      transparent 50%
     );
   mix-blend-mode: screen;
 }
@@ -213,21 +179,18 @@ body::after {
   z-index: 2;
 }
 
-/* --- phosphor burn artifact --- */
+/* --- phosphor burn — sharp line, not gradient --- */
 
 .screen-fx__phosphor {
   position: absolute;
+  left: 0;
+  right: 0;
   pointer-events: none;
   opacity: 0;
-  background: linear-gradient(90deg,
-    transparent,
-    rgba(0, 255, 65, 0.15) 20%,
-    rgba(107, 247, 255, 0.08) 50%,
-    rgba(0, 255, 65, 0.15) 80%,
-    transparent
-  );
-  filter: blur(1px);
-  mix-blend-mode: screen;
+  height: 2px;
+  /* single sharp line */
+  background: rgba(0, 255, 65, 0.5);
+  box-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
 }
 
 .screen-fx__phosphor.is-active {
@@ -327,6 +290,18 @@ body::after {
   /* drop-shadow respects clip-path — gives the irregular shape a shadow */
   filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
   overflow: hidden;
+  /* "not yet examining" — dim, tilted, like a watch at rest */
+  opacity: 0.72;
+  transform: perspective(800px) rotateX(3deg);
+  transition: opacity 350ms ease-out, transform 350ms ease-out, filter 350ms ease-out;
+}
+
+/* "raising the watch to look at it" — brightens, levels out, comes alive */
+.nav-device:hover,
+.nav-device:focus-within {
+  opacity: 1;
+  transform: perspective(800px) rotateX(0deg);
+  filter: drop-shadow(0 6px 20px rgba(0,255,65,0.08)) drop-shadow(0 4px 12px rgba(0,0,0,0.6));
 }
 
 /* corner rivets */
@@ -550,10 +525,20 @@ body::after {
     radial-gradient(ellipse 18px 12px at 38% 35%, rgba(255,255,255,0.03), transparent),
     /* scratch arc */
     radial-gradient(ellipse 60px 2px at 50% 50%, rgba(255,255,255,0.015), transparent 40%),
-    /* edge grime */
-    radial-gradient(circle, transparent 60%, rgba(0,0,0,0.15) 100%);
+    /* edge grime — more opaque when not examining */
+    radial-gradient(circle, transparent 50%, rgba(0,0,0,0.2) 100%);
   pointer-events: none;
   z-index: 4;
+  transition: opacity 350ms ease-out;
+}
+
+/* glass clears up when you "raise the watch" */
+.nav-device:hover .nav-watch__glass,
+.nav-device:focus-within .nav-watch__glass {
+  background:
+    radial-gradient(ellipse 18px 12px at 38% 35%, rgba(255,255,255,0.02), transparent),
+    radial-gradient(ellipse 60px 2px at 50% 50%, rgba(255,255,255,0.01), transparent 40%),
+    radial-gradient(circle, transparent 65%, rgba(0,0,0,0.08) 100%);
 }
 
 /* LED + digital readout below dial */
@@ -1094,47 +1079,26 @@ footer a:focus-visible {
   50% { opacity: 0.15; }
 }
 
-@keyframes scanlineDrift {
-  0% { transform: translate3d(0, 0, 0); opacity: 0.8; }
-  17% { transform: translate3d(0, 1px, 0); opacity: 0.76; }
-  39% { transform: translate3d(0, -1px, 0); opacity: 0.82; }
-  56% { transform: translate3d(0, 2px, 0); opacity: 0.74; }
-  81% { transform: translate3d(0, -1px, 0); opacity: 0.78; }
-  100% { transform: translate3d(0, 0, 0); opacity: 0.8; }
+@keyframes scanlineJump {
+  0% { background-position: 0 0; }
+  25% { background-position: 0 1px; }
+  50% { background-position: 0 -1px; }
+  75% { background-position: 0 2px; }
+  100% { background-position: 0 0; }
 }
 
-@keyframes scanlineJitter {
-  0%, 100% { background-position: 0 0, 0 0; }
-  13% { background-position: 0 -2px, 0 4px; }
-  27% { background-position: 0 1px, 0 -2px; }
-  48% { background-position: 0 -3px, 0 2px; }
-  66% { background-position: 0 2px, 0 -1px; }
-  84% { background-position: 0 -1px, 0 3px; }
+@keyframes trackingRoll {
+  0% { background-position: 0 0; }
+  25% { background-position: 0 -3px; }
+  50% { background-position: 0 5px; }
+  75% { background-position: 0 -2px; }
+  100% { background-position: 0 0; }
 }
 
-@keyframes noiseShift {
-  0% { transform: translate3d(0, 0, 0); }
-  20% { transform: translate3d(0.5%, -0.5%, 0); }
-  45% { transform: translate3d(-0.5%, 0.4%, 0); }
-  70% { transform: translate3d(0.6%, 0.6%, 0); }
-  100% { transform: translate3d(0, 0, 0); }
-}
-
-@keyframes retinalSweep {
-  0% {
-    opacity: 0;
-    transform: translate3d(-30%, -10%, 0) rotate(-7deg);
-  }
-  14% {
-    opacity: 0.2;
-  }
-  40% {
-    opacity: 0.75;
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(28%, 12%, 0) rotate(-7deg);
-  }
+@keyframes noiseFlicker {
+  0% { opacity: 0.6; }
+  50% { opacity: 0.9; }
+  100% { opacity: 0.7; }
 }
 
 @keyframes pulseSweep {
@@ -1143,40 +1107,31 @@ footer a:focus-visible {
 }
 
 @keyframes scanlineFlash {
-  0% { opacity: 0; transform: scaleX(0.3); }
-  20% { opacity: 1; transform: scaleX(1.1); }
-  60% { opacity: 0.8; transform: scaleX(0.95); }
-  100% { opacity: 0; transform: scaleX(1.05); }
+  0% { opacity: 0; transform: scaleX(0.5); }
+  10% { opacity: 1; transform: scaleX(1); }
+  30% { opacity: 0.8; }
+  50% { opacity: 1; transform: scaleX(0.98); }
+  80% { opacity: 0.6; }
+  100% { opacity: 0; }
 }
 
 @keyframes radBurst {
-  0% {
-    transform: scale(0.1);
-    opacity: 0;
-    filter: blur(0px);
-  }
-  15% {
-    opacity: 1;
-    filter: blur(2px);
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 0.6;
-    filter: blur(4px);
-  }
-  100% {
-    transform: scale(1.8);
-    opacity: 0;
-    filter: blur(8px);
-  }
+  0% { transform: scale(0.3); opacity: 0; }
+  8% { opacity: 1; }
+  15% { opacity: 0.9; transform: scale(1); }
+  25% { opacity: 0.4; }
+  35% { opacity: 0.8; transform: scale(1.05); }
+  60% { opacity: 0.15; transform: scale(1.1); }
+  100% { opacity: 0; transform: scale(1.15); }
 }
 
 @keyframes phosphorBurn {
   0% { opacity: 0; }
-  15% { opacity: 0.6; }
-  40% { opacity: 0.25; }
-  60% { opacity: 0.45; }
-  80% { opacity: 0.1; }
+  5% { opacity: 0.8; }
+  20% { opacity: 0.5; }
+  40% { opacity: 0.7; }
+  60% { opacity: 0.2; }
+  80% { opacity: 0.4; }
   100% { opacity: 0; }
 }
 

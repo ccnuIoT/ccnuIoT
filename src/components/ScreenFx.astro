@@ -35,65 +35,83 @@
       }, delay);
     };
 
-    /* --- random scanline interference --- */
+    /* --- random scanline interference — harsh, sharp --- */
     const scheduleScanline = () => {
       window.clearTimeout(nextScanId);
       if (reducedMotion.matches) return;
 
-      const delay = 2000 + Math.random() * 6000;
+      const delay = 1500 + Math.random() * 4000;
       nextScanId = window.setTimeout(() => {
         const scanlines = effectLayer.querySelector('.screen-fx__scanlines');
         if (scanlines instanceof HTMLElement) {
           const y = Math.random() * 100;
-          const thickness = 1 + Math.floor(Math.random() * 3);
-          const duration = 80 + Math.floor(Math.random() * 200);
-          const glitch = Math.random() > 0.7;
+          const thickness = 2 + Math.floor(Math.random() * 2);
+          const duration = 60 + Math.random() * 120;
+          // harsh: sometimes tinted amber/red
+          const tint = Math.random() > 0.7 ? 'rgba(255, 176, 0, 0.5)' : 'rgba(0, 255, 65, 0.6)';
 
           scanlines.style.cssText = `
             top: ${y}%;
             height: ${thickness}px;
-            opacity: ${0.25 + Math.random() * 0.5};
-            animation: scanlineFlash ${duration}ms steps(${glitch ? 2 : 1}) forwards;
+            opacity: ${0.5 + Math.random() * 0.4};
+            background: ${tint};
+            animation: scanlineFlash ${duration}ms steps(2) forwards;
           `;
           scanlines.classList.add('is-active');
 
           setTimeout(() => {
             scanlines.classList.remove('is-active');
             scanlines.style.cssText = '';
-          }, duration + 50);
+          }, duration + 30);
         }
         scheduleScanline();
       }, delay);
     };
 
-    /* --- radiation burst --- */
+    /* --- radiation burst — sharp flash + afterimage --- */
     const scheduleRadBurst = () => {
       window.clearTimeout(nextRadId);
       if (reducedMotion.matches) return;
 
-      const delay = 8000 + Math.random() * 20000;
+      const delay = 10000 + Math.random() * 18000;
       nextRadId = window.setTimeout(() => {
         const burst = effectLayer.querySelector('.screen-fx__radburst');
         if (burst instanceof HTMLElement) {
-          const x = 10 + Math.random() * 80;
-          const y = 10 + Math.random() * 80;
-          const size = 60 + Math.random() * 200;
-          const intensity = 0.15 + Math.random() * 0.35;
+          const x = 15 + Math.random() * 70;
+          const y = 15 + Math.random() * 70;
+          const size = 40 + Math.random() * 120;
 
+          // sharp flash — steps, not ease
           burst.style.cssText = `
             left: ${x}%;
             top: ${y}%;
             width: ${size}px;
             height: ${size}px;
-            opacity: ${intensity};
-            animation: radBurst ${600 + Math.random() * 800}ms ease-out forwards;
+            animation: radBurst ${400 + Math.random() * 300}ms steps(4) forwards;
           `;
           burst.classList.add('is-active');
+
+          // afterimage burn — stays briefly after flash
+          setTimeout(() => {
+            const phosphor = effectLayer.querySelector('.screen-fx__phosphor');
+            if (phosphor instanceof HTMLElement) {
+              phosphor.style.cssText = `
+                top: ${y}%;
+                opacity: 0.6;
+                animation: phosphorBurn ${1500 + Math.random() * 1500}ms steps(3) forwards;
+              `;
+              phosphor.classList.add('is-active');
+              setTimeout(() => {
+                phosphor.classList.remove('is-active');
+                phosphor.style.cssText = '';
+              }, 3200);
+            }
+          }, 150);
 
           setTimeout(() => {
             burst.classList.remove('is-active');
             burst.style.cssText = '';
-          }, 1600);
+          }, 900);
         }
         scheduleRadBurst();
       }, delay);
@@ -103,29 +121,23 @@
     const schedulePhosphor = () => {
       if (reducedMotion.matches) return;
 
-      const delay = 12000 + Math.random() * 25000;
+      const delay = 15000 + Math.random() * 20000;
       setTimeout(() => {
         const phosphor = effectLayer.querySelector('.screen-fx__phosphor');
         if (phosphor instanceof HTMLElement) {
-          const x = 15 + Math.random() * 70;
-          const y = 15 + Math.random() * 70;
-          const w = 30 + Math.random() * 120;
-          const h = 2 + Math.random() * 6;
+          const y = 10 + Math.random() * 80;
 
           phosphor.style.cssText = `
-            left: ${x}%;
             top: ${y}%;
-            width: ${w}px;
-            height: ${h}px;
-            opacity: 0;
-            animation: phosphorBurn ${3000 + Math.random() * 4000}ms ease-in-out forwards;
+            opacity: 0.5;
+            animation: phosphorBurn ${2000 + Math.random() * 2000}ms steps(3) forwards;
           `;
           phosphor.classList.add('is-active');
 
           setTimeout(() => {
             phosphor.classList.remove('is-active');
             phosphor.style.cssText = '';
-          }, 7500);
+          }, 4500);
         }
         schedulePhosphor();
       }, delay);

@@ -95,33 +95,40 @@
   document.addEventListener('DOMContentLoaded', () => {
     const needle = document.getElementById('geigerNeedle');
     const readout = document.getElementById('doseReadout');
+    const device = document.querySelector('.nav-device');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (reducedMotion.matches) return;
 
     let baseAngle = -42;
     let dose = 0.12;
     let lastUpdate = 0;
-    const STEP_INTERVAL = 80; // ~12fps — mechanical, not smooth
+    let examining = false;
+    const STEP_IDLE = 100;      // slower when not looking
+    const STEP_EXAMINING = 50;  // faster, more sensitive when hovering
 
-    // stepped needle animation — feels like a real analog instrument
+    // stepped needle animation — mechanical, not smooth
     const tick = (now: number) => {
-      if (now - lastUpdate < STEP_INTERVAL) {
+      const interval = examining ? STEP_EXAMINING : STEP_IDLE;
+      if (now - lastUpdate < interval) {
         requestAnimationFrame(tick);
         return;
       }
       lastUpdate = now;
 
-      const jitter = (Math.random() - 0.5) * 22;
-      const spike = Math.random() > 0.92 ? (Math.random() * 60 - 30) : 0;
-      baseAngle += (Math.random() - 0.5) * 4;
+      const jitterRange = examining ? 28 : 18;
+      const spikeChance = examining ? 0.88 : 0.94;
+      const spikeRange = examining ? 70 : 45;
+
+      const jitter = (Math.random() - 0.5) * jitterRange;
+      const spike = Math.random() > spikeChance ? (Math.random() * spikeRange - spikeRange/2) : 0;
+      baseAngle += (Math.random() - 0.5) * (examining ? 5 : 3);
       baseAngle = Math.max(-60, Math.min(60, baseAngle));
 
       if (needle) {
         needle.style.transform = `rotate(${baseAngle + jitter + spike}deg)`;
       }
 
-      // update digital readout with slight lag
-      dose += (Math.random() - 0.48) * 0.03;
+      dose += (Math.random() - 0.48) * (examining ? 0.04 : 0.02);
       dose = Math.max(0.01, Math.min(3.0, dose));
       if (readout) readout.textContent = dose.toFixed(2);
 
@@ -130,7 +137,13 @@
 
     requestAnimationFrame(tick);
 
-    // random LED flicker — simulates degraded power
+    // track hover state — "examining the watch"
+    if (device) {
+      device.addEventListener('mouseenter', () => { examining = true; });
+      device.addEventListener('mouseleave', () => { examining = false; });
+    }
+
+    // random LED flicker — degraded power
     const leds = document.querySelectorAll('.nav-pusher__led, .nav-watch__led');
     const flicker = () => {
       leds.forEach(led => {
