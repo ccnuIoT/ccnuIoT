@@ -1,17 +1,29 @@
 ---
-
+import Base from '../layouts/Base.astro';
+import '../styles/global.css';
+import BootSequence from '../components/BootSequence.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import GeigerBar from '../components/GeigerBar.astro';
+import Groups from '../components/Groups.astro';
+import Projects from '../components/Projects.astro';
+import SystemLog from '../components/SystemLog.astro';
+import Join from '../components/Join.astro';
+import Footer from '../components/Footer.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base>
+  <BootSequence />
+  <div class="crt-screen">
+    <Nav />
+    <div class="container">
+      <Hero />
+      <GeigerBar />
+      <Groups />
+      <Projects />
+      <SystemLog />
+      <Join />
+      <Footer />
+    </div>
+  </div>
+</Base>
