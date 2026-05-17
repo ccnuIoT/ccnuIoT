@@ -11,62 +11,81 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
 
 <Base title="Hardware Division — CCNU IoT">
   <main class="group-page group-page--hardware">
-    <div class="hardware-page-fx" aria-hidden="true">
-      <span class="hardware-page-fx__trace hardware-page-fx__trace--a"></span>
-      <span class="hardware-page-fx__trace hardware-page-fx__trace--b"></span>
-      <span class="hardware-page-fx__trace hardware-page-fx__trace--c"></span>
-      <span class="hardware-page-fx__node hardware-page-fx__node--a"></span>
-      <span class="hardware-page-fx__node hardware-page-fx__node--b"></span>
-      <span class="hardware-page-fx__node hardware-page-fx__node--c"></span>
+    <div class="hw-fx" aria-hidden="true">
+      <div class="hw-fx__noise"></div>
+      <span class="hw-fx__trace hw-fx__trace--a"></span>
+      <span class="hw-fx__trace hw-fx__trace--b"></span>
+      <span class="hw-fx__trace hw-fx__trace--c"></span>
+      <span class="hw-fx__trace hw-fx__trace--d"></span>
+      <span class="hw-fx__trace hw-fx__trace--e"></span>
+      <span class="hw-fx__via hw-fx__via--a"></span>
+      <span class="hw-fx__via hw-fx__via--b"></span>
+      <span class="hw-fx__via hw-fx__via--c"></span>
+      <span class="hw-fx__via hw-fx__via--d"></span>
+      <span class="hw-fx__led hw-fx__led--a"></span>
+      <span class="hw-fx__led hw-fx__led--b"></span>
+      <span class="hw-fx__led hw-fx__led--c"></span>
     </div>
     <GroupPageNav current="hardware" />
 
-    <section class="hardware-hero group-shell">
-      <div class="hardware-hero__grid" aria-hidden="true"></div>
-      <div class="hardware-hero__copy">
-        <p class="hardware-hero__eyebrow px">DIVISION 01 / HARDWARE</p>
-        <h1 class="hardware-hero__title glow-hard">CIRCUIT / SIGNAL / CONTROL</h1>
-        <p class="hardware-hero__desc">
+    <section class="hw-hero group-shell">
+      <div class="hw-hero__traces" aria-hidden="true"></div>
+      <div class="hw-hero__heat" aria-hidden="true"></div>
+      <div class="hw-hero__copy">
+        <p class="hw-hero__eyebrow px">DIVISION 01 / HARDWARE</p>
+        <h1 class="hw-hero__title glow-hard">CIRCUIT / SIGNAL / CONTROL</h1>
+        <p class="hw-hero__desc">
           Board files, solder heat, signal checks, field-ready modules.
         </p>
       </div>
     </section>
 
-    <section class="group-summary group-shell">
+    <section class="group-summary group-shell hw-summary">
       <SectionHead marker="SEC.H1" label="BOARD OVERVIEW" />
       <p class="group-summary__lede">
         Archived by cohort. Roles stay on the card.
       </p>
       <div class="group-summary__chips">
-        {chips.map((chip) => <span class="group-summary__chip">{chip}</span>)}
+        {chips.map((chip) => <span class="group-summary__chip hw-chip">{chip}</span>)}
       </div>
     </section>
 
     {cohorts.length === 0 ? (
-      <div class="group-empty">
+      <div class="group-empty hw-empty">
         HARDWARE ROSTER EMPTY. Add cohorts and members to <code>src/data/members.json</code>.
       </div>
     ) : (
       cohorts.map((entry) => (
         <CohortSection cohort={entry.cohort} memberCount={entry.members.length}>
-          <div class="hardware-card-grid">
-            {entry.members.map((member) => (
-              <article class="hardware-card">
-                {member.avatar ? (
-                  <img class="member-avatar" src={member.avatar} alt={`${member.name} avatar`} loading="lazy" />
-                ) : (
-                  <div class="member-avatar-fallback hardware-avatar-fallback" aria-hidden="true">
-                    {member.name.slice(0, 1)}
-                  </div>
-                )}
-                <div class="hardware-card__body">
-                  <div class="hardware-card__header">
+          <div class="hw-card-grid">
+            {entry.members.map((member, i) => (
+              <article class="hw-card">
+                <span class="hw-card__pad hw-card__pad--tl" aria-hidden="true"></span>
+                <span class="hw-card__pad hw-card__pad--tr" aria-hidden="true"></span>
+                <span class="hw-card__pad hw-card__pad--bl" aria-hidden="true"></span>
+                <span class="hw-card__pad hw-card__pad--br" aria-hidden="true"></span>
+                <div class="hw-card__ic">
+                  {member.avatar ? (
+                    <img class="member-avatar" src={member.avatar} alt={`${member.name} avatar`} loading="lazy" />
+                  ) : (
+                    <div class="member-avatar-fallback hw-avatar-fb" aria-hidden="true">
+                      {member.name.slice(0, 1)}
+                    </div>
+                  )}
+                </div>
+                <div class="hw-card__body">
+                  <div class="hw-card__header">
                     <h3>{member.name}</h3>
-                    <span class="hardware-card__focus">{member.focus}</span>
+                    <span class="hw-card__focus">{member.focus}</span>
                   </div>
-                  <p class="hardware-card__bio">{member.bio}</p>
+                  <p class="hw-card__bio">{member.bio}</p>
                   <div class="member-role-tags">
-                    {member.roleTags.map((tag) => <span class="member-role-tag">{tag}</span>)}
+                    {member.roleTags.map((tag, ti) => (
+                      <span class="member-role-tag hw-tag">
+                        <span class="hw-tag__ref">{String.fromCharCode(82 + ti)}{i + 1}</span>
+                        {tag}
+                      </span>
+                    ))}
                   </div>
                   {member.links && Object.values(member.links).some(Boolean) && (
                     <div class="member-links">
@@ -86,171 +105,347 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
 </Base>
 
 <style>
+  /* ── Palette ── */
   .group-page--hardware {
+    --hw-copper: #8b6914;
+    --hw-copper-lt: #c4962a;
+    --hw-solder: #ffcc73;
+    --hw-mask: #3a5a28;
+    --hw-silk: #c4c4c4;
+    --hw-fr4: #4a3f20;
+    --hw-bg: #0d0a04;
     color: #dfffe8;
   }
 
-  .hardware-page-fx {
+  /* ── Noise overlay ── */
+  .hw-fx {
     position: absolute;
-    inset: 118px 0 0;
+    inset: 0;
     pointer-events: none;
     z-index: -1;
-    opacity: 0.82;
   }
 
-  .hardware-page-fx__trace {
+  .hw-fx__noise {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' fill='%23ffffff' opacity='0.03'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%23ffffff' opacity='0.02'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 4px 4px;
+    opacity: 0.7;
+    mix-blend-mode: overlay;
+  }
+
+  /* ── Traces (broken PCB traces scattered across page) ── */
+  .hw-fx__trace {
     position: absolute;
     display: block;
-    border: 1px solid rgba(255, 196, 107, 0.18);
-    border-right: none;
-    border-bottom: none;
-    filter: drop-shadow(0 0 8px rgba(255, 176, 0, 0.1));
+    background: linear-gradient(90deg, rgba(139, 105, 20, 0.25), rgba(139, 105, 20, 0.05));
+    height: 2px;
   }
 
-  .hardware-page-fx__trace--a {
-    top: 52px;
-    left: 3%;
-    width: 38%;
-    height: 180px;
-  }
+  .hw-fx__trace--a { top: 180px; left: 2%; width: 28%; transform: rotate(0deg); }
+  .hw-fx__trace--b { top: 420px; right: 4%; width: 22%; transform: rotate(0deg); }
+  .hw-fx__trace--c { top: 700px; left: 10%; width: 35%; transform: rotate(2deg); }
+  .hw-fx__trace--d { top: 950px; right: 8%; width: 18%; transform: rotate(-1deg); }
+  .hw-fx__trace--e { top: 1200px; left: 25%; width: 40%; transform: rotate(0deg); }
 
-  .hardware-page-fx__trace--b {
-    top: 340px;
-    right: 5%;
-    width: 32%;
-    height: 210px;
-  }
-
-  .hardware-page-fx__trace--c {
-    top: 690px;
-    left: 16%;
-    width: 42%;
-    height: 240px;
-  }
-
-  .hardware-page-fx__node {
+  /* ── Vias (small ring shapes) ── */
+  .hw-fx__via {
     position: absolute;
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: #ffcc73;
-    box-shadow: 0 0 12px rgba(255, 176, 0, 0.3);
+    border: 2px solid rgba(139, 105, 20, 0.35);
+    background: transparent;
   }
 
-  .hardware-page-fx__node--a { top: 226px; left: 39%; }
-  .hardware-page-fx__node--b { top: 538px; right: 36%; }
-  .hardware-page-fx__node--c { top: 926px; left: 56%; }
+  .hw-fx__via--a { top: 260px; left: 28%; }
+  .hw-fx__via--b { top: 550px; right: 22%; }
+  .hw-fx__via--c { top: 840px; left: 42%; }
+  .hw-fx__via--d { top: 1100px; right: 38%; }
 
-  .hardware-hero {
+  /* ── LEDs (flickering test points) ── */
+  .hw-fx__led {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--hw-solder);
+    box-shadow: 0 0 8px rgba(255, 204, 115, 0.5), 0 0 20px rgba(255, 204, 115, 0.2);
+  }
+
+  .hw-fx__led--a { top: 300px; left: 30%; }
+  .hw-fx__led--b { top: 680px; right: 24%; }
+  .hw-fx__led--c { top: 1050px; left: 50%; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hw-fx__led--a { animation: hw-pulse 2.5s ease-in-out infinite; }
+    .hw-fx__led--b { animation: hw-pulse 3s ease-in-out infinite 0.8s; }
+    .hw-fx__led--c { animation: hw-pulse 2.2s ease-in-out infinite 1.5s; }
+  }
+
+  @keyframes hw-pulse {
+    0%, 100% { opacity: 0.4; box-shadow: 0 0 4px rgba(255, 204, 115, 0.2); }
+    50% { opacity: 1; box-shadow: 0 0 12px rgba(255, 204, 115, 0.6), 0 0 28px rgba(255, 204, 115, 0.25); }
+  }
+
+  /* ── Hero ── */
+  .hw-hero {
     position: relative;
     overflow: hidden;
-    padding: 32px;
-    border-color: rgba(147, 255, 173, 0.24);
+    padding: 36px;
+    border-color: rgba(139, 105, 20, 0.35);
     background:
-      radial-gradient(circle at top right, rgba(130, 255, 174, 0.12), transparent 30%),
-      linear-gradient(180deg, rgba(8, 22, 14, 0.94), rgba(3, 10, 8, 0.96));
+      radial-gradient(ellipse at 70% 20%, rgba(58, 90, 40, 0.15), transparent 50%),
+      radial-gradient(ellipse at 20% 80%, rgba(139, 105, 20, 0.1), transparent 40%),
+      linear-gradient(180deg, #1a1208, #0d0a04);
   }
 
-  .hardware-hero__grid {
+  .hw-hero__traces {
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(92, 255, 139, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(92, 255, 139, 0.1) 1px, transparent 1px);
-    background-size: 26px 26px;
-    opacity: 0.24;
+      linear-gradient(0deg, transparent 49.5%, rgba(139, 105, 20, 0.12) 49.5%, rgba(139, 105, 20, 0.12) 50.5%, transparent 50.5%),
+      linear-gradient(90deg, transparent 49.5%, rgba(139, 105, 20, 0.08) 49.5%, rgba(139, 105, 20, 0.08) 50.5%, transparent 50.5%);
+    background-size: 48px 48px;
+    opacity: 0.6;
+    pointer-events: none;
+    mask-image: linear-gradient(135deg, black 30%, transparent 35%, black 45%, transparent 50%, black 65%, transparent 70%, black 80%);
+    -webkit-mask-image: linear-gradient(135deg, black 30%, transparent 35%, black 45%, transparent 50%, black 65%, transparent 70%, black 80%);
+  }
+
+  .hw-hero__heat {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    top: 20%;
+    right: 15%;
+    background: radial-gradient(circle, rgba(139, 105, 20, 0.12), rgba(90, 50, 10, 0.06), transparent 70%);
+    filter: blur(30px);
     pointer-events: none;
   }
 
-  .hardware-hero__copy {
+  .hw-hero__copy {
     position: relative;
     max-width: 760px;
   }
 
-  .hardware-hero__eyebrow {
-    color: #9cffbd;
+  .hw-hero__eyebrow {
+    color: var(--hw-copper-lt);
     margin-bottom: 18px;
     font-size: 10px;
   }
 
-  .hardware-hero__title {
+  .hw-hero__title {
     font-size: clamp(34px, 7vw, 76px);
     line-height: 1;
     margin-bottom: 18px;
+    color: var(--hw-silk);
+    text-shadow:
+      2px 2px 0 rgba(139, 105, 20, 0.3),
+      -1px -1px 0 rgba(0, 0, 0, 0.5);
   }
 
-  .hardware-hero__desc {
+  .hw-hero__desc {
     max-width: 620px;
     font-size: 24px;
     line-height: 1.4;
+    color: rgba(223, 255, 232, 0.85);
   }
 
-  .hardware-card-grid {
+  /* ── Summary section ── */
+  .hw-summary {
+    border-color: rgba(139, 105, 20, 0.25);
+    background: rgba(13, 10, 4, 0.85);
+  }
+
+  .hw-chip {
+    border-color: rgba(139, 105, 20, 0.35);
+    color: var(--hw-copper-lt);
+  }
+
+  /* ── Card grid ── */
+  .hw-card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 18px;
   }
 
-  .hardware-card {
+  .hw-card {
+    position: relative;
     display: flex;
-    gap: 16px;
-    padding: 18px;
-    border: 1px solid rgba(156, 255, 189, 0.24);
+    gap: 18px;
+    padding: 22px;
+    border: 2px solid rgba(139, 105, 20, 0.4);
     background:
-      linear-gradient(135deg, rgba(8, 14, 10, 0.98), rgba(21, 29, 19, 0.95));
-    box-shadow: inset 0 0 0 1px rgba(255, 176, 0, 0.12);
+      linear-gradient(145deg, rgba(26, 18, 8, 0.97), rgba(13, 10, 4, 0.98));
+    box-shadow:
+      inset 0 0 0 1px rgba(58, 90, 40, 0.15),
+      0 2px 12px rgba(0, 0, 0, 0.4);
+    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
   }
 
-  .hardware-avatar-fallback {
-    background: linear-gradient(180deg, rgba(255, 176, 0, 0.18), rgba(0, 255, 65, 0.1));
-    color: #ffcc73;
-    border: 1px solid rgba(255, 176, 0, 0.28);
+  /* ── Solder pads (corner dots) ── */
+  .hw-card__pad {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--hw-solder);
+    box-shadow: 0 0 6px rgba(255, 204, 115, 0.4);
+    opacity: 0.6;
+    transition: opacity 200ms ease, box-shadow 200ms ease;
   }
 
-  .hardware-card__body {
+  .hw-card__pad--tl { top: 6px; left: 6px; }
+  .hw-card__pad--tr { top: 6px; right: 6px; }
+  .hw-card__pad--bl { bottom: 6px; left: 6px; }
+  .hw-card__pad--br { bottom: 6px; right: 6px; }
+
+  /* ── IC chip frame for avatar ── */
+  .hw-card__ic {
+    flex: 0 0 auto;
+    position: relative;
+    border: 2px solid rgba(139, 105, 20, 0.5);
+    padding: 4px;
+    background: rgba(74, 63, 32, 0.3);
+  }
+
+  .hw-card__ic::before,
+  .hw-card__ic::after {
+    content: '';
+    position: absolute;
+    background: rgba(139, 105, 20, 0.3);
+  }
+
+  /* IC pin markers — left side */
+  .hw-card__ic::before {
+    left: -6px;
+    top: 15%;
+    width: 4px;
+    height: 8px;
+    box-shadow:
+      0 16px 0 rgba(139, 105, 20, 0.3),
+      0 32px 0 rgba(139, 105, 20, 0.3),
+      0 48px 0 rgba(139, 105, 20, 0.3);
+  }
+
+  /* IC pin markers — right side */
+  .hw-card__ic::after {
+    right: -6px;
+    top: 15%;
+    width: 4px;
+    height: 8px;
+    box-shadow:
+      0 16px 0 rgba(139, 105, 20, 0.3),
+      0 32px 0 rgba(139, 105, 20, 0.3),
+      0 48px 0 rgba(139, 105, 20, 0.3);
+  }
+
+  .hw-card__ic .member-avatar,
+  .hw-card__ic .member-avatar-fallback {
+    width: 72px;
+    height: 72px;
+    border-radius: 0;
+    border: none;
+  }
+
+  .hw-avatar-fb {
+    background: linear-gradient(180deg, rgba(139, 105, 20, 0.25), rgba(58, 90, 40, 0.15));
+    color: var(--hw-solder);
+    border: 1px solid rgba(139, 105, 20, 0.3);
+    font-size: 22px;
+  }
+
+  .hw-card__body {
     min-width: 0;
+    flex: 1;
   }
 
-  .hardware-card__header {
+  .hw-card__header {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    margin-bottom: 10px;
   }
 
-  .hardware-card__header h3 {
-    font-size: 30px;
+  .hw-card__header h3 {
+    font-size: 28px;
     line-height: 1;
+    color: var(--hw-silk);
   }
 
-  .hardware-card__focus {
-    color: #ffcc73;
-    letter-spacing: 0.08em;
+  .hw-card__focus {
+    color: var(--hw-copper-lt);
+    letter-spacing: 0.06em;
+    font-size: 15px;
   }
 
-  .hardware-card__bio {
-    margin-top: 12px;
-    line-height: 1.45;
+  .hw-card__bio {
+    line-height: 1.5;
+    color: rgba(223, 255, 232, 0.8);
   }
 
+  /* ── Tags as component reference designators ── */
+  .hw-tag {
+    border-color: rgba(139, 105, 20, 0.4);
+    background: rgba(74, 63, 32, 0.2);
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .hw-tag__ref {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--hw-solder);
+    opacity: 0.7;
+  }
+
+  /* ── Empty state ── */
+  .hw-empty {
+    border-color: rgba(139, 105, 20, 0.35);
+    color: var(--hw-copper-lt);
+    background: rgba(13, 10, 4, 0.6);
+  }
+
+  /* ── Hover effects ── */
   @media (prefers-reduced-motion: no-preference) {
-    .hardware-card:hover {
-      transform: translateY(-2px);
-      box-shadow: inset 0 0 0 1px rgba(255, 176, 0, 0.18), 0 0 20px rgba(156, 255, 189, 0.08);
+    .hw-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(139, 105, 20, 0.65);
+      box-shadow:
+        inset 0 0 0 1px rgba(58, 90, 40, 0.25),
+        0 0 20px rgba(139, 105, 20, 0.15),
+        0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    .hw-card:hover .hw-card__pad {
+      opacity: 1;
+      box-shadow: 0 0 10px rgba(255, 204, 115, 0.6);
     }
   }
 
+  /* ── Responsive ── */
   @media (max-width: 720px) {
-    .hardware-hero,
-    .hardware-card {
+    .hw-hero,
+    .hw-card {
       padding: 18px;
     }
 
-    .hardware-card {
+    .hw-card {
       flex-direction: column;
     }
 
-    .hardware-hero__desc {
+    .hw-hero__desc {
       font-size: 20px;
+    }
+
+    .hw-card__ic::before,
+    .hw-card__ic::after {
+      display: none;
     }
   }
 </style>
