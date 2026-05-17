@@ -12,22 +12,47 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
 <Base title="Algorithm Division — CCNU IoT">
   <main class="group-page group-page--algorithm">
     <div class="algo-fx" aria-hidden="true">
+      <div class="algo-fx__noise"></div>
       <div class="algo-fx__scanlines"></div>
+      <div class="algo-fx__glow algo-fx__glow--tl"></div>
+      <div class="algo-fx__glow algo-fx__glow--br"></div>
     </div>
     <GroupPageNav current="algorithm" />
 
     <section class="algo-hero group-shell">
       <canvas class="algo-hero__canvas" aria-hidden="true"></canvas>
       <div class="algo-hero__copy">
-        <p class="algo-hero__eyebrow px">DIVISION 02 / ALGORITHM</p>
-        <h1 class="algo-hero__title glow-hard">INDEX / PARSE / PREDICT</h1>
+        <p class="algo-hero__eyebrow px">[ DIVISION 02 / ALGORITHM ]</p>
+        <h1 class="algo-hero__title">INDEX / PARSE / PREDICT</h1>
         <p class="algo-hero__desc">
           Streams, models, vectors. The system keeps scanning.
         </p>
       </div>
     </section>
 
-    <section class="group-summary group-shell algo-summary">
+    <!-- Marquee strip (SEGC pattern) -->
+    <div class="algo-marquee" aria-hidden="true">
+      <div class="algo-marquee__track">
+        <span>TENSOR</span><span>•</span>
+        <span>MATRIX</span><span>•</span>
+        <span>SIGNAL</span><span>•</span>
+        <span>VISION</span><span>•</span>
+        <span>TRACE</span><span>•</span>
+        <span>VECTOR</span><span>•</span>
+        <span>MODEL</span><span>•</span>
+        <span>PARSE</span><span>•</span>
+        <span>TENSOR</span><span>•</span>
+        <span>MATRIX</span><span>•</span>
+        <span>SIGNAL</span><span>•</span>
+        <span>VISION</span><span>•</span>
+        <span>TRACE</span><span>•</span>
+        <span>VECTOR</span><span>•</span>
+        <span>MODEL</span><span>•</span>
+        <span>PARSE</span><span>•</span>
+      </div>
+    </div>
+
+    <section class="group-summary group-shell algo-summary" data-blur-in>
       <SectionHead marker="SEC.A2" label="STREAM INDEX" />
       <p class="group-summary__lede">
         Archived by cohort. Roles stay on the card.
@@ -46,7 +71,7 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
         <CohortSection cohort={entry.cohort} memberCount={entry.members.length}>
           <div class="algo-card-list">
             {entry.members.map((member) => (
-              <article class="algo-card">
+              <article class="algo-card" data-blur-in>
                 <div class="algo-card__scan" aria-hidden="true"></div>
                 <div class="algo-card__avatar-wrap">
                   {member.avatar ? (
@@ -58,7 +83,7 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
                   )}
                 </div>
                 <div class="algo-card__body">
-                  <p class="algo-card__label px">&#9613; SUBJECT</p>
+                  <p class="algo-card__label px">&#9613; [ SUBJECT ]</p>
                   <h3>{member.name}</h3>
                   <p class="algo-card__focus">&gt; {member.focus}</p>
                   <p class="algo-card__bio">{member.bio}</p>
@@ -85,17 +110,51 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
 </Base>
 
 <style>
+  /* ================================================================
+     ALGORITHM PAGE — SEGC NEON + MATRIX RAIN
+     ================================================================ */
+
   .group-page--algorithm {
+    --algo-green: #1eff1a;
+    --algo-green-dim: rgba(30, 255, 26, 0.5);
+    --algo-glow: rgba(30, 255, 26, 0.25);
     color: #90ff9f;
   }
 
-  /* -- Scanlines overlay -- */
+  /* ── FX Layer ── */
   .algo-fx {
     position: absolute;
     inset: 0;
     pointer-events: none;
     z-index: -1;
     overflow: hidden;
+  }
+
+  /* TV noise texture (SEGC pattern) — CSS-based animated grain */
+  .algo-fx__noise {
+    position: absolute;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
+    opacity: 0.06;
+    mix-blend-mode: screen;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .algo-fx__noise {
+      animation: algo-noise-shift 0.5s steps(4) infinite;
+    }
+  }
+
+  @keyframes algo-noise-shift {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-5%, -5%); }
+    50% { transform: translate(3%, -8%); }
+    75% { transform: translate(-7%, 2%); }
+    100% { transform: translate(0, 0); }
   }
 
   .algo-fx__scanlines {
@@ -105,21 +164,47 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
       180deg,
       transparent 0,
       transparent 2px,
-      rgba(0, 255, 65, 0.03) 2px,
-      rgba(0, 255, 65, 0.03) 3px
+      rgba(30, 255, 26, 0.025) 2px,
+      rgba(30, 255, 26, 0.025) 3px
     );
     mix-blend-mode: screen;
   }
 
-  /* -- Hero -- */
+  /* Page-level glow blobs (SEGC + irys pattern) */
+  .algo-fx__glow {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+
+  .algo-fx__glow--tl {
+    width: 500px;
+    height: 500px;
+    top: 5%;
+    left: -10%;
+    background: radial-gradient(circle, rgba(30, 255, 26, 0.06), transparent 70%);
+    filter: blur(100px);
+  }
+
+  .algo-fx__glow--br {
+    width: 400px;
+    height: 400px;
+    bottom: 20%;
+    right: -8%;
+    background: radial-gradient(circle, rgba(0, 144, 214, 0.04), transparent 70%);
+    filter: blur(80px);
+  }
+
+  /* ── Hero ── */
   .algo-hero {
     position: relative;
     overflow: hidden;
     padding: 0;
-    min-height: 320px;
+    min-height: 360px;
     display: flex;
     align-items: flex-end;
-    border-color: rgba(0, 255, 65, 0.2);
+    border-color: rgba(30, 255, 26, 0.2);
     background: #000;
   }
 
@@ -134,68 +219,134 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
   .algo-hero__copy {
     position: relative;
     max-width: 760px;
-    padding: 32px;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
+    padding: 36px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
     width: 100%;
   }
 
   .algo-hero__eyebrow {
     margin-bottom: 18px;
     font-size: 10px;
-    color: rgba(144, 255, 159, 0.7);
+    color: rgba(144, 255, 159, 0.6);
+    letter-spacing: 0.15em;
   }
 
+  /* Hero title — SEGC multi-layer green glow */
   .algo-hero__title {
-    font-size: clamp(34px, 7vw, 76px);
+    font-size: clamp(36px, 8vw, 84px);
     line-height: 1;
-    margin-bottom: 18px;
-    text-shadow: 0 0 30px rgba(0, 255, 65, 0.4);
+    margin-bottom: 20px;
+    color: var(--algo-green);
+    text-shadow:
+      0 0 10px rgba(30, 255, 26, 0.6),
+      0 0 30px rgba(30, 255, 26, 0.4),
+      0 0 60px rgba(30, 255, 26, 0.2),
+      0 0 100px rgba(30, 255, 26, 0.1),
+      -2px 2px 7px rgba(255, 255, 255, 0.06),
+      4px -3px 14px var(--algo-glow),
+      1px -13px 15px var(--algo-glow),
+      -2px 14px 14px var(--algo-glow);
+    filter: drop-shadow(0 0 20px rgba(30, 255, 26, 0.3));
   }
 
   .algo-hero__desc {
     max-width: 620px;
-    font-size: 24px;
-    line-height: 1.4;
-    color: rgba(144, 255, 159, 0.85);
+    font-size: 22px;
+    line-height: 1.5;
+    color: rgba(144, 255, 159, 0.8);
   }
 
-  /* -- Summary -- */
+  /* ── Marquee strip (SEGC pattern) ── */
+  .algo-marquee {
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 14px 0;
+    border-top: 1px solid rgba(30, 255, 26, 0.1);
+    border-bottom: 1px solid rgba(30, 255, 26, 0.1);
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .algo-marquee__track {
+    display: inline-flex;
+    gap: 24px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: rgba(30, 255, 26, 0.4);
+    letter-spacing: 0.1em;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .algo-marquee__track {
+      animation: algo-marquee 30s linear infinite;
+    }
+  }
+
+  @keyframes algo-marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ── Summary ── */
   .algo-summary {
-    border-color: rgba(0, 255, 65, 0.18);
-    background: rgba(0, 5, 0, 0.85);
+    border-color: rgba(30, 255, 26, 0.15);
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .algo-chip {
-    border-color: rgba(0, 255, 65, 0.25);
-    color: #90ff9f;
+    border-color: rgba(30, 255, 26, 0.25);
+    color: var(--algo-green);
+    border-radius: 4px;
   }
 
-  /* -- Card list -- */
+  /* ── Card list ── */
   .algo-card-list {
     display: grid;
-    gap: 16px;
+    gap: 20px;
   }
 
+  /* ── Cards — SEGC neon terminal style ── */
   .algo-card {
     position: relative;
     overflow: hidden;
     display: grid;
     grid-template-columns: 96px 1fr;
     gap: 20px;
-    padding: 20px;
-    border: 1px dashed rgba(0, 255, 65, 0.3);
-    background: rgba(0, 10, 1, 0.92);
-    transition: border-color 200ms ease;
+    padding: 22px;
+    border: 1px dashed rgba(30, 255, 26, 0.25);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+    transition: transform 200ms ease, box-shadow 300ms ease, border-color 200ms ease;
   }
 
-  /* -- Scan-line hover effect -- */
+  /* Scroll blur-in effect (SEGC pattern) */
+  [data-blur-in] {
+    filter: blur(2px);
+    opacity: 0.6;
+    transform: translateY(8px);
+    transition: filter 0.6s ease, opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  [data-blur-in].is-visible {
+    filter: blur(0);
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Scan-line hover effect */
   .algo-card__scan {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, transparent, rgba(0, 255, 65, 0.08), transparent);
+    background: linear-gradient(180deg, transparent, rgba(30, 255, 26, 0.06), transparent);
     opacity: 0;
     pointer-events: none;
     transform: translateY(-100%);
+    border-radius: inherit;
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -205,7 +356,12 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
     }
 
     .algo-card:hover {
-      border-color: rgba(0, 255, 65, 0.6);
+      border-color: rgba(30, 255, 26, 0.5);
+      transform: translateY(-3px);
+      box-shadow:
+        0 0 20px rgba(30, 255, 26, 0.1),
+        0 0 40px rgba(30, 255, 26, 0.05),
+        0 12px 40px rgba(0, 0, 0, 0.5);
     }
   }
 
@@ -214,15 +370,16 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
     to { transform: translateY(100%); }
   }
 
-  /* -- Avatar -- */
+  /* Avatar */
   .algo-card__avatar-wrap {
     flex: 0 0 auto;
   }
 
   .algo-avatar-fb {
-    background: linear-gradient(180deg, rgba(0, 255, 65, 0.16), rgba(35, 121, 255, 0.12));
+    background: linear-gradient(180deg, rgba(30, 255, 26, 0.15), rgba(0, 144, 214, 0.1));
     color: #91ffac;
-    border: 1px solid rgba(0, 255, 65, 0.24);
+    border: 1px solid rgba(30, 255, 26, 0.3);
+    border-radius: 8px;
     width: 82px;
     height: 82px;
   }
@@ -231,29 +388,46 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
     min-width: 0;
   }
 
+  /* Label with bracket decorations (SEGC pattern) */
   .algo-card__label {
     font-size: 10px;
     margin-bottom: 10px;
-    color: rgba(144, 255, 159, 0.6);
-    animation: algo-cursor 1s steps(2) infinite;
+    color: rgba(144, 255, 159, 0.5);
+    letter-spacing: 0.1em;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .algo-card__label {
+      animation: algo-cursor 1s steps(2) infinite;
+    }
   }
 
   @keyframes algo-cursor {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
+    50% { opacity: 0.3; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .algo-card__label {
       animation: none;
     }
+
+    [data-blur-in] {
+      filter: none;
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
   }
 
   .algo-card h3 {
-    font-size: 28px;
+    font-size: 26px;
     line-height: 1;
     margin-bottom: 8px;
-    text-shadow: 0 0 12px rgba(0, 255, 65, 0.25);
+    color: var(--algo-green);
+    text-shadow:
+      0 0 8px rgba(30, 255, 26, 0.3),
+      0 0 20px rgba(30, 255, 26, 0.15);
   }
 
   .algo-card__focus {
@@ -265,29 +439,39 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
 
   .algo-card__bio {
     line-height: 1.5;
-    color: rgba(144, 255, 159, 0.85);
+    color: rgba(144, 255, 159, 0.8);
   }
 
-  /* -- Tags as inline code -- */
+  /* Tags — bracket-wrapped inline code (SEGC pattern) */
   .algo-tag {
-    border-color: rgba(0, 255, 65, 0.3);
-    background: rgba(0, 255, 65, 0.06);
+    border-color: rgba(30, 255, 26, 0.2);
+    background: rgba(30, 255, 26, 0.04);
     font-family: 'VT323', monospace;
     font-size: 16px;
     padding: 3px 10px;
-    color: #90ff9f;
+    color: var(--algo-green);
+    border-radius: 4px;
+    transition: border-color 200ms ease, background 200ms ease;
   }
 
-  /* -- Empty state -- */
+  @media (prefers-reduced-motion: no-preference) {
+    .algo-card:hover .algo-tag {
+      border-color: rgba(30, 255, 26, 0.4);
+      background: rgba(30, 255, 26, 0.08);
+    }
+  }
+
+  /* Empty state */
   .algo-empty {
-    border-color: rgba(0, 255, 65, 0.3);
-    background: rgba(0, 5, 0, 0.6);
+    border-color: rgba(30, 255, 26, 0.2);
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.6);
   }
 
-  /* -- Responsive -- */
+  /* ── Responsive ── */
   @media (max-width: 720px) {
     .algo-hero {
-      min-height: 240px;
+      min-height: 260px;
     }
 
     .algo-hero__copy {
@@ -300,12 +484,13 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
     }
 
     .algo-hero__desc {
-      font-size: 20px;
+      font-size: 18px;
     }
   }
 </style>
 
 <script>
+  // ── Canvas Matrix rain ──
   (() => {
     const canvas = document.querySelector('.algo-hero__canvas');
     if (!canvas) return;
@@ -352,7 +537,7 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
     }
 
     function drawFrame() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.06)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, w, h);
 
       for (const col of columns) {
@@ -362,11 +547,17 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
 
           const alpha = 1 - j / col.len;
           if (j === 0) {
-            ctx.fillStyle = `rgba(200, 255, 200, ${alpha})`;
-            ctx.shadowColor = '#00ff41';
-            ctx.shadowBlur = 8;
+            // Head: bright white-green with strong glow (SEGC neon)
+            ctx.fillStyle = `rgba(230, 255, 230, ${alpha})`;
+            ctx.shadowColor = '#1eff1a';
+            ctx.shadowBlur = 12;
+          } else if (j < 3) {
+            // Near-head: bright green
+            ctx.fillStyle = `rgba(30, 255, 26, ${alpha * 0.9})`;
+            ctx.shadowColor = '#1eff1a';
+            ctx.shadowBlur = 4;
           } else {
-            ctx.fillStyle = `rgba(0, 255, 65, ${alpha * 0.7})`;
+            ctx.fillStyle = `rgba(30, 255, 26, ${alpha * 0.6})`;
             ctx.shadowBlur = 0;
           }
 
@@ -406,5 +597,24 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
       resizeTimer = setTimeout(resize, 200);
     });
     ro.observe(canvas.parentElement);
+  })();
+
+  // ── Scroll blur-in effect (SEGC pattern) ──
+  (() => {
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    document.querySelectorAll('[data-blur-in]').forEach((el) => observer.observe(el));
   })();
 </script>
