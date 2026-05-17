@@ -11,67 +11,61 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
 
 <Base title="Algorithm Division — CCNU IoT">
   <main class="group-page group-page--algorithm">
-    <div class="algorithm-page-fx" aria-hidden="true">
-      <div class="algorithm-page-fx__rain">
-        <span>01</span><span>10</span><span>fn</span><span>>></span><span>01</span>
-        <span>10</span><span>tx</span><span>01</span><span>fn</span><span>11</span>
-        <span>00</span><span>vec</span><span>01</span><span>10</span><span>fn</span>
-        <span>11</span><span>01</span><span>tx</span><span>00</span><span>10</span>
-      </div>
-      <div class="algorithm-page-fx__scan"></div>
+    <div class="algo-fx" aria-hidden="true">
+      <div class="algo-fx__scanlines"></div>
     </div>
     <GroupPageNav current="algorithm" />
 
-    <section class="algorithm-hero group-shell">
-      <div class="algorithm-rain" aria-hidden="true">
-        <span>010101</span><span>tensor</span><span>matrix</span><span>signal</span><span>vision</span><span>trace</span>
-      </div>
-      <div class="algorithm-hero__copy">
-        <p class="algorithm-hero__eyebrow px">DIVISION 02 / ALGORITHM</p>
-        <h1 class="algorithm-hero__title glow-hard">INDEX / PARSE / PREDICT</h1>
-        <p class="algorithm-hero__desc">
+    <section class="algo-hero group-shell">
+      <canvas class="algo-hero__canvas" aria-hidden="true"></canvas>
+      <div class="algo-hero__copy">
+        <p class="algo-hero__eyebrow px">DIVISION 02 / ALGORITHM</p>
+        <h1 class="algo-hero__title glow-hard">INDEX / PARSE / PREDICT</h1>
+        <p class="algo-hero__desc">
           Streams, models, vectors. The system keeps scanning.
         </p>
       </div>
     </section>
 
-    <section class="group-summary group-shell">
+    <section class="group-summary group-shell algo-summary">
       <SectionHead marker="SEC.A2" label="STREAM INDEX" />
       <p class="group-summary__lede">
         Archived by cohort. Roles stay on the card.
       </p>
       <div class="group-summary__chips">
-        {chips.map((chip) => <span class="group-summary__chip">{chip}</span>)}
+        {chips.map((chip) => <span class="group-summary__chip algo-chip">{chip}</span>)}
       </div>
     </section>
 
     {cohorts.length === 0 ? (
-      <div class="group-empty">
+      <div class="group-empty algo-empty">
         ALGORITHM ROSTER EMPTY. Add cohorts and members to <code>src/data/members.json</code>.
       </div>
     ) : (
       cohorts.map((entry) => (
         <CohortSection cohort={entry.cohort} memberCount={entry.members.length}>
-          <div class="algorithm-card-list">
+          <div class="algo-card-list">
             {entry.members.map((member) => (
-              <article class="algorithm-card">
-                <div class="algorithm-card__scan" aria-hidden="true"></div>
-                <div class="algorithm-card__avatar-wrap">
+              <article class="algo-card">
+                <div class="algo-card__scan" aria-hidden="true"></div>
+                <div class="algo-card__avatar-wrap">
                   {member.avatar ? (
                     <img class="member-avatar" src={member.avatar} alt={`${member.name} avatar`} loading="lazy" />
                   ) : (
-                    <div class="member-avatar-fallback algorithm-avatar-fallback" aria-hidden="true">
+                    <div class="member-avatar-fallback algo-avatar-fb" aria-hidden="true">
                       {member.name.slice(0, 1)}
                     </div>
                   )}
                 </div>
-                <div class="algorithm-card__body">
-                  <p class="algorithm-card__label px">SUBJECT</p>
+                <div class="algo-card__body">
+                  <p class="algo-card__label px">&#9613; SUBJECT</p>
                   <h3>{member.name}</h3>
-                  <p class="algorithm-card__focus">{member.focus}</p>
-                  <p class="algorithm-card__bio">{member.bio}</p>
+                  <p class="algo-card__focus">&gt; {member.focus}</p>
+                  <p class="algo-card__bio">{member.bio}</p>
                   <div class="member-role-tags">
-                    {member.roleTags.map((tag) => <span class="member-role-tag">{tag}</span>)}
+                    {member.roleTags.map((tag) => (
+                      <span class="member-role-tag algo-tag">`{tag}`</span>
+                    ))}
                   </div>
                   {member.links && Object.values(member.links).some(Boolean) && (
                     <div class="member-links">
@@ -95,7 +89,8 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
     color: #90ff9f;
   }
 
-  .algorithm-page-fx {
+  /* -- Scanlines overlay -- */
+  .algo-fx {
     position: absolute;
     inset: 0;
     pointer-events: none;
@@ -103,208 +98,313 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
     overflow: hidden;
   }
 
-  .algorithm-page-fx__rain {
+  .algo-fx__scanlines {
     position: absolute;
     inset: 0;
-    display: grid;
-    grid-template-columns: repeat(20, 1fr);
-    opacity: 0.12;
-  }
-
-  .algorithm-page-fx__rain span {
-    display: block;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    font-family: 'VT323', monospace;
-    font-size: 18px;
-    color: #74ff8f;
-    text-align: center;
-    padding-top: 120px;
-    line-height: 1.6;
-  }
-
-  .algorithm-page-fx__rain span:nth-child(odd) {
-    color: #57ff7e;
-    padding-top: 200px;
-  }
-
-  .algorithm-page-fx__rain span:nth-child(3n) {
-    padding-top: 60px;
-    color: #91ffac;
-  }
-
-  .algorithm-page-fx__scan {
-    position: absolute;
-    inset: 0;
-    background:
-      repeating-linear-gradient(
-        180deg,
-        transparent 0,
-        transparent 2px,
-        rgba(0, 255, 65, 0.04) 2px,
-        rgba(0, 255, 65, 0.04) 3px
-      );
+    background: repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 2px,
+      rgba(0, 255, 65, 0.03) 2px,
+      rgba(0, 255, 65, 0.03) 3px
+    );
     mix-blend-mode: screen;
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    .algorithm-page-fx__rain span {
-      animation: algorithm-page-fall 9s linear infinite;
-    }
-
-    .algorithm-page-fx__rain span:nth-child(odd) {
-      animation-duration: 12s;
-    }
-
-    .algorithm-page-fx__rain span:nth-child(3n) {
-      animation-duration: 7s;
-    }
-  }
-
-  @keyframes algorithm-page-fall {
-    from { transform: translateY(-30px); opacity: 0.05; }
-    50% { opacity: 0.2; }
-    to { transform: translateY(40px); opacity: 0.05; }
-  }
-
-  .algorithm-hero {
+  /* -- Hero -- */
+  .algo-hero {
     position: relative;
     overflow: hidden;
-    padding: 30px;
-    background:
-      radial-gradient(circle at top center, rgba(0, 255, 65, 0.08), transparent 32%),
-      linear-gradient(180deg, rgba(0, 5, 0, 0.98), rgba(0, 12, 3, 0.96));
+    padding: 0;
+    min-height: 320px;
+    display: flex;
+    align-items: flex-end;
+    border-color: rgba(0, 255, 65, 0.2);
+    background: #000;
   }
 
-  .algorithm-rain {
+  .algo-hero__canvas {
     position: absolute;
     inset: 0;
-    display: flex;
-    justify-content: space-around;
-    gap: 16px;
-    overflow: hidden;
-    opacity: 0.18;
-    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    display: block;
   }
 
-  .algorithm-rain span {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
-    color: #74ff8f;
-  }
-
-  .algorithm-hero__copy {
+  .algo-hero__copy {
     position: relative;
     max-width: 760px;
+    padding: 32px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
+    width: 100%;
   }
 
-  .algorithm-hero__eyebrow {
+  .algo-hero__eyebrow {
     margin-bottom: 18px;
     font-size: 10px;
+    color: rgba(144, 255, 159, 0.7);
   }
 
-  .algorithm-hero__title {
+  .algo-hero__title {
     font-size: clamp(34px, 7vw, 76px);
     line-height: 1;
     margin-bottom: 18px;
+    text-shadow: 0 0 30px rgba(0, 255, 65, 0.4);
   }
 
-  .algorithm-hero__desc {
+  .algo-hero__desc {
     max-width: 620px;
     font-size: 24px;
     line-height: 1.4;
+    color: rgba(144, 255, 159, 0.85);
   }
 
-  .algorithm-card-list {
+  /* -- Summary -- */
+  .algo-summary {
+    border-color: rgba(0, 255, 65, 0.18);
+    background: rgba(0, 5, 0, 0.85);
+  }
+
+  .algo-chip {
+    border-color: rgba(0, 255, 65, 0.25);
+    color: #90ff9f;
+  }
+
+  /* -- Card list -- */
+  .algo-card-list {
     display: grid;
-    gap: 14px;
+    gap: 16px;
   }
 
-  .algorithm-card {
+  .algo-card {
     position: relative;
     overflow: hidden;
     display: grid;
     grid-template-columns: 96px 1fr;
-    gap: 18px;
-    padding: 18px;
-    border: 1px solid rgba(0, 255, 65, 0.2);
+    gap: 20px;
+    padding: 20px;
+    border: 1px dashed rgba(0, 255, 65, 0.3);
     background: rgba(0, 10, 1, 0.92);
+    transition: border-color 200ms ease;
   }
 
-  .algorithm-card__scan {
+  /* -- Scan-line hover effect -- */
+  .algo-card__scan {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, transparent, rgba(0, 255, 65, 0.06), transparent);
+    background: linear-gradient(180deg, transparent, rgba(0, 255, 65, 0.08), transparent);
     opacity: 0;
     pointer-events: none;
-  }
-
-  .algorithm-avatar-fallback {
-    background: linear-gradient(180deg, rgba(0, 255, 65, 0.16), rgba(35, 121, 255, 0.12));
-    color: #91ffac;
-    border: 1px solid rgba(0, 255, 65, 0.24);
-  }
-
-  .algorithm-card__label {
-    font-size: 10px;
-    margin-bottom: 10px;
-    color: rgba(144, 255, 159, 0.8);
-  }
-
-  .algorithm-card h3 {
-    font-size: 30px;
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-
-  .algorithm-card__focus {
-    color: #7ef7ff;
-    margin-bottom: 10px;
-  }
-
-  .algorithm-card__bio {
-    line-height: 1.45;
+    transform: translateY(-100%);
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .algorithm-rain span {
-      animation: algorithm-fall 8s linear infinite;
-    }
-
-    .algorithm-rain span:nth-child(2n) {
-      animation-duration: 10s;
-    }
-
-    .algorithm-card:hover .algorithm-card__scan {
+    .algo-card:hover .algo-card__scan {
       opacity: 1;
-      animation: algorithm-scan 900ms linear;
+      animation: algo-scan 800ms linear;
+    }
+
+    .algo-card:hover {
+      border-color: rgba(0, 255, 65, 0.6);
     }
   }
 
-  @keyframes algorithm-fall {
-    from { transform: translateY(-18px); }
-    to { transform: translateY(18px); }
-  }
-
-  @keyframes algorithm-scan {
+  @keyframes algo-scan {
     from { transform: translateY(-100%); }
     to { transform: translateY(100%); }
   }
 
+  /* -- Avatar -- */
+  .algo-card__avatar-wrap {
+    flex: 0 0 auto;
+  }
+
+  .algo-avatar-fb {
+    background: linear-gradient(180deg, rgba(0, 255, 65, 0.16), rgba(35, 121, 255, 0.12));
+    color: #91ffac;
+    border: 1px solid rgba(0, 255, 65, 0.24);
+    width: 82px;
+    height: 82px;
+  }
+
+  .algo-card__body {
+    min-width: 0;
+  }
+
+  .algo-card__label {
+    font-size: 10px;
+    margin-bottom: 10px;
+    color: rgba(144, 255, 159, 0.6);
+    animation: algo-cursor 1s steps(2) infinite;
+  }
+
+  @keyframes algo-cursor {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .algo-card__label {
+      animation: none;
+    }
+  }
+
+  .algo-card h3 {
+    font-size: 28px;
+    line-height: 1;
+    margin-bottom: 8px;
+    text-shadow: 0 0 12px rgba(0, 255, 65, 0.25);
+  }
+
+  .algo-card__focus {
+    color: #7ef7ff;
+    margin-bottom: 10px;
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+  }
+
+  .algo-card__bio {
+    line-height: 1.5;
+    color: rgba(144, 255, 159, 0.85);
+  }
+
+  /* -- Tags as inline code -- */
+  .algo-tag {
+    border-color: rgba(0, 255, 65, 0.3);
+    background: rgba(0, 255, 65, 0.06);
+    font-family: 'VT323', monospace;
+    font-size: 16px;
+    padding: 3px 10px;
+    color: #90ff9f;
+  }
+
+  /* -- Empty state -- */
+  .algo-empty {
+    border-color: rgba(0, 255, 65, 0.3);
+    background: rgba(0, 5, 0, 0.6);
+  }
+
+  /* -- Responsive -- */
   @media (max-width: 720px) {
-    .algorithm-hero,
-    .algorithm-card {
-      padding: 18px;
+    .algo-hero {
+      min-height: 240px;
     }
 
-    .algorithm-card {
+    .algo-hero__copy {
+      padding: 20px;
+    }
+
+    .algo-card {
       grid-template-columns: 1fr;
+      padding: 16px;
     }
 
-    .algorithm-hero__desc {
+    .algo-hero__desc {
       font-size: 20px;
     }
   }
 </style>
+
+<script>
+  (() => {
+    const canvas = document.querySelector('.algo-hero__canvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF(){}[]<>fn=>vec::';
+    const charArr = Array.from(chars);
+
+    const fontSize = 16;
+    let columns = [];
+    let w = 0;
+    let h = 0;
+
+    function resize() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      w = rect.width;
+      h = rect.height;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      initColumns();
+    }
+
+    function initColumns() {
+      const colCount = Math.floor(w / fontSize);
+      columns = [];
+      for (let i = 0; i < colCount; i++) {
+        columns.push({
+          x: i * fontSize,
+          y: Math.random() * h,
+          speed: 0.5 + Math.random() * 1.5,
+          chars: [],
+          len: 12 + Math.floor(Math.random() * 18),
+        });
+        for (let j = 0; j < columns[i].len; j++) {
+          columns[i].chars.push(charArr[Math.floor(Math.random() * charArr.length)]);
+        }
+      }
+    }
+
+    function drawFrame() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.06)';
+      ctx.fillRect(0, 0, w, h);
+
+      for (const col of columns) {
+        for (let j = 0; j < col.len; j++) {
+          const yPos = col.y - j * fontSize;
+          if (yPos < 0 || yPos > h) continue;
+
+          const alpha = 1 - j / col.len;
+          if (j === 0) {
+            ctx.fillStyle = `rgba(200, 255, 200, ${alpha})`;
+            ctx.shadowColor = '#00ff41';
+            ctx.shadowBlur = 8;
+          } else {
+            ctx.fillStyle = `rgba(0, 255, 65, ${alpha * 0.7})`;
+            ctx.shadowBlur = 0;
+          }
+
+          ctx.font = `${fontSize}px monospace`;
+          ctx.fillText(col.chars[j], col.x, yPos);
+        }
+        ctx.shadowBlur = 0;
+
+        col.y += col.speed * fontSize * 0.4;
+
+        if (Math.random() < 0.04) {
+          const idx = Math.floor(Math.random() * col.chars.length);
+          col.chars[idx] = charArr[Math.floor(Math.random() * charArr.length)];
+        }
+
+        if (col.y - col.len * fontSize > h) {
+          col.y = 0;
+          col.speed = 0.5 + Math.random() * 1.5;
+        }
+      }
+
+      if (!reduceMotion) {
+        requestAnimationFrame(drawFrame);
+      }
+    }
+
+    resize();
+    if (reduceMotion) {
+      for (let i = 0; i < 80; i++) drawFrame();
+    } else {
+      requestAnimationFrame(drawFrame);
+    }
+
+    let resizeTimer;
+    const ro = new ResizeObserver(() => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resize, 200);
+    });
+    ro.observe(canvas.parentElement);
+  })();
+</script>
