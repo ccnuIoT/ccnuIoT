@@ -211,23 +211,20 @@ body::after {
 }
 
 .boot-overlay.is-finishing {
-  animation: crtFlash 0.3s steps(2) forwards;
+  /* white phosphor burst — the screen flares before dying */
+  background: #fff;
+  transition: background 0.08s;
 }
 
 .boot-overlay.is-off {
-  animation: crtOff 0.4s steps(3) forwards;
-}
-
-@keyframes crtFlash {
-  0%   { filter: brightness(1); }
-  50%  { filter: brightness(4); background: #001a00; }
-  100% { filter: brightness(1); }
+  background: #000;
+  animation: crtOff 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes crtOff {
   0%   { clip-path: inset(0); opacity: 1; }
-  40%  { clip-path: inset(40% 0 40% 0); opacity: 1; }
-  70%  { clip-path: inset(49% 0 49% 0); opacity: 0.8; }
+  30%  { clip-path: inset(35% 0 35% 0); opacity: 1; }
+  60%  { clip-path: inset(48% 0 48% 0); opacity: 0.6; }
   100% { clip-path: inset(50% 0 50% 0); opacity: 0; }
 }
 
@@ -287,46 +284,56 @@ body::after {
 
 .nav-panel {
   position: fixed;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 100;
-  width: min(880px, calc(100% - 20px));
+  width: clamp(130px, 10vw, 180px);
+  max-height: calc(100vh - 40px);
 }
 
 /* --- device housing: irregular welded scrap metal --- */
 
 .nav-device {
   position: relative;
-  display: grid;
-  grid-template-columns: 200px 1fr;
+  display: flex;
+  flex-direction: column;
   align-items: stretch;
   /* worn metal surface */
   background:
-    /* scratches — diagonal streaks */
     linear-gradient(127deg, transparent 0%, transparent 44%, rgba(255,255,255,0.012) 44.5%, transparent 45%, transparent 100%),
     linear-gradient(-15deg, transparent 0%, transparent 62%, rgba(255,255,255,0.008) 62.3%, transparent 62.8%, transparent 100%),
-    /* paint chip — lighter metal showing through */
     radial-gradient(ellipse 40px 8px at 72% 20%, rgba(80,85,80,0.25), transparent),
-    /* rust spots at edges */
     radial-gradient(ellipse 30px 20px at 5% 90%, rgba(139,69,19,0.12), transparent),
     radial-gradient(ellipse 25px 15px at 95% 15%, rgba(139,69,19,0.08), transparent),
-    /* base metal gradient */
     linear-gradient(180deg, var(--metal-mid) 0%, var(--metal) 40%, #141718 100%);
-  /* irregular organic shape — not a rectangle, like welded scrap metal */
+  /* hanging on the wall — incomplete, tilted */
   clip-path: polygon(
-    2% 10%, 5% 3%, 14% 0%, 22% 4%, 35% 1%, 48% 0%, 55% 3%, 68% 0%, 78% 2%, 88% 0%, 94% 4%,
-    98% 8%, 100% 18%, 99% 30%, 100% 45%, 98.5% 58%, 100% 72%, 99% 85%, 100% 92%,
-    96% 98%, 88% 100%, 78% 97%, 65% 100%, 52% 98%, 40% 100%, 28% 97%, 15% 100%, 6% 98%,
-    1% 94%, 0% 82%, 2% 68%, 0% 52%, 1.5% 38%, 0% 22%, 1% 12%
+    3% 0%, 12% 2%, 28% 0%, 45% 1%, 62% 0%, 80% 2%, 95% 0%,
+    100% 5%, 98% 18%, 100% 32%, 97% 48%, 100% 60%,
+    92% 72%, 78% 78%, 60% 80%, 40% 78%, 22% 76%, 8% 72%,
+    0% 65%, 3% 50%, 0% 35%, 2% 20%, 0% 8%
   );
-  /* drop-shadow respects clip-path — gives the irregular shape a shadow */
   filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
   overflow: hidden;
-  /* "not yet examining" — dim, tilted, like a watch at rest */
-  opacity: 0.72;
-  transform: perspective(800px) rotateX(3deg);
-  transition: opacity 350ms ease-out, transform 350ms ease-out, filter 350ms ease-out;
+  /* hanging idle — tilted, dim, cut off */
+  opacity: 0.65;
+  transform: rotate(6deg) translateX(18px);
+  transition: opacity 400ms ease-out, transform 400ms ease-out, filter 400ms ease-out, clip-path 400ms ease-out;
+}
+
+/* "picking up the device" — levels out, fully visible */
+.nav-device:hover,
+.nav-device:focus-within {
+  opacity: 1;
+  transform: rotate(0deg) translateX(0);
+  clip-path: polygon(
+    2% 3%, 8% 0%, 22% 2%, 40% 0%, 58% 1%, 75% 0%, 90% 2%, 98% 0%,
+    100% 8%, 98% 30%, 100% 55%, 98% 80%, 100% 95%,
+    95% 100%, 78% 98%, 55% 100%, 30% 98%, 10% 100%, 2% 97%,
+    0% 88%, 2% 65%, 0% 40%, 2% 18%, 0% 5%
+  );
+  filter: drop-shadow(0 6px 20px rgba(0,255,65,0.08)) drop-shadow(0 4px 12px rgba(0,0,0,0.6));
 }
 
 /* "raising the watch to look at it" — brightens, levels out, comes alive */
@@ -352,34 +359,34 @@ body::after {
   z-index: 5;
 }
 
-.rivet--tl { top: 8px; left: 10px; }
-.rivet--tr { top: 7px; right: 11px; width: 9px; height: 9px; }
-.rivet--bl { bottom: 8px; left: 12px; width: 11px; height: 11px; }
-.rivet--br { bottom: 7px; right: 9px; }
+.rivet--tl { top: 10px; left: 8px; }
+.rivet--tr { top: 8px; right: 10px; width: 9px; height: 9px; }
+.rivet--bl { bottom: 12px; left: 10px; width: 11px; height: 11px; }
+.rivet--br { bottom: 10px; right: 8px; }
 
 /* tape repair — electrical tape holding it together */
 .tape-repair {
   position: absolute;
   top: -2px;
-  right: 25%;
-  width: 45px;
-  height: 14px;
-  background: linear-gradient(180deg, rgba(30,30,30,0.9), rgba(20,20,20,0.95));
+  left: 30%;
+  width: 40px;
+  height: 12px;
+  background: linear-gradient(90deg, rgba(30,30,30,0.9), rgba(20,20,20,0.95));
   border-radius: 1px;
-  transform: rotate(-2deg);
+  transform: rotate(-3deg);
   z-index: 5;
   box-shadow: 0 1px 2px rgba(0,0,0,0.4);
 }
 
-/* weld seam — where two metal plates join */
+/* weld seam — where two metal plates join (horizontal in vertical layout) */
 .weld-seam {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 200px;
-  width: 3px;
+  left: 0;
+  right: 0;
+  top: 52%;
+  height: 3px;
   background:
-    linear-gradient(180deg,
+    linear-gradient(90deg,
       transparent 0%,
       rgba(80, 70, 50, 0.3) 10%,
       rgba(100, 80, 50, 0.15) 30%,
@@ -399,9 +406,8 @@ body::after {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 14px 12px 10px;
-  gap: 6px;
-  border-right: none; /* weld-seam handles the divide */
+  padding: 14px 10px 8px;
+  gap: 4px;
 }
 
 .nav-watch__dial {
@@ -616,10 +622,10 @@ body::after {
 
 .nav-pushers {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 6px;
-  padding: 14px 16px;
-  align-content: center;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(5, 1fr);
+  gap: 4px;
+  padding: 8px 10px 12px;
 }
 
 .nav-pusher {
@@ -628,8 +634,8 @@ body::after {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  padding: 12px 8px 10px;
+  gap: 3px;
+  padding: 8px 6px 7px;
   text-decoration: none;
   color: var(--green);
   /* recessed button in worn metal */
@@ -720,7 +726,8 @@ body::after {
 .container {
   max-width: 1040px;
   margin: 0 auto;
-  padding: calc(var(--nav-height) + 48px) 20px 40px;
+  padding: 48px 20px 40px;
+  padding-right: clamp(160px, 12vw, 220px);
   position: relative;
   z-index: 10;
 }
@@ -1255,97 +1262,73 @@ footer a:focus-visible {
 }
 
 @media (max-width: 980px) {
-  :root {
-    --nav-height: 140px;
-  }
-
   .nav-panel {
-    width: min(720px, calc(100% - 16px));
-  }
-
-  .nav-device {
-    grid-template-columns: 160px 1fr;
-    clip-path: polygon(
-      1.5% 8%, 6% 1%, 16% 0%, 30% 3%, 48% 0%, 65% 2%, 80% 0%, 92% 3%,
-      98% 7%, 100% 20%, 99% 40%, 100% 60%, 98.5% 80%, 100% 92%,
-      96% 100%, 82% 97%, 65% 100%, 45% 98%, 25% 100%, 10% 97%,
-      0% 90%, 1% 65%, 0% 40%, 1.5% 20%
-    );
-  }
-
-  .weld-seam {
-    left: 160px;
+    width: clamp(110px, 9vw, 150px);
+    right: 8px;
   }
 
   .nav-watch__dial {
-    width: 65px;
-    height: 65px;
+    width: 60px;
+    height: 60px;
   }
 
   .nav-watch__ticks span {
-    transform-origin: 50% 30px;
+    transform-origin: 50% 28px;
   }
 
   .nav-watch__needle {
-    height: 24px;
+    height: 22px;
   }
 
   .nav-watch__scale span {
-    transform: rotate(var(--r)) translateY(-24px) rotate(calc(-1 * var(--r)));
+    transform: rotate(var(--r)) translateY(-22px) rotate(calc(-1 * var(--r)));
+  }
+
+  .container {
+    padding-right: clamp(130px, 10vw, 180px);
   }
 }
 
 @media (max-width: 768px) {
-  :root {
-    --nav-height: 100px;
-  }
-
   .nav-panel {
-    width: calc(100% - 12px);
+    right: 4px;
+    width: 90px;
   }
 
   .nav-device {
-    grid-template-columns: 1fr;
     clip-path: polygon(
-      2% 8%, 8% 0%, 20% 3%, 38% 0%, 55% 2%, 72% 0%, 88% 3%, 96% 0%,
-      100% 10%, 99% 40%, 100% 65%, 98% 90%,
-      95% 100%, 80% 97%, 60% 100%, 40% 98%, 20% 100%, 5% 97%,
-      0% 88%, 1% 55%, 0% 25%
+      5% 0%, 25% 2%, 50% 0%, 75% 2%, 95% 0%,
+      100% 8%, 98% 35%, 100% 60%,
+      90% 75%, 70% 78%, 40% 76%, 15% 72%,
+      0% 60%, 3% 35%, 0% 10%
     );
   }
 
-  .weld-seam {
-    display: none;
-  }
-
-  .tape-repair {
-    display: none;
-  }
-
-  .nav-watch {
-    display: none;
-  }
+  .weld-seam { display: none; }
+  .tape-repair { display: none; }
+  .nav-watch { display: none; }
 
   .nav-pushers {
-    padding: 10px 12px;
-    gap: 5px;
+    padding: 6px 8px 10px;
+    gap: 3px;
   }
 
   .nav-pusher {
-    padding: 10px 6px 8px;
+    padding: 6px 4px 5px;
+    gap: 2px;
   }
 
-  .nav-pusher__name {
-    font-size: 6px;
-  }
+  .nav-pusher__ch { font-size: 4px; }
+  .nav-pusher__name { font-size: 5px; }
 
-  .rivet--tl { top: 6px; left: 8px; }
-  .rivet--tr { top: 5px; right: 8px; }
-  .rivet--bl { bottom: 6px; left: 10px; }
-  .rivet--br { bottom: 5px; right: 7px; }
+  .rivet--tl { top: 4px; left: 6px; }
+  .rivet--tr { top: 3px; right: 6px; }
+  .rivet--bl { bottom: 4px; left: 8px; }
+  .rivet--br { bottom: 3px; right: 5px; }
 
   .container {
-    padding: calc(var(--nav-height) + 24px) 10px 20px;
+    padding: 24px 10px 20px;
+    padding-right: 100px;
   }
 
   .hero-title { font-size: 20px; }
