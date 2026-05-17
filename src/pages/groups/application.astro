@@ -33,8 +33,15 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
         <p class="app-hero__desc">
           UI, mobile, web, services. Built to ship.
         </p>
+        <div class="app-hero__gradient-line" aria-hidden="true"></div>
       </div>
     </section>
+
+    <div class="app-star-divider" aria-hidden="true">
+      <span class="app-star-divider__line"></span>
+      <span class="app-star-divider__star">✦</span>
+      <span class="app-star-divider__line"></span>
+    </div>
 
     <section class="group-summary group-shell app-summary">
       <SectionHead marker="SEC.P3" label="PLAYER ROSTER" />
@@ -45,6 +52,12 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
         {chips.map((chip) => <span class="group-summary__chip app-chip">{chip}</span>)}
       </div>
     </section>
+
+    <div class="app-star-divider" aria-hidden="true">
+      <span class="app-star-divider__line"></span>
+      <span class="app-star-divider__star">✦</span>
+      <span class="app-star-divider__line"></span>
+    </div>
 
     {cohorts.length === 0 ? (
       <div class="group-empty app-empty">
@@ -119,7 +132,7 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
     --app-blue: #abd0ff;
     --app-yellow: #eaff8d;
     --app-pink: #ff6b9d;
-    --app-cyan: #7ef7ff;
+    --app-cyan: #51ffd6;
     --app-night: #0a0e1a;
     color: #eaffd0;
   }
@@ -185,10 +198,25 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
   .app-hero__frame {
     position: relative;
     padding: 32px;
-    border: 3px solid rgba(171, 208, 255, 0.4);
+    border: 3px solid rgba(81, 255, 214, 0.35);
     background:
-      linear-gradient(180deg, rgba(94, 142, 255, 0.08), rgba(153, 255, 131, 0.04));
-    box-shadow: inset 0 0 0 3px rgba(10, 14, 26, 0.9);
+      linear-gradient(180deg, rgba(94, 142, 255, 0.08), rgba(81, 255, 214, 0.04));
+    box-shadow:
+      inset 0 0 0 3px rgba(10, 14, 26, 0.9),
+      0 0 30px rgba(81, 255, 214, 0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* -- Gradient accent line at bottom of hero frame -- */
+  .app-hero__gradient-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--app-cyan), transparent);
+    opacity: 0.6;
   }
 
   /* Pixel corner ornaments */
@@ -216,7 +244,10 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
     line-height: 1.2;
     margin-bottom: 12px;
     color: var(--app-yellow);
-    text-shadow: 3px 3px 0 rgba(255, 107, 157, 0.3);
+    text-shadow:
+      3px 3px 0 rgba(255, 107, 157, 0.3),
+      0 0 25px rgba(81, 255, 214, 0.3),
+      0 0 50px rgba(81, 255, 214, 0.15);
   }
 
   .app-hero__prompt {
@@ -241,6 +272,40 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
     color: rgba(234, 255, 208, 0.85);
   }
 
+  /* -- Star divider (irys-style) -- */
+  .app-star-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 28px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .app-star-divider__line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(81, 255, 214, 0.3), transparent);
+  }
+
+  .app-star-divider__star {
+    color: var(--app-cyan);
+    font-size: 14px;
+    opacity: 0.6;
+    text-shadow: 0 0 10px rgba(81, 255, 214, 0.4);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .app-star-divider__star {
+      animation: app-star-pulse 3s ease-in-out infinite;
+    }
+  }
+
+  @keyframes app-star-pulse {
+    0%, 100% { opacity: 0.6; text-shadow: 0 0 10px rgba(81, 255, 214, 0.4); }
+    50% { opacity: 1; text-shadow: 0 0 18px rgba(81, 255, 214, 0.7); }
+  }
+
   /* -- Summary -- */
   .app-summary {
     border-color: rgba(171, 208, 255, 0.2);
@@ -257,17 +322,36 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 18px;
+    position: relative;
   }
+
+  /* Vertical gradient accent lines as card separators */
+  .app-grid::before,
+  .app-grid::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, rgba(81, 255, 214, 0.2), transparent);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .app-grid::before { left: -9px; }
+  .app-grid::after { right: -9px; }
 
   .app-card {
     position: relative;
     padding: 20px;
-    border: 3px solid rgba(171, 208, 255, 0.35);
-    background: linear-gradient(180deg, rgba(16, 26, 44, 0.96), rgba(10, 14, 26, 0.98));
+    border: 2px solid transparent;
+    background:
+      linear-gradient(rgba(16, 26, 44, 0.96), rgba(10, 14, 26, 0.98)) padding-box,
+      linear-gradient(135deg, rgba(81, 255, 214, 0.3), rgba(171, 208, 255, 0.15), rgba(81, 255, 214, 0.1)) border-box;
     box-shadow:
       inset 0 0 0 3px rgba(10, 14, 26, 0.8),
       0 4px 16px rgba(0, 0, 0, 0.4);
-    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+    transition: transform 200ms ease, box-shadow 200ms ease;
     overflow: hidden;
   }
 
@@ -423,11 +507,11 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
   /* -- Hover effects -- */
   @media (prefers-reduced-motion: no-preference) {
     .app-card:hover {
-      transform: scale(1.02);
-      border-color: rgba(234, 255, 141, 0.5);
+      transform: scale(1.05);
       box-shadow:
         inset 0 0 0 3px rgba(10, 14, 26, 0.8),
-        0 0 20px rgba(234, 255, 141, 0.1),
+        0 0 20px rgba(81, 255, 214, 0.15),
+        0 0 40px rgba(81, 255, 214, 0.08),
         0 8px 32px rgba(0, 0, 0, 0.5);
     }
 
@@ -436,8 +520,13 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
     }
 
     .app-card:hover .app-card__corner {
-      background: var(--app-yellow);
+      background: var(--app-cyan);
       opacity: 0.8;
+      box-shadow: 0 0 8px rgba(81, 255, 214, 0.4);
+    }
+
+    .app-card:hover .app-card__badge {
+      box-shadow: 0 0 12px rgba(81, 255, 214, 0.25);
     }
   }
 
