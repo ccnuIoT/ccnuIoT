@@ -1,38 +1,38 @@
 {
   "hardware": [
     {
-      "cohort": "2025",
+      "cohort": "2024",
       "members": [
         {
-          "name": "陈志远",
+          "name": "狄伟嘉",
           "avatar": "",
           "roleTags": ["组长", "会长"],
-          "focus": "嵌入式系统 / PCB设计",
-          "bio": "主导多块核心板卡设计，擅长STM32和ESP32平台的底层驱动开发。",
+          "focus": "",
+          "bio": "Arch享受者",
           "links": { "github": "", "bilibili": "", "blog": "" }
         },
         {
-          "name": "王梓轩",
+          "name": "刘崔磊",
           "avatar": "",
-          "roleTags": ["副组长"],
-          "focus": "传感器融合 / 信号处理",
-          "bio": "负责多传感器数据融合方案，熟悉I2C/SPI通信协议栈。",
+          "roleTags": [],
+          "focus": "",
+          "bio": "",
           "links": { "github": "", "bilibili": "", "blog": "" }
         },
         {
-          "name": "林雨桐",
+          "name": "孙吴涛",
           "avatar": "",
-          "roleTags": ["委员"],
-          "focus": "电源管理 / 调试测试",
-          "bio": "专注低功耗电源方案设计，热衷于用示波器抓波形分析问题。",
+          "roleTags": ["副会长"],
+          "focus": "",
+          "bio": "",
           "links": { "github": "", "bilibili": "", "blog": "" }
         },
         {
-          "name": "赵明辉",
+          "name": "邢卓涵",
           "avatar": "",
-          "roleTags": ["委员"],
-          "focus": "射频通信 / 天线设计",
-          "bio": "负责LoRa和BLE通信模块调试，对射频链路有深入理解。",
+          "roleTags": ["卫生委员"],
+          "focus": "",
+          "bio": "物联网的mac独苗，头号反贼",
           "links": { "github": "", "bilibili": "", "blog": "" }
         }
       ]
@@ -40,38 +40,22 @@
   ],
   "algorithm": [
     {
-      "cohort": "2025",
+      "cohort": "2024",
       "members": [
         {
-          "name": "张思远",
+          "name": "梅霜",
+          "avatar": "",
+          "roleTags": ["副会长"],
+          "focus": "",
+          "bio": "",
+          "links": { "github": "", "bilibili": "", "blog": "" }
+        },
+        {
+          "name": "刘凌霄",
           "avatar": "",
           "roleTags": ["组长"],
-          "focus": "计算机视觉 / 目标检测",
-          "bio": "主导YOLO系列模型在边缘设备上的部署优化，熟悉TensorRT加速。",
-          "links": { "github": "", "bilibili": "", "blog": "" }
-        },
-        {
-          "name": "李知行",
-          "avatar": "",
-          "roleTags": ["副组长"],
-          "focus": "自然语言处理 / 大模型",
-          "bio": "负责轻量化LLM的微调与推理，探索端侧AI的应用边界。",
-          "links": { "github": "", "bilibili": "", "blog": "" }
-        },
-        {
-          "name": "周子墨",
-          "avatar": "",
-          "roleTags": ["委员"],
-          "focus": "强化学习 / 控制策略",
-          "bio": "将RL算法应用于机器人运动控制，热衷于reward shaping实验。",
-          "links": { "github": "", "bilibili": "", "blog": "" }
-        },
-        {
-          "name": "吴思涵",
-          "avatar": "",
-          "roleTags": ["委员"],
-          "focus": "数据挖掘 / 时序分析",
-          "bio": "专注IoT传感器数据的异常检测与趋势预测，擅长特征工程。",
+          "focus": "",
+          "bio": "",
           "links": { "github": "", "bilibili": "", "blog": "" }
         }
       ]
@@ -79,38 +63,22 @@
   ],
   "application": [
     {
-      "cohort": "2025",
+      "cohort": "2024",
       "members": [
         {
-          "name": "刘星宇",
+          "name": "赵启文",
           "avatar": "",
-          "roleTags": ["组长", "会长"],
-          "focus": "全栈开发 / 系统架构",
-          "bio": "主导协会技术栈选型与后端架构设计，熟悉Next.js和Go。",
+          "roleTags": ["组长", "副会长"],
+          "focus": "",
+          "bio": "协会最菜的",
           "links": { "github": "", "bilibili": "", "blog": "" }
         },
         {
-          "name": "孙若溪",
+          "name": "刘德瑞",
           "avatar": "",
-          "roleTags": ["副组长"],
-          "focus": "UI/UX设计 / 前端开发",
-          "bio": "负责协会所有产品的界面设计与交互实现，像素级还原爱好者。",
-          "links": { "github": "", "bilibili": "", "blog": "" }
-        },
-        {
-          "name": "陈浩然",
-          "avatar": "",
-          "roleTags": ["委员"],
-          "focus": "移动端开发 / Flutter",
-          "bio": "主导协会App的跨平台开发，热衷于流畅动画与原生体验。",
-          "links": { "github": "", "bilibili": "", "blog": "" }
-        },
-        {
-          "name": "黄诗琪",
-          "avatar": "",
-          "roleTags": ["委员"],
-          "focus": "后端服务 / DevOps",
-          "bio": "负责CI/CD流水线与云服务部署，保障协会项目稳定运行。",
+          "roleTags": [""],
+          "focus": "",
+          "bio": "没出现过",
           "links": { "github": "", "bilibili": "", "blog": "" }
         }
       ]
