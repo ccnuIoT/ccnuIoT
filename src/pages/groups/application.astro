@@ -11,6 +11,16 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
 
 <Base title="Application Division — CCNU IoT">
   <main class="group-page group-page--application">
+    <div class="application-page-fx" aria-hidden="true">
+      <div class="application-page-fx__grid"></div>
+      <span class="application-page-fx__chip application-page-fx__chip--a"></span>
+      <span class="application-page-fx__chip application-page-fx__chip--b"></span>
+      <span class="application-page-fx__chip application-page-fx__chip--c"></span>
+      <span class="application-page-fx__chip application-page-fx__chip--d"></span>
+      <span class="application-page-fx__star application-page-fx__star--a"></span>
+      <span class="application-page-fx__star application-page-fx__star--b"></span>
+      <span class="application-page-fx__star application-page-fx__star--c"></span>
+    </div>
     <GroupPageNav current="application" />
 
     <section class="application-hero group-shell">
@@ -18,7 +28,7 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
         <p class="application-hero__eyebrow px">DIVISION 03 / APPLICATION</p>
         <h1 class="application-hero__title">SELECT YOUR PARTY</h1>
         <p class="application-hero__desc">
-          App 组像掌机里的角色编队界面：界面、交互、服务与工程协作，最终都要变成真正可被使用的体验。
+          UI, mobile, web, services. Built to ship.
         </p>
       </div>
     </section>
@@ -26,7 +36,7 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
     <section class="group-summary group-shell">
       <SectionHead marker="SEC.P3" label="PLAYER ROSTER" />
       <p class="group-summary__lede">
-        这里按届展示 App 组成员，保留角色感视觉，但信息密度和可读性优先。
+        Archived by cohort. Roles stay on the card.
       </p>
       <div class="group-summary__chips">
         {chips.map((chip) => <span class="group-summary__chip">{chip}</span>)}
@@ -80,6 +90,72 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
 <style>
   .group-page--application {
     color: #eaffd0;
+  }
+
+  .application-page-fx {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .application-page-fx__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(171, 208, 255, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(171, 208, 255, 0.08) 1px, transparent 1px);
+    background-size: 8px 8px;
+    opacity: 0.5;
+  }
+
+  .application-page-fx__chip {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background:
+      linear-gradient(180deg, rgba(234, 255, 141, 0.4), rgba(94, 142, 255, 0.3));
+    box-shadow:
+      4px 0 0 0 rgba(234, 255, 141, 0.2),
+      0 4px 0 0 rgba(94, 142, 255, 0.2),
+      4px 4px 0 0 rgba(8, 13, 22, 0.4);
+    image-rendering: pixelated;
+  }
+
+  .application-page-fx__chip--a { top: 180px; left: 4%; transform: rotate(0deg); }
+  .application-page-fx__chip--b { top: 460px; right: 6%; transform: rotate(45deg); }
+  .application-page-fx__chip--c { top: 820px; left: 12%; transform: rotate(0deg); }
+  .application-page-fx__chip--d { top: 1180px; right: 14%; transform: rotate(45deg); }
+
+  .application-page-fx__star {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #eaff8d;
+    box-shadow:
+      8px 0 0 0 #eaff8d,
+      -8px 0 0 0 #eaff8d,
+      0 8px 0 0 #eaff8d,
+      0 -8px 0 0 #eaff8d;
+  }
+
+  .application-page-fx__star--a { top: 320px; right: 18%; opacity: 0.5; }
+  .application-page-fx__star--b { top: 660px; left: 26%; opacity: 0.4; }
+  .application-page-fx__star--c { top: 1040px; right: 30%; opacity: 0.45; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .application-page-fx__star {
+      animation: application-twinkle 2.4s steps(2) infinite;
+    }
+
+    .application-page-fx__star--b { animation-delay: 0.8s; }
+    .application-page-fx__star--c { animation-delay: 1.6s; }
+  }
+
+  @keyframes application-twinkle {
+    0%, 100% { opacity: 0.45; transform: scale(1); }
+    50% { opacity: 0.15; transform: scale(0.7); }
   }
 
   .application-hero {

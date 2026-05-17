@@ -11,6 +11,15 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
 
 <Base title="Algorithm Division — CCNU IoT">
   <main class="group-page group-page--algorithm">
+    <div class="algorithm-page-fx" aria-hidden="true">
+      <div class="algorithm-page-fx__rain">
+        <span>01</span><span>10</span><span>fn</span><span>>></span><span>01</span>
+        <span>10</span><span>tx</span><span>01</span><span>fn</span><span>11</span>
+        <span>00</span><span>vec</span><span>01</span><span>10</span><span>fn</span>
+        <span>11</span><span>01</span><span>tx</span><span>00</span><span>10</span>
+      </div>
+      <div class="algorithm-page-fx__scan"></div>
+    </div>
     <GroupPageNav current="algorithm" />
 
     <section class="algorithm-hero group-shell">
@@ -21,7 +30,7 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
         <p class="algorithm-hero__eyebrow px">DIVISION 02 / ALGORITHM</p>
         <h1 class="algorithm-hero__title glow-hard">INDEX / PARSE / PREDICT</h1>
         <p class="algorithm-hero__desc">
-          算法组像一套持续扫描的系统：输入、推断、识别、校正。每位成员的轨迹都像被索引进同一份数据流。
+          Streams, models, vectors. The system keeps scanning.
         </p>
       </div>
     </section>
@@ -29,7 +38,7 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
     <section class="group-summary group-shell">
       <SectionHead marker="SEC.A2" label="STREAM INDEX" />
       <p class="group-summary__lede">
-        按届检索算法组成员，每张卡片展示方向、简介和组内 / 协会职务标签。
+        Archived by cohort. Roles stay on the card.
       </p>
       <div class="group-summary__chips">
         {chips.map((chip) => <span class="group-summary__chip">{chip}</span>)}
@@ -84,6 +93,78 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
 <style>
   .group-page--algorithm {
     color: #90ff9f;
+  }
+
+  .algorithm-page-fx {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .algorithm-page-fx__rain {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    opacity: 0.12;
+  }
+
+  .algorithm-page-fx__rain span {
+    display: block;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+    color: #74ff8f;
+    text-align: center;
+    padding-top: 120px;
+    line-height: 1.6;
+  }
+
+  .algorithm-page-fx__rain span:nth-child(odd) {
+    color: #57ff7e;
+    padding-top: 200px;
+  }
+
+  .algorithm-page-fx__rain span:nth-child(3n) {
+    padding-top: 60px;
+    color: #91ffac;
+  }
+
+  .algorithm-page-fx__scan {
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        180deg,
+        transparent 0,
+        transparent 2px,
+        rgba(0, 255, 65, 0.04) 2px,
+        rgba(0, 255, 65, 0.04) 3px
+      );
+    mix-blend-mode: screen;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .algorithm-page-fx__rain span {
+      animation: algorithm-page-fall 9s linear infinite;
+    }
+
+    .algorithm-page-fx__rain span:nth-child(odd) {
+      animation-duration: 12s;
+    }
+
+    .algorithm-page-fx__rain span:nth-child(3n) {
+      animation-duration: 7s;
+    }
+  }
+
+  @keyframes algorithm-page-fall {
+    from { transform: translateY(-30px); opacity: 0.05; }
+    50% { opacity: 0.2; }
+    to { transform: translateY(40px); opacity: 0.05; }
   }
 
   .algorithm-hero {

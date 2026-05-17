@@ -1355,6 +1355,8 @@ footer a:focus-visible {
   padding: 150px 0 72px;
   position: relative;
   z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
 }
 
 .group-page-nav {
