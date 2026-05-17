@@ -13,15 +13,21 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
   <main class="group-page group-page--application">
     <div class="app-fx" aria-hidden="true">
       <div class="app-fx__grid"></div>
+      <div class="app-fx__aurora"></div>
+      <div class="app-fx__glow app-fx__glow--tl"></div>
+      <div class="app-fx__glow app-fx__glow--br"></div>
       <span class="app-fx__star app-fx__star--a"></span>
       <span class="app-fx__star app-fx__star--b"></span>
       <span class="app-fx__star app-fx__star--c"></span>
       <span class="app-fx__star app-fx__star--d"></span>
       <span class="app-fx__star app-fx__star--e"></span>
+      <span class="app-fx__star app-fx__star--f"></span>
+      <span class="app-fx__star app-fx__star--g"></span>
     </div>
     <GroupPageNav current="application" />
 
     <section class="app-hero group-shell">
+      <div class="app-hero__glow" aria-hidden="true"></div>
       <div class="app-hero__frame">
         <span class="app-hero__corner app-hero__corner--tl" aria-hidden="true"></span>
         <span class="app-hero__corner app-hero__corner--tr" aria-hidden="true"></span>
@@ -39,7 +45,10 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
 
     <div class="app-star-divider" aria-hidden="true">
       <span class="app-star-divider__line"></span>
-      <span class="app-star-divider__star">✦</span>
+      <svg class="app-star-divider__svg" width="24" height="24" viewBox="0 0 50 50" fill="none">
+        <path d="M25.1 0.1C25.09 -0.03 24.91 -0.03 24.9 0.1L24.61 2.36C23.13 13.98 13.98 23.13 2.36 24.61L0.09 24.9C-0.03 24.91 -0.03 25.09 0.09 25.1L2.36 25.39C13.98 26.87 23.13 36.02 24.61 47.64L24.9 49.91C24.91 50.03 25.09 50.03 25.1 49.91L25.39 47.64C26.87 36.02 36.02 26.87 47.64 25.39L49.91 25.1C50.03 25.09 50.03 24.91 49.91 24.9L47.64 24.61C36.02 23.13 26.87 13.98 25.39 2.36L25.1 0.1Z" fill="url(#star-grad-app)"/>
+        <defs><linearGradient id="star-grad-app" x1="25" y1="0" x2="25" y2="50"><stop stop-color="#BAFFEF"/><stop offset="1" stop-color="#51FFD6"/></linearGradient></defs>
+      </svg>
       <span class="app-star-divider__line"></span>
     </div>
 
@@ -55,7 +64,10 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
 
     <div class="app-star-divider" aria-hidden="true">
       <span class="app-star-divider__line"></span>
-      <span class="app-star-divider__star">✦</span>
+      <svg class="app-star-divider__svg" width="24" height="24" viewBox="0 0 50 50" fill="none">
+        <path d="M25.1 0.1C25.09 -0.03 24.91 -0.03 24.9 0.1L24.61 2.36C23.13 13.98 13.98 23.13 2.36 24.61L0.09 24.9C-0.03 24.91 -0.03 25.09 0.09 25.1L2.36 25.39C13.98 26.87 23.13 36.02 24.61 47.64L24.9 49.91C24.91 50.03 25.09 50.03 25.1 49.91L25.39 47.64C26.87 36.02 36.02 26.87 47.64 25.39L49.91 25.1C50.03 25.09 50.03 24.91 49.91 24.9L47.64 24.61C36.02 23.13 26.87 13.98 25.39 2.36L25.1 0.1Z" fill="url(#star-grad-app-2)"/>
+        <defs><linearGradient id="star-grad-app-2" x1="25" y1="0" x2="25" y2="50"><stop stop-color="#BAFFEF"/><stop offset="1" stop-color="#51FFD6"/></linearGradient></defs>
+      </svg>
       <span class="app-star-divider__line"></span>
     </div>
 
@@ -71,7 +83,10 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
               const hp = 50 + ((i * 17) % 50);
               const mp = 30 + ((i * 23) % 70);
               return (
-                <article class="app-card">
+                <article class="app-card" data-card>
+                  <div class="app-card__border" aria-hidden="true"></div>
+                  <div class="app-card__holo-glow" aria-hidden="true"></div>
+                  <div class="app-card__holo-shine" aria-hidden="true"></div>
                   <span class="app-card__corner app-card__corner--tl" aria-hidden="true"></span>
                   <span class="app-card__corner app-card__corner--tr" aria-hidden="true"></span>
                   <span class="app-card__corner app-card__corner--bl" aria-hidden="true"></span>
@@ -128,16 +143,20 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
 </Base>
 
 <style>
+  /* ================================================================
+     APP PAGE — IRYS.XYZ INSPIRED + RPG CHARACTER SELECT
+     ================================================================ */
+
   .group-page--application {
     --app-blue: #abd0ff;
     --app-yellow: #eaff8d;
     --app-pink: #ff6b9d;
     --app-cyan: #51ffd6;
-    --app-night: #0a0e1a;
-    color: #eaffd0;
+    --app-night: #18191a;
+    color: #dbe7e9;
   }
 
-  /* -- Background FX -- */
+  /* ── Background FX ── */
   .app-fx {
     position: absolute;
     inset: 0;
@@ -150,13 +169,73 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(171, 208, 255, 0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(171, 208, 255, 0.06) 1px, transparent 1px);
+      linear-gradient(rgba(81, 255, 214, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(81, 255, 214, 0.04) 1px, transparent 1px);
     background-size: 8px 8px;
-    opacity: 0.6;
+    opacity: 0.5;
   }
 
-  /* -- Pixel stars -- */
+  /* Aurora — slow scrolling color wash (irys.xyz signature) */
+  .app-fx__aurora {
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(100deg,
+        rgba(0, 144, 214, 0.06) 10%,
+        rgba(81, 255, 214, 0.04) 15%,
+        rgba(0, 144, 214, 0.06) 20%,
+        transparent 25%,
+        rgba(0, 144, 214, 0.06) 30%
+      ),
+      repeating-linear-gradient(100deg,
+        var(--app-night) 0%,
+        var(--app-night) 7%,
+        transparent 10%,
+        transparent 12%,
+        var(--app-night) 16%
+      );
+    background-size: 300% 100%, 200% 100%;
+    opacity: 0.5;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .app-fx__aurora {
+      animation: app-aurora 60s linear infinite;
+    }
+  }
+
+  @keyframes app-aurora {
+    0% { background-position: 50% 50%, 50% 50%; }
+    100% { background-position: 350% 50%, 350% 50%; }
+  }
+
+  /* Page-level glow blobs (mix-blend-mode: screen) */
+  .app-fx__glow {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+
+  .app-fx__glow--tl {
+    width: 500px;
+    height: 500px;
+    top: 5%;
+    left: -10%;
+    background: radial-gradient(circle, rgba(81, 255, 214, 0.06), transparent 70%);
+    filter: blur(100px);
+  }
+
+  .app-fx__glow--br {
+    width: 400px;
+    height: 400px;
+    bottom: 15%;
+    right: -8%;
+    background: radial-gradient(circle, rgba(0, 144, 214, 0.05), transparent 70%);
+    filter: blur(80px);
+  }
+
+  /* Pixel stars — more of them, more spread */
   .app-fx__star {
     position: absolute;
     width: 4px;
@@ -169,91 +248,112 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
       0 -4px 0 0 var(--app-yellow);
   }
 
-  .app-fx__star--a { top: 200px; right: 12%; opacity: 0.5; }
-  .app-fx__star--b { top: 500px; left: 8%; opacity: 0.35; }
-  .app-fx__star--c { top: 800px; right: 25%; opacity: 0.45; }
-  .app-fx__star--d { top: 1100px; left: 20%; opacity: 0.3; }
-  .app-fx__star--e { top: 1400px; right: 35%; opacity: 0.4; }
+  .app-fx__star--a { top: 180px; right: 10%; opacity: 0.5; }
+  .app-fx__star--b { top: 450px; left: 6%; opacity: 0.35; }
+  .app-fx__star--c { top: 750px; right: 22%; opacity: 0.45; }
+  .app-fx__star--d { top: 1050px; left: 18%; opacity: 0.3; }
+  .app-fx__star--e { top: 1350px; right: 32%; opacity: 0.4; }
+  .app-fx__star--f { top: 1650px; left: 30%; opacity: 0.25; }
+  .app-fx__star--g { top: 1950px; right: 15%; opacity: 0.35; }
 
   @media (prefers-reduced-motion: no-preference) {
     .app-fx__star { animation: app-twinkle 2.4s steps(2) infinite; }
-    .app-fx__star--b { animation-delay: 0.5s; }
-    .app-fx__star--c { animation-delay: 1s; }
-    .app-fx__star--d { animation-delay: 1.5s; }
-    .app-fx__star--e { animation-delay: 0.3s; }
+    .app-fx__star--b { animation-delay: 0.4s; }
+    .app-fx__star--c { animation-delay: 0.8s; }
+    .app-fx__star--d { animation-delay: 1.2s; }
+    .app-fx__star--e { animation-delay: 0.2s; }
+    .app-fx__star--f { animation-delay: 0.6s; }
+    .app-fx__star--g { animation-delay: 1.0s; }
   }
 
   @keyframes app-twinkle {
     0%, 100% { opacity: 0.5; transform: scale(1); }
-    50% { opacity: 0.1; transform: scale(0.5); }
+    50% { opacity: 0.08; transform: scale(0.4); }
   }
 
-  /* -- Hero -- */
+  /* ── Hero ── */
   .app-hero {
-    padding: 28px;
-    background: linear-gradient(180deg, rgba(18, 27, 46, 0.95), rgba(10, 14, 26, 0.98));
-    border-color: rgba(171, 208, 255, 0.25);
+    position: relative;
+    padding: 32px;
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(24, 25, 26, 0.95), rgba(24, 25, 26, 0.98));
+    border-color: rgba(81, 255, 214, 0.2);
+  }
+
+  /* Hero ambient glow behind the frame */
+  .app-hero__glow {
+    position: absolute;
+    inset: -30px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at 50% 50%, rgba(81, 255, 214, 0.08), transparent 70%);
+    pointer-events: none;
+    filter: blur(40px);
   }
 
   .app-hero__frame {
     position: relative;
-    padding: 32px;
-    border: 3px solid rgba(81, 255, 214, 0.35);
+    padding: 36px;
+    border-radius: 12px;
+    border: 2px solid rgba(81, 255, 214, 0.4);
     background:
-      linear-gradient(180deg, rgba(94, 142, 255, 0.08), rgba(81, 255, 214, 0.04));
+      linear-gradient(180deg, rgba(81, 255, 214, 0.04), rgba(0, 144, 214, 0.03));
     box-shadow:
-      inset 0 0 0 3px rgba(10, 14, 26, 0.9),
-      0 0 30px rgba(81, 255, 214, 0.08);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+      inset 0 0 0 3px rgba(24, 25, 26, 0.85),
+      0 0 40px rgba(81, 255, 214, 0.1);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
   }
 
-  /* -- Gradient accent line at bottom of hero frame -- */
   .app-hero__gradient-line {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     height: 2px;
+    border-radius: 0 0 12px 12px;
     background: linear-gradient(90deg, transparent, var(--app-cyan), transparent);
-    opacity: 0.6;
+    opacity: 0.7;
   }
 
-  /* Pixel corner ornaments */
+  /* Corner ornaments — now with border-radius awareness */
   .app-hero__corner {
     position: absolute;
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     background: var(--app-yellow);
     box-shadow: inset 0 0 0 3px var(--app-night);
+    z-index: 2;
   }
 
-  .app-hero__corner--tl { top: -3px; left: -3px; }
-  .app-hero__corner--tr { top: -3px; right: -3px; }
-  .app-hero__corner--bl { bottom: -3px; left: -3px; }
-  .app-hero__corner--br { bottom: -3px; right: -3px; }
+  .app-hero__corner--tl { top: -2px; left: -2px; border-radius: 4px 0 0 0; }
+  .app-hero__corner--tr { top: -2px; right: -2px; border-radius: 0 4px 0 0; }
+  .app-hero__corner--bl { bottom: -2px; left: -2px; border-radius: 0 0 0 4px; }
+  .app-hero__corner--br { bottom: -2px; right: -2px; border-radius: 0 0 4px 0; }
 
   .app-hero__eyebrow {
     margin-bottom: 16px;
     font-size: 10px;
     color: var(--app-blue);
+    letter-spacing: 0.15em;
   }
 
   .app-hero__title {
-    font-size: clamp(24px, 5vw, 52px);
-    line-height: 1.2;
-    margin-bottom: 12px;
+    font-size: clamp(28px, 6vw, 60px);
+    line-height: 1.1;
+    margin-bottom: 14px;
     color: var(--app-yellow);
     text-shadow:
-      3px 3px 0 rgba(255, 107, 157, 0.3),
-      0 0 25px rgba(81, 255, 214, 0.3),
-      0 0 50px rgba(81, 255, 214, 0.15);
+      3px 3px 0 rgba(255, 107, 157, 0.25),
+      0 0 30px rgba(81, 255, 214, 0.35),
+      0 0 60px rgba(81, 255, 214, 0.15);
+    filter: drop-shadow(0 0 20px rgba(81, 255, 214, 0.2));
   }
 
   .app-hero__prompt {
     font-size: 12px;
     color: var(--app-cyan);
-    margin-bottom: 18px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(81, 255, 214, 0.3);
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -266,17 +366,17 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
   }
 
   .app-hero__desc {
-    font-size: 22px;
-    line-height: 1.45;
+    font-size: 20px;
+    line-height: 1.5;
     max-width: 640px;
-    color: rgba(234, 255, 208, 0.85);
+    color: rgba(219, 231, 233, 0.85);
   }
 
-  /* -- Star divider (irys-style) -- */
+  /* ── Star dividers — irys.xyz 4-pointed star SVG ── */
   .app-star-divider {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     padding: 0 28px;
     max-width: 960px;
     margin: 0 auto;
@@ -285,47 +385,47 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
   .app-star-divider__line {
     flex: 1;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(81, 255, 214, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(81, 255, 214, 0.4), transparent);
   }
 
-  .app-star-divider__star {
-    color: var(--app-cyan);
-    font-size: 14px;
-    opacity: 0.6;
-    text-shadow: 0 0 10px rgba(81, 255, 214, 0.4);
+  .app-star-divider__svg {
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 8px rgba(81, 255, 214, 0.4));
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .app-star-divider__star {
+    .app-star-divider__svg {
       animation: app-star-pulse 3s ease-in-out infinite;
     }
   }
 
   @keyframes app-star-pulse {
-    0%, 100% { opacity: 0.6; text-shadow: 0 0 10px rgba(81, 255, 214, 0.4); }
-    50% { opacity: 1; text-shadow: 0 0 18px rgba(81, 255, 214, 0.7); }
+    0%, 100% { filter: drop-shadow(0 0 8px rgba(81, 255, 214, 0.3)); transform: scale(1); }
+    50% { filter: drop-shadow(0 0 16px rgba(81, 255, 214, 0.6)); transform: scale(1.1); }
   }
 
-  /* -- Summary -- */
+  /* ── Summary ── */
   .app-summary {
-    border-color: rgba(171, 208, 255, 0.2);
-    background: rgba(10, 14, 26, 0.85);
+    border-radius: 16px;
+    border-color: rgba(81, 255, 214, 0.15);
+    background: rgba(24, 25, 26, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .app-chip {
-    border-color: rgba(171, 208, 255, 0.3);
-    color: var(--app-blue);
+    border-color: rgba(81, 255, 214, 0.25);
+    color: var(--app-cyan);
   }
 
-  /* -- Card grid -- */
+  /* ── Card grid ── */
   .app-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
     position: relative;
   }
 
-  /* Vertical gradient accent lines as card separators */
   .app-grid::before,
   .app-grid::after {
     content: '';
@@ -333,26 +433,83 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
     top: 0;
     bottom: 0;
     width: 1px;
-    background: linear-gradient(180deg, transparent, rgba(81, 255, 214, 0.2), transparent);
+    background: linear-gradient(180deg, transparent, rgba(81, 255, 214, 0.25), transparent);
     pointer-events: none;
     z-index: 1;
   }
 
-  .app-grid::before { left: -9px; }
-  .app-grid::after { right: -9px; }
+  .app-grid::before { left: -12px; }
+  .app-grid::after { right: -12px; }
 
+  /* ── Cards — irys.xyz glass + animated border ── */
   .app-card {
     position: relative;
-    padding: 20px;
+    padding: 22px;
+    border-radius: 16px;
     border: 2px solid transparent;
     background:
-      linear-gradient(rgba(16, 26, 44, 0.96), rgba(10, 14, 26, 0.98)) padding-box,
-      linear-gradient(135deg, rgba(81, 255, 214, 0.3), rgba(171, 208, 255, 0.15), rgba(81, 255, 214, 0.1)) border-box;
+      linear-gradient(rgba(24, 25, 26, 0.92), rgba(24, 25, 26, 0.96)) padding-box,
+      linear-gradient(135deg, rgba(81, 255, 214, 0.4), rgba(0, 144, 214, 0.2), rgba(81, 255, 214, 0.15)) border-box;
     box-shadow:
-      inset 0 0 0 3px rgba(10, 14, 26, 0.8),
-      0 4px 16px rgba(0, 0, 0, 0.4);
-    transition: transform 200ms ease, box-shadow 200ms ease;
+      inset 0 0 0 3px rgba(24, 25, 26, 0.7),
+      0 8px 32px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: transform 200ms ease, box-shadow 300ms ease;
     overflow: hidden;
+    z-index: 0;
+  }
+
+  /* Animated conic gradient border (irys.xyz signature) */
+  .app-card__border {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from 0deg,
+      #51FFD6, #51DCFF, #51FFD6, #51DCFF, #51FFD6
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.3;
+    transition: opacity 300ms ease;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .app-card__border {
+      animation: app-border-rotate 4s linear infinite;
+    }
+  }
+
+  @keyframes app-border-rotate {
+    100% { filter: hue-rotate(360deg); }
+  }
+
+  /* Holo glow — mouse-tracking radial (irys.xyz) */
+  .app-card__holo-glow {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 50%), rgba(81, 255, 214, 0.06), rgba(0, 144, 214, 0.03) 50%, transparent 70%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 300ms ease;
+    z-index: -1;
+  }
+
+  /* Holo shine — linear highlight (irys.xyz) */
+  .app-card__holo-shine {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(105deg, transparent 30%, rgba(81, 255, 214, 0.03) 45%, rgba(0, 144, 214, 0.04) 50%, rgba(81, 255, 214, 0.03) 55%, transparent 70%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 300ms ease;
   }
 
   /* Speed lines on hover */
@@ -360,39 +517,45 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
     content: '';
     position: absolute;
     inset: 0;
+    border-radius: inherit;
     background: repeating-conic-gradient(
       from 0deg at 50% 120%,
       transparent 0deg,
-      rgba(171, 208, 255, 0.03) 2deg,
+      rgba(81, 255, 214, 0.025) 2deg,
       transparent 4deg
     );
     opacity: 0;
     pointer-events: none;
     transition: opacity 300ms ease;
+    z-index: -1;
   }
 
-  /* -- Card corner ornaments -- */
+  /* Card corner ornaments */
   .app-card__corner {
     position: absolute;
     width: 8px;
     height: 8px;
     background: var(--app-blue);
-    opacity: 0.5;
+    opacity: 0.4;
+    border-radius: 2px;
+    transition: opacity 200ms ease, background 200ms ease, box-shadow 200ms ease;
   }
 
-  .app-card__corner--tl { top: 0; left: 0; }
-  .app-card__corner--tr { top: 0; right: 0; }
-  .app-card__corner--bl { bottom: 0; left: 0; }
-  .app-card__corner--br { bottom: 0; right: 0; }
+  .app-card__corner--tl { top: 4px; left: 4px; }
+  .app-card__corner--tr { top: 4px; right: 4px; }
+  .app-card__corner--bl { bottom: 4px; left: 4px; }
+  .app-card__corner--br { bottom: 4px; right: 4px; }
 
   .app-card__badge {
     display: inline-block;
     margin-bottom: 14px;
-    padding: 5px 10px;
+    padding: 5px 12px;
     font-size: 9px;
     color: var(--app-night);
     background: var(--app-yellow);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
+    border-radius: 4px;
+    transition: box-shadow 200ms ease;
   }
 
   .app-card__top {
@@ -404,21 +567,23 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
 
   .app-card__portrait {
     flex: 0 0 auto;
-    border: 2px solid var(--app-blue);
-    box-shadow: inset 0 0 0 2px rgba(10, 14, 26, 0.8);
+    border: 2px solid rgba(81, 255, 214, 0.35);
+    box-shadow: inset 0 0 0 2px rgba(24, 25, 26, 0.7);
     padding: 3px;
+    border-radius: 50%;
+    transition: border-color 200ms ease, box-shadow 200ms ease;
   }
 
   .app-card__portrait .member-avatar,
   .app-card__portrait .member-avatar-fallback {
     width: 64px;
     height: 64px;
-    border-radius: 0;
+    border-radius: 50%;
     border: none;
   }
 
   .app-avatar-fb {
-    background: linear-gradient(180deg, rgba(171, 208, 255, 0.18), rgba(234, 255, 141, 0.12));
+    background: linear-gradient(180deg, rgba(81, 255, 214, 0.15), rgba(0, 144, 214, 0.1));
     color: #dffcb0;
     font-size: 20px;
   }
@@ -432,18 +597,18 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
 
   .app-card__class {
     font-size: 9px;
-    color: var(--app-blue);
+    color: var(--app-cyan);
     margin-top: 6px;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
   }
 
   .app-card__bio {
     line-height: 1.5;
-    color: rgba(234, 255, 208, 0.8);
+    color: rgba(219, 231, 233, 0.8);
     margin-bottom: 14px;
   }
 
-  /* -- Stat bars -- */
+  /* Stat bars */
   .app-card__stats {
     margin-bottom: 14px;
     display: flex;
@@ -468,51 +633,68 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
   .app-stat__bar {
     flex: 1;
     height: 10px;
-    background: rgba(171, 208, 255, 0.1);
-    border: 1px solid rgba(171, 208, 255, 0.2);
+    background: rgba(81, 255, 214, 0.06);
+    border: 1px solid rgba(81, 255, 214, 0.15);
+    border-radius: 5px;
     position: relative;
     overflow: hidden;
   }
 
   .app-stat__fill {
     height: 100%;
+    border-radius: 5px;
     transition: width 600ms ease;
   }
 
   .app-stat__fill--hp {
     background: linear-gradient(90deg, #ff4444, #ff6b6b);
-    box-shadow: 0 0 6px rgba(255, 68, 68, 0.4);
+    box-shadow: 0 0 8px rgba(255, 68, 68, 0.5);
   }
 
   .app-stat__fill--mp {
     background: linear-gradient(90deg, #4488ff, #6baaff);
-    box-shadow: 0 0 6px rgba(68, 136, 255, 0.4);
+    box-shadow: 0 0 8px rgba(68, 136, 255, 0.5);
   }
 
-  /* -- Tags -- */
+  /* Tags */
   .app-tag {
-    border-color: rgba(171, 208, 255, 0.3);
-    background: rgba(94, 142, 255, 0.08);
+    border-color: rgba(81, 255, 214, 0.2);
+    background: rgba(81, 255, 214, 0.05);
     font-size: 13px;
-    color: var(--app-blue);
+    color: var(--app-cyan);
+    border-radius: 6px;
+    transition: border-color 200ms ease, background 200ms ease;
   }
 
-  /* -- Empty state -- */
+  /* Empty state */
   .app-empty {
-    border-color: rgba(171, 208, 255, 0.3);
-    color: var(--app-blue);
-    background: rgba(10, 14, 26, 0.6);
+    border-radius: 16px;
+    border-color: rgba(81, 255, 214, 0.2);
+    color: var(--app-cyan);
+    background: rgba(24, 25, 26, 0.6);
   }
 
-  /* -- Hover effects -- */
+  /* ── Hover effects — irys.xyz glow + scale ── */
   @media (prefers-reduced-motion: no-preference) {
     .app-card:hover {
-      transform: scale(1.05);
+      transform: scale(1.03) translateY(-4px);
       box-shadow:
-        inset 0 0 0 3px rgba(10, 14, 26, 0.8),
-        0 0 20px rgba(81, 255, 214, 0.15),
-        0 0 40px rgba(81, 255, 214, 0.08),
-        0 8px 32px rgba(0, 0, 0, 0.5);
+        inset 0 0 0 3px rgba(24, 25, 26, 0.7),
+        0 0 30px rgba(81, 255, 214, 0.2),
+        0 0 60px rgba(81, 255, 214, 0.1),
+        0 12px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .app-card:hover .app-card__border {
+      opacity: 0.8;
+    }
+
+    .app-card:hover .app-card__holo-glow {
+      opacity: 1;
+    }
+
+    .app-card:hover .app-card__holo-shine {
+      opacity: 1;
     }
 
     .app-card:hover::before {
@@ -521,16 +703,26 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
 
     .app-card:hover .app-card__corner {
       background: var(--app-cyan);
-      opacity: 0.8;
-      box-shadow: 0 0 8px rgba(81, 255, 214, 0.4);
+      opacity: 0.9;
+      box-shadow: 0 0 10px rgba(81, 255, 214, 0.5);
     }
 
     .app-card:hover .app-card__badge {
-      box-shadow: 0 0 12px rgba(81, 255, 214, 0.25);
+      box-shadow: 0 0 16px rgba(81, 255, 214, 0.3);
+    }
+
+    .app-card:hover .app-card__portrait {
+      border-color: rgba(81, 255, 214, 0.6);
+      box-shadow: 0 0 12px rgba(81, 255, 214, 0.2);
+    }
+
+    .app-card:hover .app-tag {
+      border-color: rgba(81, 255, 214, 0.4);
+      background: rgba(81, 255, 214, 0.1);
     }
   }
 
-  /* -- Responsive -- */
+  /* ── Responsive ── */
   @media (max-width: 720px) {
     .app-hero,
     .app-hero__frame,
@@ -538,16 +730,50 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
       padding: 14px;
     }
 
+    .app-hero {
+      border-radius: 12px;
+    }
+
+    .app-hero__frame {
+      border-radius: 8px;
+    }
+
+    .app-card {
+      border-radius: 12px;
+    }
+
     .app-card__top {
       align-items: flex-start;
     }
 
     .app-hero__desc {
-      font-size: 20px;
+      font-size: 18px;
     }
 
     .app-card__info h3 {
       font-size: 11px;
     }
+
+    .app-card__portrait {
+      border-radius: 12px;
+    }
+
+    .app-card__portrait .member-avatar,
+    .app-card__portrait .member-avatar-fallback {
+      border-radius: 12px;
+    }
   }
 </style>
+
+<script>
+  // Mouse-tracking holo glow on cards (irys.xyz pattern)
+  document.querySelectorAll('[data-card]').forEach((card) => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      card.style.setProperty('--mx', x + '%');
+      card.style.setProperty('--my', y + '%');
+    });
+  });
+</script>
