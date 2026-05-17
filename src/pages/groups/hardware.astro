@@ -1,0 +1,198 @@
+---
+import Base from '../../layouts/Base.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import GroupPageNav from '../../components/GroupPageNav.astro';
+import CohortSection from '../../components/CohortSection.astro';
+import { getGroupCohorts } from '../../data/members';
+
+const cohorts = getGroupCohorts('hardware');
+const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
+---
+
+<Base title="Hardware Division — CCNU IoT">
+  <main class="group-page group-page--hardware">
+    <GroupPageNav current="hardware" />
+
+    <section class="hardware-hero group-shell">
+      <div class="hardware-hero__grid" aria-hidden="true"></div>
+      <div class="hardware-hero__copy">
+        <p class="hardware-hero__eyebrow px">DIVISION 01 / HARDWARE</p>
+        <h1 class="hardware-hero__title glow-hard">CIRCUIT / SIGNAL / CONTROL</h1>
+        <p class="hardware-hero__desc">
+          从电路设计、焊接调试到嵌入式控制，硬件组像一块持续通电的实验板，
+          每一届成员都在同一条走线上留下自己的焊点。
+        </p>
+      </div>
+    </section>
+
+    <section class="group-summary group-shell">
+      <SectionHead marker="SEC.H1" label="BOARD OVERVIEW" />
+      <p class="group-summary__lede">
+        这里展示硬件组历届成员。信息按届归档，成员卡内保留组内与协会职务标签。
+      </p>
+      <div class="group-summary__chips">
+        {chips.map((chip) => <span class="group-summary__chip">{chip}</span>)}
+      </div>
+    </section>
+
+    {cohorts.length === 0 ? (
+      <div class="group-empty">
+        HARDWARE ROSTER EMPTY. Add cohorts and members to <code>src/data/members.json</code>.
+      </div>
+    ) : (
+      cohorts.map((entry) => (
+        <CohortSection cohort={entry.cohort} memberCount={entry.members.length}>
+          <div class="hardware-card-grid">
+            {entry.members.map((member) => (
+              <article class="hardware-card">
+                {member.avatar ? (
+                  <img class="member-avatar" src={member.avatar} alt={`${member.name} avatar`} loading="lazy" />
+                ) : (
+                  <div class="member-avatar-fallback hardware-avatar-fallback" aria-hidden="true">
+                    {member.name.slice(0, 1)}
+                  </div>
+                )}
+                <div class="hardware-card__body">
+                  <div class="hardware-card__header">
+                    <h3>{member.name}</h3>
+                    <span class="hardware-card__focus">{member.focus}</span>
+                  </div>
+                  <p class="hardware-card__bio">{member.bio}</p>
+                  <div class="member-role-tags">
+                    {member.roleTags.map((tag) => <span class="member-role-tag">{tag}</span>)}
+                  </div>
+                  {member.links && Object.values(member.links).some(Boolean) && (
+                    <div class="member-links">
+                      {member.links.github && <a href={member.links.github}>GitHub</a>}
+                      {member.links.bilibili && <a href={member.links.bilibili}>Bilibili</a>}
+                      {member.links.blog && <a href={member.links.blog}>Blog</a>}
+                    </div>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </CohortSection>
+      ))
+    )}
+  </main>
+</Base>
+
+<style>
+  .group-page--hardware {
+    color: #dfffe8;
+  }
+
+  .hardware-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 32px;
+    border-color: rgba(147, 255, 173, 0.24);
+    background:
+      radial-gradient(circle at top right, rgba(130, 255, 174, 0.12), transparent 30%),
+      linear-gradient(180deg, rgba(8, 22, 14, 0.94), rgba(3, 10, 8, 0.96));
+  }
+
+  .hardware-hero__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(92, 255, 139, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(92, 255, 139, 0.1) 1px, transparent 1px);
+    background-size: 26px 26px;
+    opacity: 0.24;
+    pointer-events: none;
+  }
+
+  .hardware-hero__copy {
+    position: relative;
+    max-width: 760px;
+  }
+
+  .hardware-hero__eyebrow {
+    color: #9cffbd;
+    margin-bottom: 18px;
+    font-size: 10px;
+  }
+
+  .hardware-hero__title {
+    font-size: clamp(34px, 7vw, 76px);
+    line-height: 1;
+    margin-bottom: 18px;
+  }
+
+  .hardware-hero__desc {
+    max-width: 620px;
+    font-size: 24px;
+    line-height: 1.4;
+  }
+
+  .hardware-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .hardware-card {
+    display: flex;
+    gap: 16px;
+    padding: 18px;
+    border: 1px solid rgba(156, 255, 189, 0.24);
+    background:
+      linear-gradient(135deg, rgba(8, 14, 10, 0.98), rgba(21, 29, 19, 0.95));
+    box-shadow: inset 0 0 0 1px rgba(255, 176, 0, 0.12);
+  }
+
+  .hardware-avatar-fallback {
+    background: linear-gradient(180deg, rgba(255, 176, 0, 0.18), rgba(0, 255, 65, 0.1));
+    color: #ffcc73;
+    border: 1px solid rgba(255, 176, 0, 0.28);
+  }
+
+  .hardware-card__body {
+    min-width: 0;
+  }
+
+  .hardware-card__header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .hardware-card__header h3 {
+    font-size: 30px;
+    line-height: 1;
+  }
+
+  .hardware-card__focus {
+    color: #ffcc73;
+    letter-spacing: 0.08em;
+  }
+
+  .hardware-card__bio {
+    margin-top: 12px;
+    line-height: 1.45;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hardware-card:hover {
+      transform: translateY(-2px);
+      box-shadow: inset 0 0 0 1px rgba(255, 176, 0, 0.18), 0 0 20px rgba(156, 255, 189, 0.08);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .hardware-hero,
+    .hardware-card {
+      padding: 18px;
+    }
+
+    .hardware-card {
+      flex-direction: column;
+    }
+
+    .hardware-hero__desc {
+      font-size: 20px;
+    }
+  }
+</style>

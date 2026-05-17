@@ -892,6 +892,12 @@ body::after {
   transition: background-color 160ms ease, box-shadow 160ms ease;
 }
 
+.group-block--link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
 .group-block:hover {
   background: rgba(0, 255, 65, 0.06);
   z-index: 2;
@@ -900,6 +906,11 @@ body::after {
     inset 0 0 20px rgba(0, 255, 65, 0.06),
     0 0 20px rgba(0, 255, 65, 0.04);
   border-color: rgba(0, 255, 65, 0.7);
+}
+
+.group-block--link:hover {
+  border-color: rgba(0, 255, 65, 0.4);
+  box-shadow: 0 0 18px rgba(0, 255, 65, 0.06);
 }
 
 .group-block:hover .group-idx {
@@ -1331,5 +1342,182 @@ footer a:focus-visible {
   .screen-fx::after,
   .screen-fx__noise {
     animation: none !important;
+  }
+}
+
+/* ============================================================
+   GROUP PAGES — SHARED SHELL
+   ============================================================ */
+
+.group-page {
+  width: min(1120px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 150px 0 72px;
+  position: relative;
+  z-index: 1;
+}
+
+.group-page-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.group-page-nav__home,
+.group-page-nav__link {
+  text-decoration: none;
+  color: var(--green);
+  border: 1px solid rgba(0, 255, 65, 0.28);
+  background: rgba(2, 8, 3, 0.7);
+  padding: 10px 14px;
+  letter-spacing: 0.08em;
+  transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+}
+
+.group-page-nav__links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.group-page-nav__home:hover,
+.group-page-nav__link:hover,
+.group-page-nav__link.is-current {
+  border-color: rgba(0, 255, 65, 0.7);
+  background: rgba(0, 255, 65, 0.08);
+  transform: translateY(-1px);
+}
+
+.group-shell {
+  border: 1px solid rgba(0, 255, 65, 0.18);
+  background: rgba(2, 8, 3, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.group-summary {
+  margin-top: 24px;
+  padding: 22px;
+}
+
+.group-summary__lede {
+  font-size: 22px;
+  line-height: 1.4;
+  margin-bottom: 14px;
+}
+
+.group-summary__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.group-summary__chip {
+  border: 1px solid rgba(0, 255, 65, 0.2);
+  padding: 8px 12px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+}
+
+.group-empty {
+  margin-top: 20px;
+  padding: 26px;
+  border: 1px dashed rgba(0, 255, 65, 0.35);
+  color: var(--green);
+  background: rgba(0, 0, 0, 0.38);
+}
+
+.cohort-section {
+  margin-top: 24px;
+  border: 1px solid rgba(0, 255, 65, 0.18);
+  background: rgba(0, 0, 0, 0.38);
+}
+
+.cohort-section__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(0, 255, 65, 0.14);
+}
+
+.cohort-section__title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 16px;
+}
+
+.cohort-section__count {
+  font-size: 18px;
+  color: rgba(0, 255, 65, 0.8);
+}
+
+.cohort-section__body {
+  padding: 18px;
+}
+
+.member-avatar,
+.member-avatar-fallback {
+  width: 82px;
+  height: 82px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.member-avatar {
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.member-avatar-fallback {
+  display: grid;
+  place-items: center;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 24px;
+}
+
+.member-role-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.member-role-tag {
+  padding: 4px 8px;
+  font-size: 14px;
+  border: 1px solid currentColor;
+}
+
+.member-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.member-links a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+
+@media (max-width: 720px) {
+  .group-page {
+    width: min(100%, calc(100% - 18px));
+    padding-top: 132px;
+  }
+
+  .group-summary,
+  .cohort-section__body {
+    padding: 16px;
+  }
+
+  .cohort-section__title {
+    font-size: 14px;
   }
 }

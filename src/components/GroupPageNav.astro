@@ -1,0 +1,30 @@
+---
+import type { GroupSlug } from '../data/members';
+
+interface Props {
+  current: GroupSlug;
+}
+
+const { current } = Astro.props;
+
+const links: { slug: GroupSlug; label: string; href: string }[] = [
+  { slug: 'hardware', label: 'HW', href: '/groups/hardware' },
+  { slug: 'algorithm', label: 'ALGO', href: '/groups/algorithm' },
+  { slug: 'application', label: 'APP', href: '/groups/application' },
+];
+---
+
+<nav class="group-page-nav" aria-label="Group page navigation">
+  <a href="/" class="group-page-nav__home">&larr; HOME</a>
+  <div class="group-page-nav__links">
+    {links.map((link) => (
+      <a
+        href={link.href}
+        class:list={['group-page-nav__link', { 'is-current': link.slug === current }]}
+        aria-current={link.slug === current ? 'page' : undefined}
+      >
+        {link.label}
+      </a>
+    ))}
+  </div>
+</nav>

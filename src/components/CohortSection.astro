@@ -1,0 +1,20 @@
+---
+interface Props {
+  cohort: string;
+  memberCount: number;
+}
+
+const { cohort, memberCount } = Astro.props;
+---
+
+<section class="cohort-section" aria-labelledby={`cohort-${cohort}`}>
+  <div class="cohort-section__header">
+    <h2 id={`cohort-${cohort}`} class="cohort-section__title">
+      {cohort}
+    </h2>
+    <span class="cohort-section__count">{String(memberCount).padStart(2, '0')} MEMBERS</span>
+  </div>
+  <div class="cohort-section__body">
+    <slot />
+  </div>
+</section>
