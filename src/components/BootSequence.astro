@@ -24,13 +24,22 @@
     const overlay = document.getElementById('bootOverlay');
     if (!overlay) return;
 
+    const alreadyBooted = sessionStorage.getItem('booted');
+
+    // Skip boot if already done this session
+    if (alreadyBooted) {
+      overlay.remove();
+      document.dispatchEvent(new CustomEvent('boot-typed'));
+      return;
+    }
+
     const lines = overlay.querySelectorAll<HTMLElement>('.boot-line');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     if (reducedMotion.matches) {
       lines.forEach(l => { l.style.visibility = 'visible'; });
-      overlay.style.display = 'none';
       overlay.remove();
+      sessionStorage.setItem('booted', '1');
       document.dispatchEvent(new CustomEvent('boot-typed'));
       return;
     }
@@ -92,6 +101,7 @@
         await typeLine(line);
       }
 
+      sessionStorage.setItem('booted', '1');
       document.dispatchEvent(new CustomEvent('boot-typed'));
 
       // CRT death: white phosphor burst → collapse to black line → remove
