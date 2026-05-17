@@ -25,6 +25,10 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
       <span class="hw-fx__led hw-fx__led--a"></span>
       <span class="hw-fx__led hw-fx__led--b"></span>
       <span class="hw-fx__led hw-fx__led--c"></span>
+      <span class="hw-fx__orbit hw-fx__orbit--2"></span>
+      <span class="hw-fx__orbit hw-fx__orbit--3"></span>
+      <span class="hw-fx__glow hw-fx__glow--tr"></span>
+      <span class="hw-fx__glow hw-fx__glow--bl"></span>
     </div>
     <GroupPageNav current="hardware" />
 
@@ -131,8 +135,8 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' fill='%23ffffff' opacity='0.05'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%23ffffff' opacity='0.04'/%3E%3C/svg%3E");
     background-repeat: repeat;
     background-size: 4px 4px;
-    opacity: 0.85;
-    mix-blend-mode: overlay;
+    opacity: 0.14;
+    mix-blend-mode: screen;
   }
 
   /* ── Grid overlay (structured background grid) ── */
@@ -140,10 +144,13 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
     content: '';
     position: absolute;
     inset: 0;
+    opacity: 0.08;
     background-image:
-      linear-gradient(rgba(139, 105, 20, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(139, 105, 20, 0.04) 1px, transparent 1px);
-    background-size: 60px 60px;
+      linear-gradient(rgba(139, 105, 20, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139, 105, 20, 0.06) 1px, transparent 1px),
+      /* intersection dots */
+      radial-gradient(circle 1px, rgba(139, 105, 20, 0.12) 1px, transparent 1px);
+    background-size: 60px 60px, 60px 60px, 60px 60px;
     pointer-events: none;
   }
 
@@ -221,10 +228,11 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
     padding: 36px;
     border-color: rgba(139, 105, 20, 0.35);
     background:
-      radial-gradient(ellipse at 50% 40%, rgba(139, 105, 20, 0.08), transparent 60%),
-      radial-gradient(ellipse at 70% 20%, rgba(58, 90, 40, 0.15), transparent 50%),
-      radial-gradient(ellipse at 20% 80%, rgba(139, 105, 20, 0.1), transparent 40%),
-      radial-gradient(ellipse at 85% 65%, rgba(58, 90, 40, 0.06), transparent 45%),
+      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(139, 105, 20, 0.18), transparent 70%),
+      radial-gradient(circle at 30% 60%, rgba(143, 126, 119, 0.12), transparent 50%),
+      radial-gradient(ellipse at 70% 20%, rgba(58, 90, 40, 0.2), transparent 50%),
+      radial-gradient(ellipse at 20% 80%, rgba(139, 105, 20, 0.15), transparent 40%),
+      radial-gradient(ellipse at 85% 65%, rgba(58, 90, 40, 0.12), transparent 45%),
       linear-gradient(180deg, #1a1208, #0d0a04);
   }
 
@@ -243,13 +251,13 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
 
   .hw-hero__heat {
     position: absolute;
-    width: 120px;
-    height: 120px;
+    width: 350px;
+    height: 350px;
     border-radius: 50%;
     top: 20%;
     right: 15%;
-    background: radial-gradient(circle, rgba(139, 105, 20, 0.12), rgba(90, 50, 10, 0.06), transparent 70%);
-    filter: blur(30px);
+    background: radial-gradient(circle, rgba(139, 105, 20, 0.25), rgba(90, 50, 10, 0.15), transparent 70%);
+    filter: blur(80px);
     pointer-events: none;
   }
 
@@ -270,6 +278,8 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
     margin-bottom: 18px;
     color: var(--hw-silk);
     text-shadow:
+      0 0 40px rgba(139, 105, 20, 0.2),
+      0 0 80px rgba(139, 105, 20, 0.08),
       2px 2px 0 rgba(139, 105, 20, 0.3),
       -1px -1px 0 rgba(0, 0, 0, 0.5);
   }
@@ -294,8 +304,8 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
     border-radius: 50%;
     border: 1px solid rgba(139, 105, 20, 0.15);
     box-shadow:
-      inset 0 0 40px rgba(139, 105, 20, 0.04),
-      0 0 40px rgba(139, 105, 20, 0.03);
+      inset 0 0 40px rgba(139, 105, 20, 0.1),
+      0 0 20px rgba(139, 105, 20, 0.08);
     pointer-events: none;
   }
 
@@ -337,6 +347,7 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
     padding: 22px;
     border: 2px solid rgba(139, 105, 20, 0.4);
     background:
+      radial-gradient(ellipse at 50% 0%, rgba(139, 105, 20, 0.06), transparent 60%),
       linear-gradient(145deg, rgba(26, 18, 8, 0.97), rgba(13, 10, 4, 0.98));
     box-shadow:
       inset 0 0 0 1px rgba(58, 90, 40, 0.15),
@@ -371,7 +382,7 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
     height: 18px;
     border-top: 2px solid var(--hw-copper);
     border-left: 2px solid var(--hw-copper);
-    opacity: 0;
+    opacity: 0.3;
     transition: opacity 200ms ease, box-shadow 200ms ease;
     pointer-events: none;
     z-index: 1;
@@ -386,7 +397,7 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
     height: 18px;
     border-bottom: 2px solid var(--hw-copper);
     border-right: 2px solid var(--hw-copper);
-    opacity: 0;
+    opacity: 0.3;
     transition: opacity 200ms ease, box-shadow 200ms ease;
     pointer-events: none;
     z-index: 1;
@@ -521,6 +532,98 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
       opacity: 1;
       box-shadow: 0 0 8px rgba(139, 105, 20, 0.4);
     }
+  }
+
+  /* ── Additional orbital rings ── */
+  .hw-fx__orbit {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(139, 105, 20, 0.2);
+    pointer-events: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .hw-fx__orbit--2 {
+    width: 560px;
+    height: 560px;
+    border-style: dashed;
+    opacity: 0.3;
+  }
+
+  .hw-fx__orbit--3 {
+    width: 720px;
+    height: 720px;
+    border-style: dotted;
+    opacity: 0.15;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hw-fx__orbit--2 { animation: hw-orbit 14s linear infinite reverse; }
+    .hw-fx__orbit--3 { animation: hw-orbit 25s linear infinite; }
+  }
+
+  /* ── Page-level glow blobs ── */
+  .hw-fx__glow {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+
+  .hw-fx__glow--tr {
+    width: 500px;
+    height: 500px;
+    top: 10%;
+    right: -10%;
+    background: radial-gradient(circle, rgba(143, 126, 119, 0.08), transparent 70%);
+    filter: blur(100px);
+  }
+
+  .hw-fx__glow--bl {
+    width: 400px;
+    height: 400px;
+    bottom: 10%;
+    left: -10%;
+    background: radial-gradient(circle, rgba(139, 105, 20, 0.06), transparent 70%);
+    filter: blur(80px);
+  }
+
+  /* ── Card solder-pad pulse ── */
+  @media (prefers-reduced-motion: no-preference) {
+    .hw-card__pad {
+      animation: hw-pad-pulse 4s ease-in-out infinite;
+    }
+  }
+
+  @keyframes hw-pad-pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.7; }
+  }
+
+  /* ── Hero copy corner brackets ── */
+  .hw-hero__copy::before,
+  .hw-hero__copy::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-color: rgba(139, 105, 20, 0.4);
+    border-style: solid;
+    pointer-events: none;
+  }
+
+  .hw-hero__copy::before {
+    top: -12px;
+    left: -12px;
+    border-width: 2px 0 0 2px;
+  }
+
+  .hw-hero__copy::after {
+    bottom: -12px;
+    right: -12px;
+    border-width: 0 2px 2px 0;
   }
 
   /* ── Responsive ── */
