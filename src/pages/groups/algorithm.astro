@@ -196,16 +196,17 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
     filter: blur(80px);
   }
 
-  /* ── Hero ── */
+  /* ── Hero — immersive canvas, no border, title overlays from bottom ── */
   .algo-hero {
     position: relative;
     overflow: hidden;
     padding: 0;
-    min-height: 360px;
+    min-height: 400px;
     display: flex;
     align-items: flex-end;
-    border-color: rgba(30, 255, 26, 0.2);
+    border: none;
     background: #000;
+    border-radius: 0;
   }
 
   .algo-hero__canvas {

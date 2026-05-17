@@ -221,12 +221,15 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
     100% { transform: translate(0, 0); }
   }
 
-  /* ── Hero ── */
+  /* ── Hero — full-bleed PCB board, no visible border ── */
   .hw-hero {
     position: relative;
     overflow: hidden;
-    padding: 36px;
-    border-color: rgba(139, 105, 20, 0.35);
+    padding: 48px 36px 36px;
+    min-height: 380px;
+    display: flex;
+    align-items: flex-end;
+    border: none;
     background:
       radial-gradient(ellipse 80% 60% at 50% 40%, rgba(139, 105, 20, 0.18), transparent 70%),
       radial-gradient(circle at 30% 60%, rgba(143, 126, 119, 0.12), transparent 50%),
@@ -264,6 +267,8 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
   .hw-hero__copy {
     position: relative;
     max-width: 760px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid rgba(139, 105, 20, 0.3);
   }
 
   .hw-hero__eyebrow {

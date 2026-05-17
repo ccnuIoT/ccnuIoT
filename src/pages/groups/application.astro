@@ -271,13 +271,18 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
     50% { opacity: 0.08; transform: scale(0.4); }
   }
 
-  /* ── Hero ── */
+  /* ── Hero — centered game screen window, narrower ── */
   .app-hero {
     position: relative;
-    padding: 32px;
-    border-radius: 16px;
+    padding: 28px;
+    border-radius: 20px;
+    max-width: 800px;
+    margin: 0 auto;
     background: linear-gradient(180deg, rgba(24, 25, 26, 0.95), rgba(24, 25, 26, 0.98));
-    border-color: rgba(81, 255, 214, 0.2);
+    border-color: rgba(81, 255, 214, 0.25);
+    box-shadow:
+      0 0 60px rgba(81, 255, 214, 0.06),
+      0 20px 60px rgba(0, 0, 0, 0.5);
   }
 
   /* Hero ambient glow behind the frame */
@@ -292,16 +297,17 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
 
   .app-hero__frame {
     position: relative;
-    padding: 36px;
-    border-radius: 12px;
-    border: 2px solid rgba(81, 255, 214, 0.4);
+    padding: 40px 32px;
+    border-radius: 14px;
+    border: 3px solid rgba(81, 255, 214, 0.4);
     background:
-      linear-gradient(180deg, rgba(81, 255, 214, 0.04), rgba(0, 144, 214, 0.03));
+      linear-gradient(180deg, rgba(81, 255, 214, 0.05), rgba(0, 144, 214, 0.03));
     box-shadow:
-      inset 0 0 0 3px rgba(24, 25, 26, 0.85),
-      0 0 40px rgba(81, 255, 214, 0.1);
+      inset 0 0 0 4px rgba(24, 25, 26, 0.9),
+      0 0 50px rgba(81, 255, 214, 0.12);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
+    text-align: center;
   }
 
   .app-hero__gradient-line {
@@ -366,9 +372,10 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
   }
 
   .app-hero__desc {
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1.5;
-    max-width: 640px;
+    max-width: 480px;
+    margin: 0 auto;
     color: rgba(219, 231, 233, 0.85);
   }
 

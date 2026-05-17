@@ -1352,7 +1352,7 @@ footer a:focus-visible {
 .group-page {
   width: min(1120px, calc(100% - 28px));
   margin: 0 auto;
-  padding: 150px 0 72px;
+  padding: 88px 0 72px;
   position: relative;
   z-index: 1;
   isolation: isolate;
@@ -1511,7 +1511,7 @@ footer a:focus-visible {
 @media (max-width: 720px) {
   .group-page {
     width: min(100%, calc(100% - 18px));
-    padding-top: 132px;
+    padding-top: 72px;
   }
 
   .group-summary,
