@@ -11,75 +11,102 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
 
 <Base title="Application Division — CCNU IoT">
   <main class="group-page group-page--application">
-    <div class="application-page-fx" aria-hidden="true">
-      <div class="application-page-fx__grid"></div>
-      <span class="application-page-fx__chip application-page-fx__chip--a"></span>
-      <span class="application-page-fx__chip application-page-fx__chip--b"></span>
-      <span class="application-page-fx__chip application-page-fx__chip--c"></span>
-      <span class="application-page-fx__chip application-page-fx__chip--d"></span>
-      <span class="application-page-fx__star application-page-fx__star--a"></span>
-      <span class="application-page-fx__star application-page-fx__star--b"></span>
-      <span class="application-page-fx__star application-page-fx__star--c"></span>
+    <div class="app-fx" aria-hidden="true">
+      <div class="app-fx__grid"></div>
+      <span class="app-fx__star app-fx__star--a"></span>
+      <span class="app-fx__star app-fx__star--b"></span>
+      <span class="app-fx__star app-fx__star--c"></span>
+      <span class="app-fx__star app-fx__star--d"></span>
+      <span class="app-fx__star app-fx__star--e"></span>
     </div>
     <GroupPageNav current="application" />
 
-    <section class="application-hero group-shell">
-      <div class="application-hero__screen">
-        <p class="application-hero__eyebrow px">DIVISION 03 / APPLICATION</p>
-        <h1 class="application-hero__title">SELECT YOUR PARTY</h1>
-        <p class="application-hero__desc">
+    <section class="app-hero group-shell">
+      <div class="app-hero__frame">
+        <span class="app-hero__corner app-hero__corner--tl" aria-hidden="true"></span>
+        <span class="app-hero__corner app-hero__corner--tr" aria-hidden="true"></span>
+        <span class="app-hero__corner app-hero__corner--bl" aria-hidden="true"></span>
+        <span class="app-hero__corner app-hero__corner--br" aria-hidden="true"></span>
+        <p class="app-hero__eyebrow px">DIVISION 03 / APPLICATION</p>
+        <h1 class="app-hero__title px">SELECT YOUR PARTY</h1>
+        <p class="app-hero__prompt px">▶ PRESS START_</p>
+        <p class="app-hero__desc">
           UI, mobile, web, services. Built to ship.
         </p>
       </div>
     </section>
 
-    <section class="group-summary group-shell">
+    <section class="group-summary group-shell app-summary">
       <SectionHead marker="SEC.P3" label="PLAYER ROSTER" />
       <p class="group-summary__lede">
         Archived by cohort. Roles stay on the card.
       </p>
       <div class="group-summary__chips">
-        {chips.map((chip) => <span class="group-summary__chip">{chip}</span>)}
+        {chips.map((chip) => <span class="group-summary__chip app-chip">{chip}</span>)}
       </div>
     </section>
 
     {cohorts.length === 0 ? (
-      <div class="group-empty">
+      <div class="group-empty app-empty">
         APPLICATION ROSTER EMPTY. Add cohorts and members to <code>src/data/members.json</code>.
       </div>
     ) : (
       cohorts.map((entry) => (
         <CohortSection cohort={entry.cohort} memberCount={entry.members.length}>
-          <div class="application-grid">
-            {entry.members.map((member) => (
-              <article class="application-card">
-                <div class="application-card__badge px">READY</div>
-                <div class="application-card__top">
-                  {member.avatar ? (
-                    <img class="member-avatar" src={member.avatar} alt={`${member.name} avatar`} loading="lazy" />
-                  ) : (
-                    <div class="member-avatar-fallback application-avatar-fallback" aria-hidden="true">
-                      {member.name.slice(0, 1)}
+          <div class="app-grid">
+            {entry.members.map((member, i) => {
+              const hp = 50 + ((i * 17) % 50);
+              const mp = 30 + ((i * 23) % 70);
+              return (
+                <article class="app-card">
+                  <span class="app-card__corner app-card__corner--tl" aria-hidden="true"></span>
+                  <span class="app-card__corner app-card__corner--tr" aria-hidden="true"></span>
+                  <span class="app-card__corner app-card__corner--bl" aria-hidden="true"></span>
+                  <span class="app-card__corner app-card__corner--br" aria-hidden="true"></span>
+                  <div class="app-card__badge px">★ READY</div>
+                  <div class="app-card__top">
+                    <div class="app-card__portrait">
+                      {member.avatar ? (
+                        <img class="member-avatar" src={member.avatar} alt={`${member.name} avatar`} loading="lazy" />
+                      ) : (
+                        <div class="member-avatar-fallback app-avatar-fb" aria-hidden="true">
+                          {member.name.slice(0, 1)}
+                        </div>
+                      )}
+                    </div>
+                    <div class="app-card__info">
+                      <h3>★ {member.name}</h3>
+                      <p class="app-card__class px">CLASS: {member.focus}</p>
+                    </div>
+                  </div>
+                  <p class="app-card__bio">{member.bio}</p>
+                  <div class="app-card__stats" aria-hidden="true">
+                    <div class="app-stat">
+                      <span class="app-stat__label">HP</span>
+                      <div class="app-stat__bar">
+                        <div class="app-stat__fill app-stat__fill--hp" style={`width: ${hp}%`}></div>
+                      </div>
+                    </div>
+                    <div class="app-stat">
+                      <span class="app-stat__label">MP</span>
+                      <div class="app-stat__bar">
+                        <div class="app-stat__fill app-stat__fill--mp" style={`width: ${mp}%`}></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="member-role-tags">
+                    {member.roleTags.map((tag) => <span class="member-role-tag app-tag">✦ {tag}</span>)}
+                  </div>
+                  {member.links && Object.values(member.links).some(Boolean) && (
+                    <div class="member-links">
+                      {member.links.github && <a href={member.links.github}>GitHub</a>}
+                      {member.links.bilibili && <a href={member.links.bilibili}>Bilibili</a>}
+                      {member.links.blog && <a href={member.links.blog}>Blog</a>}
                     </div>
                   )}
-                  <div>
-                    <h3>{member.name}</h3>
-                    <p class="application-card__focus">{member.focus}</p>
-                  </div>
-                </div>
-                <p class="application-card__bio">{member.bio}</p>
-                <div class="member-role-tags">
-                  {member.roleTags.map((tag) => <span class="member-role-tag">{tag}</span>)}
-                </div>
-                {member.links && Object.values(member.links).some(Boolean) && (
-                  <div class="member-links">
-                    {member.links.github && <a href={member.links.github}>GitHub</a>}
-                    {member.links.bilibili && <a href={member.links.bilibili}>Bilibili</a>}
-                    {member.links.blog && <a href={member.links.blog}>Blog</a>}
-                  </div>
-                )}
-              </article>
-            ))}
+                </article>
+              );
+            })}
           </div>
         </CohortSection>
       ))
@@ -89,10 +116,16 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
 
 <style>
   .group-page--application {
+    --app-blue: #abd0ff;
+    --app-yellow: #eaff8d;
+    --app-pink: #ff6b9d;
+    --app-cyan: #7ef7ff;
+    --app-night: #0a0e1a;
     color: #eaffd0;
   }
 
-  .application-page-fx {
+  /* -- Background FX -- */
+  .app-fx {
     position: absolute;
     inset: 0;
     pointer-events: none;
@@ -100,168 +133,332 @@ const chips = ['UI', 'MOBILE', 'WEB', 'BACKEND'];
     overflow: hidden;
   }
 
-  .application-page-fx__grid {
+  .app-fx__grid {
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(171, 208, 255, 0.08) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(171, 208, 255, 0.08) 1px, transparent 1px);
+      linear-gradient(rgba(171, 208, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(171, 208, 255, 0.06) 1px, transparent 1px);
     background-size: 8px 8px;
-    opacity: 0.5;
+    opacity: 0.6;
   }
 
-  .application-page-fx__chip {
+  /* -- Pixel stars -- */
+  .app-fx__star {
     position: absolute;
-    width: 24px;
-    height: 24px;
-    background:
-      linear-gradient(180deg, rgba(234, 255, 141, 0.4), rgba(94, 142, 255, 0.3));
+    width: 4px;
+    height: 4px;
+    background: var(--app-yellow);
     box-shadow:
-      4px 0 0 0 rgba(234, 255, 141, 0.2),
-      0 4px 0 0 rgba(94, 142, 255, 0.2),
-      4px 4px 0 0 rgba(8, 13, 22, 0.4);
-    image-rendering: pixelated;
+      4px 0 0 0 var(--app-yellow),
+      -4px 0 0 0 var(--app-yellow),
+      0 4px 0 0 var(--app-yellow),
+      0 -4px 0 0 var(--app-yellow);
   }
 
-  .application-page-fx__chip--a { top: 180px; left: 4%; transform: rotate(0deg); }
-  .application-page-fx__chip--b { top: 460px; right: 6%; transform: rotate(45deg); }
-  .application-page-fx__chip--c { top: 820px; left: 12%; transform: rotate(0deg); }
-  .application-page-fx__chip--d { top: 1180px; right: 14%; transform: rotate(45deg); }
-
-  .application-page-fx__star {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background: #eaff8d;
-    box-shadow:
-      8px 0 0 0 #eaff8d,
-      -8px 0 0 0 #eaff8d,
-      0 8px 0 0 #eaff8d,
-      0 -8px 0 0 #eaff8d;
-  }
-
-  .application-page-fx__star--a { top: 320px; right: 18%; opacity: 0.5; }
-  .application-page-fx__star--b { top: 660px; left: 26%; opacity: 0.4; }
-  .application-page-fx__star--c { top: 1040px; right: 30%; opacity: 0.45; }
+  .app-fx__star--a { top: 200px; right: 12%; opacity: 0.5; }
+  .app-fx__star--b { top: 500px; left: 8%; opacity: 0.35; }
+  .app-fx__star--c { top: 800px; right: 25%; opacity: 0.45; }
+  .app-fx__star--d { top: 1100px; left: 20%; opacity: 0.3; }
+  .app-fx__star--e { top: 1400px; right: 35%; opacity: 0.4; }
 
   @media (prefers-reduced-motion: no-preference) {
-    .application-page-fx__star {
-      animation: application-twinkle 2.4s steps(2) infinite;
-    }
-
-    .application-page-fx__star--b { animation-delay: 0.8s; }
-    .application-page-fx__star--c { animation-delay: 1.6s; }
+    .app-fx__star { animation: app-twinkle 2.4s steps(2) infinite; }
+    .app-fx__star--b { animation-delay: 0.5s; }
+    .app-fx__star--c { animation-delay: 1s; }
+    .app-fx__star--d { animation-delay: 1.5s; }
+    .app-fx__star--e { animation-delay: 0.3s; }
   }
 
-  @keyframes application-twinkle {
-    0%, 100% { opacity: 0.45; transform: scale(1); }
-    50% { opacity: 0.15; transform: scale(0.7); }
+  @keyframes app-twinkle {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.1; transform: scale(0.5); }
   }
 
-  .application-hero {
+  /* -- Hero -- */
+  .app-hero {
     padding: 28px;
-    background:
-      linear-gradient(180deg, rgba(18, 27, 46, 0.94), rgba(8, 13, 22, 0.98));
-    border-color: rgba(138, 187, 255, 0.24);
+    background: linear-gradient(180deg, rgba(18, 27, 46, 0.95), rgba(10, 14, 26, 0.98));
+    border-color: rgba(171, 208, 255, 0.25);
   }
 
-  .application-hero__screen {
-    padding: 24px;
-    border: 4px solid rgba(138, 187, 255, 0.34);
+  .app-hero__frame {
+    position: relative;
+    padding: 32px;
+    border: 3px solid rgba(171, 208, 255, 0.4);
     background:
-      linear-gradient(180deg, rgba(94, 142, 255, 0.14), rgba(153, 255, 131, 0.08));
-    box-shadow: inset 0 0 0 4px rgba(8, 13, 22, 0.9);
+      linear-gradient(180deg, rgba(94, 142, 255, 0.08), rgba(153, 255, 131, 0.04));
+    box-shadow: inset 0 0 0 3px rgba(10, 14, 26, 0.9);
   }
 
-  .application-hero__eyebrow {
+  /* Pixel corner ornaments */
+  .app-hero__corner {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: var(--app-yellow);
+    box-shadow: inset 0 0 0 3px var(--app-night);
+  }
+
+  .app-hero__corner--tl { top: -3px; left: -3px; }
+  .app-hero__corner--tr { top: -3px; right: -3px; }
+  .app-hero__corner--bl { bottom: -3px; left: -3px; }
+  .app-hero__corner--br { bottom: -3px; right: -3px; }
+
+  .app-hero__eyebrow {
     margin-bottom: 16px;
     font-size: 10px;
-    color: #abd0ff;
+    color: var(--app-blue);
   }
 
-  .application-hero__title {
-    font-family: 'Press Start 2P', monospace;
+  .app-hero__title {
     font-size: clamp(24px, 5vw, 52px);
     line-height: 1.2;
-    margin-bottom: 18px;
-    color: #eaff8d;
+    margin-bottom: 12px;
+    color: var(--app-yellow);
+    text-shadow: 3px 3px 0 rgba(255, 107, 157, 0.3);
   }
 
-  .application-hero__desc {
+  .app-hero__prompt {
+    font-size: 12px;
+    color: var(--app-cyan);
+    margin-bottom: 18px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .app-hero__prompt { animation: app-blink 1s steps(2) infinite; }
+  }
+
+  @keyframes app-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .app-hero__desc {
     font-size: 22px;
     line-height: 1.45;
     max-width: 640px;
+    color: rgba(234, 255, 208, 0.85);
   }
 
-  .application-grid {
+  /* -- Summary -- */
+  .app-summary {
+    border-color: rgba(171, 208, 255, 0.2);
+    background: rgba(10, 14, 26, 0.85);
+  }
+
+  .app-chip {
+    border-color: rgba(171, 208, 255, 0.3);
+    color: var(--app-blue);
+  }
+
+  /* -- Card grid -- */
+  .app-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
   }
 
-  .application-card {
+  .app-card {
     position: relative;
-    padding: 18px;
-    border: 2px solid rgba(171, 208, 255, 0.34);
-    background: linear-gradient(180deg, rgba(16, 26, 44, 0.95), rgba(9, 16, 28, 0.98));
-    box-shadow: inset 0 0 0 2px rgba(234, 255, 141, 0.08);
+    padding: 20px;
+    border: 3px solid rgba(171, 208, 255, 0.35);
+    background: linear-gradient(180deg, rgba(16, 26, 44, 0.96), rgba(10, 14, 26, 0.98));
+    box-shadow:
+      inset 0 0 0 3px rgba(10, 14, 26, 0.8),
+      0 4px 16px rgba(0, 0, 0, 0.4);
+    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+    overflow: hidden;
   }
 
-  .application-card__badge {
+  /* Speed lines on hover */
+  .app-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-conic-gradient(
+      from 0deg at 50% 120%,
+      transparent 0deg,
+      rgba(171, 208, 255, 0.03) 2deg,
+      transparent 4deg
+    );
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 300ms ease;
+  }
+
+  /* -- Card corner ornaments -- */
+  .app-card__corner {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--app-blue);
+    opacity: 0.5;
+  }
+
+  .app-card__corner--tl { top: 0; left: 0; }
+  .app-card__corner--tr { top: 0; right: 0; }
+  .app-card__corner--bl { bottom: 0; left: 0; }
+  .app-card__corner--br { bottom: 0; right: 0; }
+
+  .app-card__badge {
     display: inline-block;
     margin-bottom: 14px;
-    padding: 6px 10px;
-    font-size: 10px;
-    color: #08101c;
-    background: #eaff8d;
+    padding: 5px 10px;
+    font-size: 9px;
+    color: var(--app-night);
+    background: var(--app-yellow);
+    letter-spacing: 0.05em;
   }
 
-  .application-card__top {
+  .app-card__top {
     display: flex;
-    gap: 14px;
+    gap: 16px;
     align-items: center;
+    margin-bottom: 14px;
   }
 
-  .application-avatar-fallback {
-    background: linear-gradient(180deg, rgba(171, 208, 255, 0.18), rgba(234, 255, 141, 0.14));
+  .app-card__portrait {
+    flex: 0 0 auto;
+    border: 2px solid var(--app-blue);
+    box-shadow: inset 0 0 0 2px rgba(10, 14, 26, 0.8);
+    padding: 3px;
+  }
+
+  .app-card__portrait .member-avatar,
+  .app-card__portrait .member-avatar-fallback {
+    width: 64px;
+    height: 64px;
+    border-radius: 0;
+    border: none;
+  }
+
+  .app-avatar-fb {
+    background: linear-gradient(180deg, rgba(171, 208, 255, 0.18), rgba(234, 255, 141, 0.12));
     color: #dffcb0;
-    border: 1px solid rgba(171, 208, 255, 0.3);
+    font-size: 20px;
   }
 
-  .application-card h3 {
-    font-size: 28px;
-    line-height: 1;
+  .app-card__info h3 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--app-yellow);
   }
 
-  .application-card__focus {
-    margin-top: 8px;
-    color: #abd0ff;
+  .app-card__class {
+    font-size: 9px;
+    color: var(--app-blue);
+    margin-top: 6px;
+    letter-spacing: 0.06em;
   }
 
-  .application-card__bio {
-    margin-top: 14px;
-    line-height: 1.45;
+  .app-card__bio {
+    line-height: 1.5;
+    color: rgba(234, 255, 208, 0.8);
+    margin-bottom: 14px;
   }
 
+  /* -- Stat bars -- */
+  .app-card__stats {
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .app-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .app-stat__label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--app-blue);
+    width: 24px;
+    flex: 0 0 auto;
+  }
+
+  .app-stat__bar {
+    flex: 1;
+    height: 10px;
+    background: rgba(171, 208, 255, 0.1);
+    border: 1px solid rgba(171, 208, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .app-stat__fill {
+    height: 100%;
+    transition: width 600ms ease;
+  }
+
+  .app-stat__fill--hp {
+    background: linear-gradient(90deg, #ff4444, #ff6b6b);
+    box-shadow: 0 0 6px rgba(255, 68, 68, 0.4);
+  }
+
+  .app-stat__fill--mp {
+    background: linear-gradient(90deg, #4488ff, #6baaff);
+    box-shadow: 0 0 6px rgba(68, 136, 255, 0.4);
+  }
+
+  /* -- Tags -- */
+  .app-tag {
+    border-color: rgba(171, 208, 255, 0.3);
+    background: rgba(94, 142, 255, 0.08);
+    font-size: 13px;
+    color: var(--app-blue);
+  }
+
+  /* -- Empty state -- */
+  .app-empty {
+    border-color: rgba(171, 208, 255, 0.3);
+    color: var(--app-blue);
+    background: rgba(10, 14, 26, 0.6);
+  }
+
+  /* -- Hover effects -- */
   @media (prefers-reduced-motion: no-preference) {
-    .application-card:hover {
-      transform: translateY(-2px) scale(1.01);
+    .app-card:hover {
+      transform: scale(1.02);
+      border-color: rgba(234, 255, 141, 0.5);
+      box-shadow:
+        inset 0 0 0 3px rgba(10, 14, 26, 0.8),
+        0 0 20px rgba(234, 255, 141, 0.1),
+        0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    .app-card:hover::before {
+      opacity: 1;
+    }
+
+    .app-card:hover .app-card__corner {
+      background: var(--app-yellow);
+      opacity: 0.8;
     }
   }
 
+  /* -- Responsive -- */
   @media (max-width: 720px) {
-    .application-hero,
-    .application-hero__screen,
-    .application-card {
-      padding: 16px;
+    .app-hero,
+    .app-hero__frame,
+    .app-card {
+      padding: 14px;
     }
 
-    .application-card__top {
+    .app-card__top {
       align-items: flex-start;
     }
 
-    .application-hero__desc {
+    .app-hero__desc {
       font-size: 20px;
+    }
+
+    .app-card__info h3 {
+      font-size: 11px;
     }
   }
 </style>
