@@ -127,12 +127,24 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
 
   .hw-fx__noise {
     position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' fill='%23ffffff' opacity='0.03'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%23ffffff' opacity='0.02'/%3E%3C/svg%3E");
+    inset: -20%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' fill='%23ffffff' opacity='0.05'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%23ffffff' opacity='0.04'/%3E%3C/svg%3E");
     background-repeat: repeat;
     background-size: 4px 4px;
-    opacity: 0.7;
+    opacity: 0.85;
     mix-blend-mode: overlay;
+  }
+
+  /* ── Grid overlay (structured background grid) ── */
+  .hw-fx::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(139, 105, 20, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139, 105, 20, 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
   }
 
   /* ── Traces (broken PCB traces scattered across page) ── */
@@ -182,11 +194,24 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
     .hw-fx__led--a { animation: hw-pulse 2.5s ease-in-out infinite; }
     .hw-fx__led--b { animation: hw-pulse 3s ease-in-out infinite 0.8s; }
     .hw-fx__led--c { animation: hw-pulse 2.2s ease-in-out infinite 1.5s; }
+    .hw-fx__noise { animation: hw-noise-drift 8s linear infinite; }
+    .hw-hero::before { animation: hw-orbit 20s linear infinite; }
   }
 
   @keyframes hw-pulse {
     0%, 100% { opacity: 0.4; box-shadow: 0 0 4px rgba(255, 204, 115, 0.2); }
     50% { opacity: 1; box-shadow: 0 0 12px rgba(255, 204, 115, 0.6), 0 0 28px rgba(255, 204, 115, 0.25); }
+  }
+
+  @keyframes hw-orbit {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes hw-noise-drift {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(-10px, -8px); }
+    100% { transform: translate(0, 0); }
   }
 
   /* ── Hero ── */
@@ -196,8 +221,10 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
     padding: 36px;
     border-color: rgba(139, 105, 20, 0.35);
     background:
+      radial-gradient(ellipse at 50% 40%, rgba(139, 105, 20, 0.08), transparent 60%),
       radial-gradient(ellipse at 70% 20%, rgba(58, 90, 40, 0.15), transparent 50%),
       radial-gradient(ellipse at 20% 80%, rgba(139, 105, 20, 0.1), transparent 40%),
+      radial-gradient(ellipse at 85% 65%, rgba(58, 90, 40, 0.06), transparent 45%),
       linear-gradient(180deg, #1a1208, #0d0a04);
   }
 
@@ -254,6 +281,37 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
     color: rgba(223, 255, 232, 0.85);
   }
 
+  /* ── Orbital ring (animated circle around hero center) ── */
+  .hw-hero::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 420px;
+    height: 420px;
+    margin-top: -210px;
+    margin-left: -210px;
+    border-radius: 50%;
+    border: 1px solid rgba(139, 105, 20, 0.15);
+    box-shadow:
+      inset 0 0 40px rgba(139, 105, 20, 0.04),
+      0 0 40px rgba(139, 105, 20, 0.03);
+    pointer-events: none;
+  }
+
+  /* ── Mist / fog layer ── */
+  .hw-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -20%;
+    left: -10%;
+    width: 80%;
+    height: 60%;
+    background: radial-gradient(ellipse, rgba(139, 105, 20, 0.06), transparent 70%);
+    filter: blur(60px);
+    pointer-events: none;
+  }
+
   /* ── Summary section ── */
   .hw-summary {
     border-color: rgba(139, 105, 20, 0.25);
@@ -302,6 +360,37 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
   .hw-card__pad--tr { top: 6px; right: 6px; }
   .hw-card__pad--bl { bottom: 6px; left: 6px; }
   .hw-card__pad--br { bottom: 6px; right: 6px; }
+
+  /* ── Corner bracket ornaments (Astral Frontier style) ── */
+  .hw-card::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    width: 18px;
+    height: 18px;
+    border-top: 2px solid var(--hw-copper);
+    border-left: 2px solid var(--hw-copper);
+    opacity: 0;
+    transition: opacity 200ms ease, box-shadow 200ms ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .hw-card::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    width: 18px;
+    height: 18px;
+    border-bottom: 2px solid var(--hw-copper);
+    border-right: 2px solid var(--hw-copper);
+    opacity: 0;
+    transition: opacity 200ms ease, box-shadow 200ms ease;
+    pointer-events: none;
+    z-index: 1;
+  }
 
   /* ── IC chip frame for avatar ── */
   .hw-card__ic {
@@ -425,6 +514,12 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
     .hw-card:hover .hw-card__pad {
       opacity: 1;
       box-shadow: 0 0 10px rgba(255, 204, 115, 0.6);
+    }
+
+    .hw-card:hover::before,
+    .hw-card:hover::after {
+      opacity: 1;
+      box-shadow: 0 0 8px rgba(139, 105, 20, 0.4);
     }
   }
 
