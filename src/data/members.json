@@ -34,6 +34,14 @@
           "focus": "",
           "bio": "物联网的mac独苗，头号反贼",
           "links": { "github": "", "bilibili": "", "blog": "" }
+        },
+        {
+          "name": "丁雨杭",
+          "avatar": "",
+          "roleTags": ["宣传委员"],
+          "focus": "",
+          "bio": "混子一个",
+          "links": { "github": "", "bilibili": "", "blog": "" }
         }
       ]
     }
