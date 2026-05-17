@@ -1,16 +1,110 @@
-<section class="hero">
+<section class="hero" id="heroSection">
   <div class="sys-header">
-    ROBCO INDUSTRIES UNIFIED OPERATING SYSTEM<br>
-    COPYRIGHT 2075-2077 ROBCO INDUSTRIES<br>
-    <span class="val">- CCNU IoT ASSOCIATION TERMINAL v4.0 -</span>
+    <span class="type-line">ROBCO INDUSTRIES UNIFIED OPERATING SYSTEM</span><br>
+    <span class="type-line">COPYRIGHT 2075-2077 ROBCO INDUSTRIES</span><br>
+    <span class="type-line val">- CCNU IoT ASSOCIATION TERMINAL v4.0 -</span>
   </div>
-  <h1 class="hero-title glow-hard" data-text="CONNECT&#10;EVERYTHING">CONNECT<br>EVERYTHING</h1>
+  <h1 class="hero-title glow-hard" data-text="CONNECT&#10;EVERYTHING" id="heroTitle">
+    <span class="type-line">CONNECT</span><br>
+    <span class="type-line">EVERYTHING</span>
+  </h1>
   <p class="hero-sub">
-    华中师范大学物联网协会。
+    <span class="type-line">华中师范大学物联网协会。</span>
   </p>
-  <div class="hero-actions">
+  <div class="hero-actions" id="heroActions" style="opacity:0">
     <button class="btn-term primary">[ JOIN ]</button>
     <button class="btn-term">[ PROJECTS ]</button>
     <button class="btn-term">[ HELP ]</button>
   </div>
 </section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const heroSection = document.getElementById('heroSection');
+    const lines = document.querySelectorAll<HTMLElement>('.hero .type-line');
+    const title = document.getElementById('heroTitle');
+    const actions = document.getElementById('heroActions');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function showAll() {
+      heroSection?.classList.add('is-active');
+      lines.forEach(l => { l.style.visibility = 'visible'; });
+      if (title) title.classList.add('is-typed');
+      if (actions) actions.style.opacity = '1';
+      document.dispatchEvent(new CustomEvent('hero-typed'));
+    }
+
+    if (reducedMotion.matches) {
+      document.addEventListener('boot-typed', showAll, { once: true });
+      return;
+    }
+
+    const SPEED = 14;
+    const JITTER = 6;
+    const LINE_GAP = 80;
+    const TITLE_LINE_GAP = 280;
+    const CURSOR = '▌';
+
+    const cursor = document.createElement('span');
+    cursor.className = 'type-cursor-char';
+    cursor.textContent = CURSOR;
+
+    function rand(min: number, max: number) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function sleep(ms: number) {
+      return new Promise<void>(r => setTimeout(r, ms));
+    }
+
+    async function typeLine(el: HTMLElement, speed: number, gap: number) {
+      el.style.visibility = 'visible';
+      const text = el.textContent || '';
+      el.textContent = '';
+      el.appendChild(cursor);
+
+      for (const ch of text) {
+        cursor.before(ch);
+        await sleep(rand(speed - JITTER, speed + JITTER));
+      }
+
+      cursor.remove();
+      await sleep(gap);
+    }
+
+    async function run() {
+      // Hero section becomes visible (was hidden during boot)
+      heroSection?.classList.add('is-active');
+
+      const lineArr = Array.from(lines);
+
+      for (let i = 0; i < lineArr.length; i++) {
+        const isTitle = lineArr[i].closest('.hero-title') !== null;
+        const speed = isTitle ? 24 : SPEED;
+        const gap = isTitle ? TITLE_LINE_GAP : LINE_GAP;
+        await typeLine(lineArr[i], speed, gap);
+        if (isTitle) title?.classList.add('is-typed');
+      }
+
+      // Cursor holds on last line
+      const lastLine = lineArr[lineArr.length - 1];
+      lastLine.appendChild(cursor);
+      await sleep(1800);
+      cursor.remove();
+
+      // Buttons
+      if (actions) {
+        actions.style.transition = 'opacity 0.3s ease-in';
+        actions.style.opacity = '1';
+        await sleep(300);
+      }
+
+      document.dispatchEvent(new CustomEvent('hero-typed'));
+    }
+
+    document.addEventListener('boot-typed', () => {
+      // Brief beat after CRT flash, then start hero
+      setTimeout(run, 200);
+    }, { once: true });
+  });
+</script>

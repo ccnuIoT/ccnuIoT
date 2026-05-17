@@ -1,4 +1,4 @@
-<div class="boot-overlay">
+<div class="boot-overlay" id="bootOverlay">
   <div class="boot-line dim px">ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL</div>
   <div class="boot-line dim">========================================</div>
   <div class="boot-line">&nbsp;</div>
@@ -18,3 +18,90 @@
   <div class="boot-line ok px">SYSTEM READY</div>
   <div class="boot-line dim px">TYPE 'help' FOR COMMANDS</div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('bootOverlay');
+    if (!overlay) return;
+
+    const lines = overlay.querySelectorAll<HTMLElement>('.boot-line');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    if (reducedMotion.matches) {
+      lines.forEach(l => { l.style.visibility = 'visible'; });
+      overlay.style.display = 'none';
+      overlay.remove();
+      document.dispatchEvent(new CustomEvent('boot-typed'));
+      return;
+    }
+
+    const SPEED = 10;
+    const JITTER = 8;
+    const LINE_GAP = 60;
+    const OK_PAUSE_MIN = 200;
+    const OK_PAUSE_MAX = 450;
+    const CURSOR = '▌';
+
+    const cursor = document.createElement('span');
+    cursor.className = 'type-cursor-char';
+    cursor.textContent = CURSOR;
+
+    function rand(min: number, max: number) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function sleep(ms: number) {
+      return new Promise<void>(r => setTimeout(r, ms));
+    }
+
+    function parseSegments(el: HTMLElement): { text: string; isOk: boolean }[] {
+      const segs: { text: string; isOk: boolean }[] = [];
+      el.childNodes.forEach(node => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          const t = node.textContent || '';
+          if (t.length > 0) segs.push({ text: t, isOk: false });
+        } else if (node instanceof HTMLElement && node.classList.contains('ok')) {
+          segs.push({ text: node.textContent || '', isOk: true });
+        }
+      });
+      return segs;
+    }
+
+    async function typeLine(el: HTMLElement) {
+      el.style.visibility = 'visible';
+      const segs = parseSegments(el);
+      if (segs.length === 0) { await sleep(LINE_GAP); return; }
+
+      el.textContent = '';
+      el.appendChild(cursor);
+
+      for (const seg of segs) {
+        if (seg.isOk) await sleep(rand(OK_PAUSE_MIN, OK_PAUSE_MAX));
+        for (const ch of seg.text) {
+          cursor.before(ch);
+          await sleep(rand(SPEED - JITTER, SPEED + JITTER));
+        }
+      }
+
+      cursor.remove();
+      await sleep(LINE_GAP);
+    }
+
+    async function run() {
+      for (const line of Array.from(lines)) {
+        await typeLine(line);
+      }
+
+      document.dispatchEvent(new CustomEvent('boot-typed'));
+
+      // CRT power-off: flash bright → collapse → remove
+      overlay.classList.add('is-finishing');
+      await sleep(300);
+      overlay.classList.add('is-off');
+      await sleep(400);
+      overlay.remove();
+    }
+
+    run();
+  });
+</script>

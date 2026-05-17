@@ -28,43 +28,51 @@
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (reducedMotion.matches) {
       el.innerHTML = lines.map(l => `<div style="color:${l.color}">${l.text}</div>`).join('');
+      document.dispatchEvent(new CustomEvent('log-typed'));
       return;
     }
 
-    let lineIdx = 0;
-    let charIdx = 0;
-    const SPEED = 18;
-    const LINE_DELAY = 200;
+    const SPEED = 10;
+    const JITTER = 6;
+    const LINE_GAP = 120;
 
-    const type = () => {
-      if (lineIdx >= lines.length) return;
-      const line = lines[lineIdx];
-      const currentText = line.text.substring(0, charIdx + 1);
+    const cursor = document.createElement('span');
+    cursor.className = 'type-cursor-char';
+    cursor.textContent = '▌';
 
-      // update or create line element
-      let lineEl = el.querySelector(`[data-line="${lineIdx}"]`);
-      if (!lineEl) {
-        lineEl = document.createElement('div');
-        lineEl.setAttribute('data-line', String(lineIdx));
-        lineEl.style.color = line.color;
-        lineEl.style.lineHeight = '2';
-        lineEl.style.fontSize = '16px';
-        el.appendChild(lineEl);
+    function rand(min: number, max: number) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function sleep(ms: number) {
+      return new Promise<void>(r => setTimeout(r, ms));
+    }
+
+    async function typeLine(text: string, color: string) {
+      const lineEl = document.createElement('div');
+      lineEl.style.color = color;
+      lineEl.style.lineHeight = '2';
+      lineEl.style.fontSize = '16px';
+      el.appendChild(lineEl);
+      lineEl.appendChild(cursor);
+
+      for (const ch of text) {
+        cursor.before(ch);
+        await sleep(rand(SPEED - JITTER, SPEED + JITTER));
       }
-      lineEl.textContent = currentText;
 
-      charIdx++;
-      if (charIdx < line.text.length) {
-        setTimeout(type, SPEED);
-      } else {
-        lineIdx++;
-        charIdx = 0;
-        setTimeout(type, LINE_DELAY);
+      cursor.remove();
+      await sleep(LINE_GAP);
+    }
+
+    async function run() {
+      for (const line of lines) {
+        await typeLine(line.text, line.color);
       }
-    };
+      document.dispatchEvent(new CustomEvent('log-typed'));
+    }
 
-    // start after boot sequence finishes
-    setTimeout(type, 5500);
+    document.addEventListener('hero-typed', () => run(), { once: true });
   });
 </script>
 

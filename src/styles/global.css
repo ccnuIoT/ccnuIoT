@@ -206,18 +206,35 @@ body::after {
   flex-direction: column;
   justify-content: center;
   padding: 32px;
-  animation: bootFade 0s 5s forwards;
+  font-family: 'VT323', monospace;
+  color: var(--green);
 }
 
-@keyframes bootFade {
-  to { display: none; }
+.boot-overlay.is-finishing {
+  animation: crtFlash 0.3s steps(2) forwards;
+}
+
+.boot-overlay.is-off {
+  animation: crtOff 0.4s steps(3) forwards;
+}
+
+@keyframes crtFlash {
+  0%   { filter: brightness(1); }
+  50%  { filter: brightness(4); background: #001a00; }
+  100% { filter: brightness(1); }
+}
+
+@keyframes crtOff {
+  0%   { clip-path: inset(0); opacity: 1; }
+  40%  { clip-path: inset(40% 0 40% 0); opacity: 1; }
+  70%  { clip-path: inset(49% 0 49% 0); opacity: 0.8; }
+  100% { clip-path: inset(50% 0 50% 0); opacity: 0; }
 }
 
 .boot-line {
   font-size: 16px;
   line-height: 2;
-  opacity: 0;
-  animation: bootIn 0s forwards;
+  visibility: hidden;
 }
 
 .boot-line.dim { color: var(--green); }
@@ -226,26 +243,42 @@ body::after {
 .boot-line.fail { color: var(--red); }
 .boot-line.px { font-size: 10px; line-height: 2.4; }
 
-@keyframes bootIn { to { opacity: 1; } }
+/* Inline block cursor — ▌ character */
+.type-cursor-char {
+  color: var(--green);
+  animation: cursorBlink 0.6s step-end infinite;
+  font-weight: normal;
+}
 
-.boot-line:nth-child(1) { animation-delay: 0.0s; }
-.boot-line:nth-child(2) { animation-delay: 0.2s; }
-.boot-line:nth-child(3) { animation-delay: 0.4s; }
-.boot-line:nth-child(4) { animation-delay: 0.6s; }
-.boot-line:nth-child(5) { animation-delay: 0.8s; }
-.boot-line:nth-child(6) { animation-delay: 1.0s; }
-.boot-line:nth-child(7) { animation-delay: 1.2s; }
-.boot-line:nth-child(8) { animation-delay: 1.4s; }
-.boot-line:nth-child(9) { animation-delay: 1.6s; }
-.boot-line:nth-child(10) { animation-delay: 1.8s; }
-.boot-line:nth-child(11) { animation-delay: 2.0s; }
-.boot-line:nth-child(12) { animation-delay: 2.2s; }
-.boot-line:nth-child(13) { animation-delay: 2.5s; }
-.boot-line:nth-child(14) { animation-delay: 2.8s; }
-.boot-line:nth-child(15) { animation-delay: 3.2s; }
-.boot-line:nth-child(16) { animation-delay: 3.5s; }
-.boot-line:nth-child(17) { animation-delay: 4.0s; }
-.boot-line:nth-child(18) { animation-delay: 4.5s; }
+/* Per-character phosphor glow — applied via JS */
+@keyframes charGlow {
+  0%   { text-shadow: 0 0 8px var(--green), 0 0 16px rgba(0,255,65,0.5); }
+  100% { text-shadow: none; }
+}
+
+.char-glow {
+  animation: charGlow 0.15s ease-out forwards;
+}
+
+/* Blinking terminal cursor (block) */
+@keyframes cursorBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.type-cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.1em;
+  background: var(--green);
+  vertical-align: text-bottom;
+  animation: cursorBlink 0.6s step-end infinite;
+}
+
+/* Hero visibility during boot */
+.hero.is-active {
+  opacity: 1;
+}
 
 /* ============================================================
    NAV — Metro Exodus Geiger Counter Device
@@ -696,6 +729,8 @@ body::after {
   padding: 42px 0 28px;
   border-bottom: 2px solid var(--green);
   margin-bottom: 28px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
 }
 
 .sys-header {
@@ -703,6 +738,10 @@ body::after {
   color: var(--green);
   margin-bottom: 16px;
   line-height: 1.8;
+}
+
+.type-line {
+  visibility: hidden;
 }
 
 .sys-header .val { color: var(--green); }
@@ -730,13 +769,20 @@ body::after {
 .hero-title::before {
   color: var(--cyan);
   z-index: -1;
+  opacity: 0;
   animation: glitch1 3s infinite linear alternate-reverse;
 }
 
 .hero-title::after {
   color: var(--red);
   z-index: -2;
+  opacity: 0;
   animation: glitch2 2s infinite linear alternate-reverse;
+}
+
+.hero-title.is-typed::before,
+.hero-title.is-typed::after {
+  opacity: 1;
 }
 
 @keyframes glitch1 {

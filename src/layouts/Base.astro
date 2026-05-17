@@ -23,22 +23,5 @@ const { title = 'CCNU IoT — 华中师范大学物联网协会' } = Astro.props
 </head>
 <body>
   <slot />
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const boot = document.querySelector('.boot-overlay');
-      if (boot) {
-        boot.addEventListener('animationend', (e) => {
-          if (e.animationName === 'bootFade') {
-            boot.remove();
-          }
-        });
-        setTimeout(() => {
-          if (boot && boot.parentNode) {
-            boot.remove();
-          }
-        }, 6000);
-      }
-    });
-  </script>
 </body>
 </html>
