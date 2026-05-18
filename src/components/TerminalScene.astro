@@ -1,0 +1,321 @@
+---
+---
+
+<canvas id="terminal-scene" aria-hidden="true"></canvas>
+
+<script>
+  import {
+    Scene, PerspectiveCamera, WebGLRenderer,
+    BoxGeometry, CylinderGeometry, SphereGeometry, TorusGeometry,
+    BufferGeometry, Float32BufferAttribute,
+    MeshStandardMaterial, MeshBasicMaterial,
+    Mesh, Group, LineSegments, LineBasicMaterial, Clock,
+  } from 'three';
+  import {
+    createRenderer, setupResize, createVisibilityController,
+    prefersReducedMotion, isMobile, disposeScene,
+  } from '../lib/three-utils';
+
+  const canvas = document.getElementById('terminal-scene') as HTMLCanvasElement;
+  if (!canvas) throw new Error('Terminal scene canvas not found');
+
+  const reduced = prefersReducedMotion();
+  const mobile = isMobile();
+
+  const renderer = createRenderer(canvas);
+  const scene = new Scene();
+  const camera = new PerspectiveCamera(40, 1, 0.1, 100);
+  camera.position.set(0, 0.5, 5);
+
+  const sceneGroup = new Group();
+  scene.add(sceneGroup);
+
+  // ── Materials ──
+  const metalMat = new MeshStandardMaterial({
+    color: 0x1a1d1e,
+    metalness: 0.8,
+    roughness: 0.4,
+  });
+  const screenMat = new MeshStandardMaterial({
+    color: 0x002200,
+    emissive: 0x00ff41,
+    emissiveIntensity: 0.25,
+    roughness: 0.6,
+    metalness: 0.1,
+  });
+  const greenGlow = new MeshStandardMaterial({
+    color: 0x00ff41,
+    emissive: 0x00ff41,
+    emissiveIntensity: 0.4,
+    transparent: true,
+    opacity: 0.6,
+  });
+  const keyMat = new MeshStandardMaterial({
+    color: 0x0a0a0a,
+    roughness: 0.7,
+    metalness: 0.3,
+  });
+
+  // ── Terminal Body ──
+  const terminal = new Group();
+
+  // Main chassis
+  const chassis = new Mesh(
+    new BoxGeometry(2, 2.5, 1.5),
+    metalMat
+  );
+  chassis.position.y = 0;
+  terminal.add(chassis);
+
+  // Screen bezel
+  const bezel = new Mesh(
+    new BoxGeometry(1.6, 1.2, 0.1),
+    new MeshStandardMaterial({ color: 0x0d0d0d, metalness: 0.6, roughness: 0.5 })
+  );
+  bezel.position.set(0, 0.4, 0.76);
+  terminal.add(bezel);
+
+  // Screen
+  const screen = new Mesh(
+    new BoxGeometry(1.4, 1.0, 0.02),
+    screenMat
+  );
+  screen.position.set(0, 0.4, 0.82);
+  terminal.add(screen);
+
+  // Screen scanline overlay (wireframe)
+  const scanOverlay = new Mesh(
+    new BoxGeometry(1.4, 1.0, 0.025),
+    new MeshBasicMaterial({
+      color: 0x00ff41,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.05,
+    })
+  );
+  scanOverlay.position.set(0, 0.4, 0.83);
+  terminal.add(scanOverlay);
+
+  // ── Keyboard ──
+  const keyboard = new Group();
+  const keyGeo = new BoxGeometry(0.12, 0.06, 0.12);
+  for (let row = 0; row < 4; row++) {
+    for (let col = 0; col < 8; col++) {
+      const key = new Mesh(keyGeo, keyMat);
+      key.position.set(
+        (col - 3.5) * 0.16,
+        -0.85,
+        0.6 + row * 0.16
+      );
+      keyboard.add(key);
+    }
+  }
+  terminal.add(keyboard);
+
+  // ── Knobs ──
+  const knobGeo = new CylinderGeometry(0.12, 0.12, 0.08, 16);
+  const knobMat = new MeshStandardMaterial({
+    color: 0x3a3d3e,
+    metalness: 0.9,
+    roughness: 0.3,
+  });
+
+  const knob1 = new Mesh(knobGeo, knobMat);
+  knob1.position.set(-0.7, -1.1, 0.76);
+  knob1.rotation.x = Math.PI / 2;
+  terminal.add(knob1);
+
+  const knob2 = new Mesh(knobGeo, knobMat);
+  knob2.position.set(0.7, -1.1, 0.76);
+  knob2.rotation.x = Math.PI / 2;
+  terminal.add(knob2);
+
+  // ── Antenna ──
+  const antenna = new Mesh(
+    new CylinderGeometry(0.015, 0.01, 0.8, 6),
+    new MeshStandardMaterial({ color: 0x6a6a6a, metalness: 0.9, roughness: 0.2 })
+  );
+  antenna.position.set(0.6, 1.6, -0.3);
+  antenna.rotation.z = 0.15;
+  terminal.add(antenna);
+
+  // Antenna tip
+  const antTip = new Mesh(
+    new SphereGeometry(0.04, 8, 8),
+    greenGlow.clone()
+  );
+  antTip.position.set(0.66, 2.0, -0.3);
+  terminal.add(antTip);
+
+  // ── ROBCO Ring Decoration ──
+  const ring = new Mesh(
+    new TorusGeometry(0.3, 0.02, 8, 32),
+    greenGlow.clone()
+  );
+  ring.position.set(0, 1.3, 0.76);
+  terminal.add(ring);
+
+  // ── Edge Wireframe ──
+  const edges = new (await import('three')).EdgesGeometry(new BoxGeometry(2, 2.5, 1.5));
+  const edgeLines = new LineSegments(
+    edges,
+    new LineBasicMaterial({ color: 0x00ff41, transparent: true, opacity: 0.15 })
+  );
+  terminal.add(edgeLines);
+
+  sceneGroup.add(terminal);
+
+  // ── Floating Data Nodes ──
+  interface DataNode {
+    mesh: Mesh;
+    radius: number;
+    speed: number;
+    phase: number;
+  }
+
+  const nodeGeo = new SphereGeometry(0.06, 8, 8);
+  const nodeMat = new MeshStandardMaterial({
+    color: 0x00ff41,
+    emissive: 0x00ff41,
+    emissiveIntensity: 0.5,
+    transparent: true,
+    opacity: 0.6,
+  });
+
+  const dataNodes: DataNode[] = [];
+  if (!mobile) {
+    for (let i = 0; i < 6; i++) {
+      const mesh = new Mesh(nodeGeo, nodeMat.clone());
+      const radius = 2.5 + Math.random() * 1.5;
+      const speed = 0.2 + Math.random() * 0.3;
+      const phase = (Math.PI * 2 * i) / 6;
+      sceneGroup.add(mesh);
+      dataNodes.push({ mesh, radius, speed, phase });
+    }
+  }
+
+  // ── Connection Lines ──
+  const MAX_CONN = 30;
+  const CONN_DIST = 3.0;
+  const linePositions = new Float32Array(MAX_CONN * 6);
+  const lineGeo = new BufferGeometry();
+  lineGeo.setAttribute('position', new Float32BufferAttribute(linePositions, 3));
+  lineGeo.setDrawRange(0, 0);
+  const lineMat = new LineBasicMaterial({
+    color: 0x00ff41,
+    transparent: true,
+    opacity: 0.08,
+  });
+  const lines = new LineSegments(lineGeo, lineMat);
+  sceneGroup.add(lines);
+
+  function updateConnections() {
+    let idx = 0;
+    const pos = lineGeo.attributes.position as Float32BufferAttribute;
+    for (let i = 0; i < dataNodes.length && idx < MAX_CONN; i++) {
+      for (let j = i + 1; j < dataNodes.length && idx < MAX_CONN; j++) {
+        const a = dataNodes[i].mesh.position;
+        const b = dataNodes[j].mesh.position;
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        const dz = a.z - b.z;
+        const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        if (dist < CONN_DIST) {
+          linePositions[idx * 6] = a.x;
+          linePositions[idx * 6 + 1] = a.y;
+          linePositions[idx * 6 + 2] = a.z;
+          linePositions[idx * 6 + 3] = b.x;
+          linePositions[idx * 6 + 4] = b.y;
+          linePositions[idx * 6 + 5] = b.z;
+          idx++;
+        }
+      }
+    }
+    pos.needsUpdate = true;
+    lineGeo.setDrawRange(0, idx * 2);
+  }
+
+  // ── Lighting ──
+  scene.add(createAmbientLight(0x1a1a1a, 0.6));
+  scene.add(createPointLight(0x00ff41, 0.8, 30, 0, 3, 5));
+  scene.add(createPointLight(0x003300, 0.4, 20, 0, -2, 3));
+  scene.add(createPointLight(0xffffff, 0.15, 15, -3, 2, 4));
+
+  // ── Resize ──
+  const cleanupResize = setupResize(renderer, camera, canvas);
+
+  // ── Mouse tracking ──
+  let mouseX = 0;
+  let mouseY = 0;
+  if (!reduced) {
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX - window.innerWidth / 2;
+      mouseY = e.clientY - window.innerHeight / 2;
+    });
+  }
+
+  // ── Animation ──
+  const clock = new Clock();
+  let running = true;
+  let animId: number | null = null;
+
+  function animate() {
+    if (!running) return;
+    const t = clock.getElapsedTime();
+
+    // Data nodes orbit
+    for (const node of dataNodes) {
+      node.mesh.position.x = Math.cos(t * node.speed + node.phase) * node.radius;
+      node.mesh.position.z = Math.sin(t * node.speed + node.phase) * node.radius;
+      node.mesh.position.y = Math.sin(t * node.speed * 0.5 + node.phase) * 0.5;
+    }
+
+    updateConnections();
+
+    // Screen flicker
+    screenMat.emissiveIntensity = 0.2 + Math.sin(t * 3) * 0.05 + (Math.random() < 0.02 ? 0.15 : 0);
+
+    // Antenna tip pulse
+    (antTip.material as MeshStandardMaterial).emissiveIntensity = 0.3 + Math.sin(t * 2) * 0.2;
+
+    // Ring rotation
+    ring.rotation.z = t * 0.3;
+
+    // Mouse parallax
+    sceneGroup.rotation.y = mouseX * 0.0002 + Math.sin(t * 0.1) * 0.02;
+    sceneGroup.rotation.x = mouseY * 0.00015;
+
+    renderer.render(scene, camera);
+    animId = requestAnimationFrame(animate);
+  }
+
+  // ── Visibility ──
+  const vis = createVisibilityController(
+    () => { running = true; animate(); },
+    () => { running = false; if (animId) cancelAnimationFrame(animId); }
+  );
+
+  if (reduced) {
+    // Static frame
+    for (const node of dataNodes) {
+      node.mesh.position.x = Math.cos(node.phase) * node.radius;
+      node.mesh.position.z = Math.sin(node.phase) * node.radius;
+    }
+    updateConnections();
+    renderer.render(scene, camera);
+  } else {
+    animate();
+  }
+</script>
+
+<style>
+  #terminal-scene {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+</style>

@@ -1,5 +1,40 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 99999;
+  padding: 8px 16px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: var(--green);
+  background: var(--bg);
+  border: 1px solid var(--green-dim);
+  transition: top 150ms ease;
+}
+
+.skip-link:focus {
+  top: 16px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 :root {
   --green: #00ff41;
   --green-dim: #00cc33;
@@ -277,457 +312,13 @@ body::after {
   opacity: 1;
 }
 
-/* ============================================================
-   NAV — Metro Exodus Geiger Counter Device
-   Worn, welded scrap-metal instrument. Not a bar.
-   ============================================================ */
-
-.nav-panel {
-  position: fixed;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 100;
-  width: clamp(130px, 10vw, 180px);
-  max-height: calc(100vh - 40px);
-}
-
-/* --- device housing: irregular welded scrap metal --- */
-
-.nav-device {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  /* worn metal surface */
-  background:
-    linear-gradient(127deg, transparent 0%, transparent 44%, rgba(255,255,255,0.012) 44.5%, transparent 45%, transparent 100%),
-    linear-gradient(-15deg, transparent 0%, transparent 62%, rgba(255,255,255,0.008) 62.3%, transparent 62.8%, transparent 100%),
-    radial-gradient(ellipse 40px 8px at 72% 20%, rgba(80,85,80,0.25), transparent),
-    radial-gradient(ellipse 30px 20px at 5% 90%, rgba(139,69,19,0.12), transparent),
-    radial-gradient(ellipse 25px 15px at 95% 15%, rgba(139,69,19,0.08), transparent),
-    linear-gradient(180deg, var(--metal-mid) 0%, var(--metal) 40%, #141718 100%);
-  /* hanging on the wall — incomplete, tilted */
-  clip-path: polygon(
-    3% 0%, 12% 2%, 28% 0%, 45% 1%, 62% 0%, 80% 2%, 95% 0%,
-    100% 5%, 98% 18%, 100% 32%, 97% 48%, 100% 60%,
-    92% 72%, 78% 78%, 60% 80%, 40% 78%, 22% 76%, 8% 72%,
-    0% 65%, 3% 50%, 0% 35%, 2% 20%, 0% 8%
-  );
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
-  overflow: hidden;
-  /* hanging idle — tilted, dim, cut off */
-  opacity: 0.65;
-  transform: rotate(6deg) translateX(18px);
-  transition: opacity 400ms ease-out, transform 400ms ease-out, filter 400ms ease-out, clip-path 400ms ease-out;
-}
-
-/* "picking up the device" — levels out, fully visible */
-.nav-device:hover,
-.nav-device:focus-within {
-  opacity: 1;
-  transform: rotate(0deg) translateX(0);
-  clip-path: polygon(
-    2% 3%, 8% 0%, 22% 2%, 40% 0%, 58% 1%, 75% 0%, 90% 2%, 98% 0%,
-    100% 8%, 98% 30%, 100% 55%, 98% 80%, 100% 95%,
-    95% 100%, 78% 98%, 55% 100%, 30% 98%, 10% 100%, 2% 97%,
-    0% 88%, 2% 65%, 0% 40%, 2% 18%, 0% 5%
-  );
-  filter: drop-shadow(0 6px 20px rgba(0,255,65,0.08)) drop-shadow(0 4px 12px rgba(0,0,0,0.6));
-}
-
-/* "raising the watch to look at it" — brightens, levels out, comes alive */
-.nav-device:hover,
-.nav-device:focus-within {
-  opacity: 1;
-  transform: perspective(800px) rotateX(0deg);
-  filter: drop-shadow(0 6px 20px rgba(0,255,65,0.08)) drop-shadow(0 4px 12px rgba(0,0,0,0.6));
-}
-
-/* corner rivets */
-.rivet {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 35% 35%, rgba(120,125,120,0.6), rgba(50,55,50,0.8) 60%, rgba(30,35,30,1));
-  border: 1px solid rgba(60, 65, 60, 0.7);
-  box-shadow:
-    inset 0 1px 2px rgba(255,255,255,0.08),
-    0 1px 3px rgba(0,0,0,0.5);
-  z-index: 5;
-}
-
-.rivet--tl { top: 10px; left: 8px; }
-.rivet--tr { top: 8px; right: 10px; width: 9px; height: 9px; }
-.rivet--bl { bottom: 12px; left: 10px; width: 11px; height: 11px; }
-.rivet--br { bottom: 10px; right: 8px; }
-
-/* tape repair — electrical tape holding it together */
-.tape-repair {
-  position: absolute;
-  top: -2px;
-  left: 30%;
-  width: 40px;
-  height: 12px;
-  background: linear-gradient(90deg, rgba(30,30,30,0.9), rgba(20,20,20,0.95));
-  border-radius: 1px;
-  transform: rotate(-3deg);
-  z-index: 5;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.4);
-}
-
-/* weld seam — where two metal plates join (horizontal in vertical layout) */
-.weld-seam {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 52%;
-  height: 3px;
-  background:
-    linear-gradient(90deg,
-      transparent 0%,
-      rgba(80, 70, 50, 0.3) 10%,
-      rgba(100, 80, 50, 0.15) 30%,
-      rgba(80, 70, 50, 0.25) 50%,
-      rgba(100, 80, 50, 0.1) 70%,
-      rgba(80, 70, 50, 0.3) 90%,
-      transparent 100%
-    );
-  z-index: 3;
-  pointer-events: none;
-}
-
-/* --- left: analog watch dial --- */
-
-.nav-watch {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 14px 10px 8px;
-  gap: 4px;
-}
-
-.nav-watch__dial {
-  position: relative;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  /* worn metal bezel */
-  border: 3px solid rgba(80, 90, 80, 0.5);
-  background:
-    /* subtle radial scratch pattern */
-    radial-gradient(circle, rgba(10, 12, 10, 0.95), rgba(5, 6, 5, 0.98)),
-    conic-gradient(from 45deg, rgba(0,0,0,0.1), transparent, rgba(0,0,0,0.05), transparent, rgba(0,0,0,0.1));
-  box-shadow:
-    inset 0 2px 6px rgba(0, 0, 0, 0.6),
-    0 0 12px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(0, 0, 0, 0.6);
-  overflow: hidden;
-}
-
-/* danger zone arc — red sector on the dial */
-.nav-watch__danger {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: conic-gradient(
-    from 210deg,
-    transparent 0deg,
-    transparent 120deg,
-    rgba(200, 50, 50, 0.12) 180deg,
-    rgba(200, 50, 50, 0.2) 240deg,
-    rgba(200, 50, 50, 0.08) 300deg,
-    transparent 360deg
-  );
-}
-
-/* 24 tick marks */
-.nav-watch__ticks {
-  position: absolute;
-  inset: 0;
-}
-
-.nav-watch__ticks span {
-  position: absolute;
-  left: 50%;
-  top: 3px;
-  width: 1px;
-  height: 5px;
-  background: rgba(0, 255, 65, 0.5);
-  transform-origin: 50% 37px;
-}
-
-/* major marks every 6th tick */
-.nav-watch__ticks span:nth-child(6n+1) {
-  height: 8px;
-  width: 1.5px;
-  background: rgba(0, 255, 65, 0.75);
-}
-
-/* danger zone ticks — red */
-.nav-watch__ticks span:nth-child(n+14):nth-child(-n+20) {
-  background: rgba(200, 50, 50, 0.5);
-}
-
-.nav-watch__ticks span:nth-child(1)  { transform: translateX(-50%) rotate(0deg); }
-.nav-watch__ticks span:nth-child(2)  { transform: translateX(-50%) rotate(15deg); }
-.nav-watch__ticks span:nth-child(3)  { transform: translateX(-50%) rotate(30deg); }
-.nav-watch__ticks span:nth-child(4)  { transform: translateX(-50%) rotate(45deg); }
-.nav-watch__ticks span:nth-child(5)  { transform: translateX(-50%) rotate(60deg); }
-.nav-watch__ticks span:nth-child(6)  { transform: translateX(-50%) rotate(75deg); }
-.nav-watch__ticks span:nth-child(7)  { transform: translateX(-50%) rotate(90deg); }
-.nav-watch__ticks span:nth-child(8)  { transform: translateX(-50%) rotate(105deg); }
-.nav-watch__ticks span:nth-child(9)  { transform: translateX(-50%) rotate(120deg); }
-.nav-watch__ticks span:nth-child(10) { transform: translateX(-50%) rotate(135deg); }
-.nav-watch__ticks span:nth-child(11) { transform: translateX(-50%) rotate(150deg); }
-.nav-watch__ticks span:nth-child(12) { transform: translateX(-50%) rotate(165deg); }
-.nav-watch__ticks span:nth-child(13) { transform: translateX(-50%) rotate(180deg); }
-.nav-watch__ticks span:nth-child(14) { transform: translateX(-50%) rotate(195deg); }
-.nav-watch__ticks span:nth-child(15) { transform: translateX(-50%) rotate(210deg); }
-.nav-watch__ticks span:nth-child(16) { transform: translateX(-50%) rotate(225deg); }
-.nav-watch__ticks span:nth-child(17) { transform: translateX(-50%) rotate(240deg); }
-.nav-watch__ticks span:nth-child(18) { transform: translateX(-50%) rotate(255deg); }
-.nav-watch__ticks span:nth-child(19) { transform: translateX(-50%) rotate(270deg); }
-.nav-watch__ticks span:nth-child(20) { transform: translateX(-50%) rotate(285deg); }
-.nav-watch__ticks span:nth-child(21) { transform: translateX(-50%) rotate(300deg); }
-.nav-watch__ticks span:nth-child(22) { transform: translateX(-50%) rotate(315deg); }
-.nav-watch__ticks span:nth-child(23) { transform: translateX(-50%) rotate(330deg); }
-.nav-watch__ticks span:nth-child(24) { transform: translateX(-50%) rotate(345deg); }
-
-/* scale labels */
-.nav-watch__scale {
-  position: absolute;
-  inset: 0;
-}
-
-.nav-watch__scale span {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 5px;
-  color: rgba(0, 255, 65, 0.55);
-  transform-origin: 0 0;
-  transform: rotate(var(--r)) translateY(-30px) rotate(calc(-1 * var(--r)));
-}
-
-/* needle — green body with red tip */
-.nav-watch__needle {
-  position: absolute;
-  left: 50%;
-  bottom: 50%;
-  width: 2.5px;
-  height: 30px;
-  background: linear-gradient(to top, var(--green-bright) 0%, var(--green) 65%, var(--red) 100%);
-  transform-origin: 50% 100%;
-  transform: rotate(-42deg);
-  box-shadow: 0 0 6px rgba(0, 255, 65, 0.3);
-  z-index: 2;
-  transition: none;
-}
-
-.nav-watch__center {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--green);
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
-  z-index: 3;
-}
-
-.nav-watch__unit {
-  position: absolute;
-  bottom: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: 'Press Start 2P', monospace;
-  font-size: 4px;
-  color: rgba(0, 255, 65, 0.5);
-  letter-spacing: 0.5px;
-  white-space: nowrap;
-}
-
-/* worn glass overlay — scratched, dirty, fingerprint */
-.nav-watch__glass {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background:
-    /* fingerprint smudge */
-    radial-gradient(ellipse 18px 12px at 38% 35%, rgba(255,255,255,0.03), transparent),
-    /* scratch arc */
-    radial-gradient(ellipse 60px 2px at 50% 50%, rgba(255,255,255,0.015), transparent 40%),
-    /* edge grime — more opaque when not examining */
-    radial-gradient(circle, transparent 50%, rgba(0,0,0,0.2) 100%);
-  pointer-events: none;
-  z-index: 4;
-  transition: opacity 350ms ease-out;
-}
-
-/* glass clears up when you "raise the watch" */
-.nav-device:hover .nav-watch__glass,
-.nav-device:focus-within .nav-watch__glass {
-  background:
-    radial-gradient(ellipse 18px 12px at 38% 35%, rgba(255,255,255,0.02), transparent),
-    radial-gradient(ellipse 60px 2px at 50% 50%, rgba(255,255,255,0.01), transparent 40%),
-    radial-gradient(circle, transparent 65%, rgba(0,0,0,0.08) 100%);
-}
-
-/* LED + digital readout below dial */
-.nav-watch__info {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.nav-watch__led {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 255, 65, 0.3);
-  background: transparent;
-  transition: opacity 60ms;
-}
-
-.nav-watch__led.is-live {
-  background: var(--green-bright);
-  box-shadow: 0 0 8px rgba(0, 255, 65, 0.7);
-}
-
-.nav-watch__readout {
-  font-family: 'VT323', monospace;
-  font-size: 18px;
-  color: var(--green-bright);
-  text-shadow: 0 0 8px rgba(0, 255, 65, 0.4);
-  min-width: 40px;
-}
-
-/* model plate — stamped into metal */
-.nav-watch__plate {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 5px;
-  color: rgba(0, 255, 65, 0.4);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-/* --- right: physical pusher buttons --- */
-
-.nav-pushers {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: repeat(5, 1fr);
-  gap: 4px;
-  padding: 8px 10px 12px;
-}
-
-.nav-pusher {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  padding: 8px 6px 7px;
-  text-decoration: none;
-  color: var(--green);
-  /* recessed button in worn metal */
-  border-radius: 4px 3px 5px 3px;
-  border: 1.5px solid rgba(60, 70, 60, 0.5);
-  border-top-color: rgba(40, 45, 40, 0.6);
-  border-bottom-color: rgba(80, 90, 80, 0.3);
-  background:
-    /* subtle scratch */
-    linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.01) 40.5%, transparent 41%),
-    linear-gradient(180deg, rgba(30, 35, 30, 0.9), rgba(20, 24, 20, 0.95));
-  box-shadow:
-    inset 0 2px 6px rgba(0, 0, 0, 0.5),
-    inset 0 -1px 2px rgba(255, 255, 255, 0.03),
-    0 1px 2px rgba(0, 0, 0, 0.3);
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='7' fill='none' stroke='%2300ff41' stroke-width='1.2' opacity='0.8'/%3E%3Ccircle cx='10' cy='10' r='1.5' fill='%2300ff41'/%3E%3C/svg%3E") 10 10, pointer;
-  transition: transform 80ms, box-shadow 80ms, border-color 80ms;
-}
-
-/* physical press — button goes IN */
-.nav-pusher:active {
-  transform: translateY(1px);
-  box-shadow:
-    inset 0 1px 3px rgba(0, 0, 0, 0.6),
-    0 0 1px rgba(0, 0, 0, 0.4);
-}
-
-.nav-pusher__led {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 255, 65, 0.2);
-  background: transparent;
-  transition: background 120ms, box-shadow 120ms, opacity 60ms;
-}
-
-.nav-pusher__ch {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 5px;
-  letter-spacing: 1px;
-  opacity: 0.5;
-}
-
-.nav-pusher__name {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 7px;
-  letter-spacing: 0.5px;
-}
-
-/* hover: amber backlight bleed — worn instrument panel light */
-.nav-pusher:hover,
-.nav-pusher:focus-visible {
-  border-color: rgba(196, 136, 32, 0.35);
-  box-shadow:
-    inset 0 2px 6px rgba(0, 0, 0, 0.4),
-    inset 0 0 12px rgba(196, 136, 32, 0.06),
-    0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.nav-pusher:focus-visible {
-  outline: 2px solid var(--amber);
-  outline-offset: 2px;
-}
-
-/* active channel — lit LED, brighter surface */
-.nav-pusher.active {
-  border-color: rgba(0, 255, 65, 0.35);
-  background:
-    linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.01) 40.5%, transparent 41%),
-    linear-gradient(180deg, rgba(35, 45, 35, 0.9), rgba(25, 32, 25, 0.95));
-  box-shadow:
-    inset 0 2px 6px rgba(0, 0, 0, 0.4),
-    inset 0 0 8px rgba(0, 255, 65, 0.04),
-    0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.nav-pusher.active .nav-pusher__led {
-  background: var(--green-bright);
-  box-shadow: 0 0 6px rgba(0, 255, 65, 0.7);
-  border-color: rgba(0, 255, 65, 0.5);
-}
-
-.nav-pusher.active .nav-pusher__ch {
-  opacity: 0.8;
-  color: var(--cyan);
-}
+/* Nav styles are in Nav.astro component */
 
 .container {
   max-width: 1040px;
   margin: 0 auto;
   padding: 48px 20px 40px;
-  padding-right: clamp(160px, 12vw, 220px);
+  padding-right: clamp(170px, 12vw, 220px);
   position: relative;
   z-index: 10;
 }

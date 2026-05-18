@@ -29,7 +29,10 @@
     // Skip boot if already done this session
     if (alreadyBooted) {
       overlay.remove();
-      document.dispatchEvent(new CustomEvent('boot-typed'));
+      // Defer so Hero and other listeners have time to register
+      requestAnimationFrame(() => {
+        document.dispatchEvent(new CustomEvent('boot-typed'));
+      });
       return;
     }
 
@@ -40,7 +43,9 @@
       lines.forEach(l => { l.style.visibility = 'visible'; });
       overlay.remove();
       sessionStorage.setItem('booted', '1');
-      document.dispatchEvent(new CustomEvent('boot-typed'));
+      requestAnimationFrame(() => {
+        document.dispatchEvent(new CustomEvent('boot-typed'));
+      });
       return;
     }
 

@@ -1,0 +1,57 @@
+---
+---
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // Wait for DOM
+    requestAnimationFrame(() => {
+      const needle = document.getElementById('geigerNeedle') as SVGElement | null;
+      const readout = document.getElementById('doseReadout') as HTMLElement | null;
+
+      if (!needle) return;
+
+      // Base needle angle from scroll progress
+      let scrollAngle = 0;
+      let velocityBoost = 0;
+
+      ScrollTrigger.create({
+        trigger: document.body,
+        start: 'top top',
+        end: 'bottom bottom',
+        onUpdate(self) {
+          // Map progress (0-1) to angle range (30° to 140°)
+          scrollAngle = 30 + self.progress * 110;
+
+          // Velocity-based jitter
+          const velocity = Math.abs(self.getVelocity());
+          velocityBoost = Math.min(velocity / 1000, 40);
+        },
+      });
+
+      // Apply scroll angle to needle with smoothing
+      let currentAngle = 0;
+      function updateNeedle() {
+        const jitter = (Math.random() - 0.5) * velocityBoost;
+        const target = scrollAngle + jitter;
+        currentAngle += (target - currentAngle) * 0.1;
+
+        needle.style.transform = `rotate(${currentAngle}deg)`;
+
+        // Update readout
+        if (readout) {
+          const dose = (currentAngle / 140 * 5).toFixed(2);
+          readout.textContent = dose;
+        }
+
+        requestAnimationFrame(updateNeedle);
+      }
+
+      updateNeedle();
+    });
+  }
+</script>

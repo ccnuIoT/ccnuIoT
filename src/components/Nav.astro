@@ -1,161 +1,420 @@
-<nav class="nav-panel" aria-label="Primary">
-  <div class="nav-device">
-    <!-- corner rivets -->
-    <span class="rivet rivet--tl" aria-hidden="true"></span>
-    <span class="rivet rivet--tr" aria-hidden="true"></span>
-    <span class="rivet rivet--bl" aria-hidden="true"></span>
-    <span class="rivet rivet--br" aria-hidden="true"></span>
+---
+const links = [
+  { href: '/', label: 'HOME', ch: '00' },
+  { href: '/groups/hardware', label: 'HW', ch: '01' },
+  { href: '/groups/algorithm', label: 'ALGO', ch: '02' },
+  { href: '/groups/application', label: 'APP', ch: '03' },
+];
 
-    <!-- tape repair -->
-    <span class="tape-repair" aria-hidden="true"></span>
+const currentPath = Astro.url.pathname;
+---
 
-    <!-- weld seam -->
-    <span class="weld-seam" aria-hidden="true"></span>
-
-    <!-- left: analog watch dial -->
-    <div class="nav-watch">
-      <div class="nav-watch__dial">
-        <!-- danger zone arc -->
-        <div class="nav-watch__danger" aria-hidden="true"></div>
-
-        <!-- 24 tick marks -->
-        <div class="nav-watch__ticks" aria-hidden="true">
-          <span></span><span></span><span></span><span></span>
-          <span></span><span></span><span></span><span></span>
-          <span></span><span></span><span></span><span></span>
-          <span></span><span></span><span></span><span></span>
-          <span></span><span></span><span></span><span></span>
-          <span></span><span></span><span></span><span></span>
-        </div>
-
-        <!-- scale labels -->
-        <div class="nav-watch__scale" aria-hidden="true">
-          <span style="--r:-60deg">0</span>
-          <span style="--r:-30deg">25</span>
-          <span style="--r:0deg">50</span>
-          <span style="--r:30deg">75</span>
-          <span style="--r:60deg">100</span>
-        </div>
-
-        <!-- needle -->
-        <div class="nav-watch__needle" id="geigerNeedle"></div>
-        <div class="nav-watch__center"></div>
-
-        <!-- unit label -->
-        <div class="nav-watch__unit">mSv/h</div>
-
-        <!-- worn glass overlay -->
-        <div class="nav-watch__glass" aria-hidden="true"></div>
-      </div>
-
-      <!-- LED + digital readout -->
-      <div class="nav-watch__info">
-        <span class="nav-watch__led is-live" aria-hidden="true"></span>
-        <span class="nav-watch__readout" id="doseReadout">0.12</span>
-      </div>
-
-      <!-- model plate -->
-      <div class="nav-watch__plate">
-        <span>DSTM-01</span>
-      </div>
+<nav class="nav-device" aria-label="Primary">
+  <!-- Top: Geiger dial -->
+  <div class="nav-device__head">
+    <canvas id="geigerDial" width="160" height="160" aria-hidden="true"></canvas>
+    <div class="nav-device__readout">
+      <span class="nav-device__led"></span>
+      <span class="nav-device__dose" id="doseReadout">0.12</span>
+      <span class="nav-device__unit">mSv/h</span>
     </div>
-
-    <!-- right: physical pusher buttons -->
-    <div class="nav-pushers">
-      <a href="/" class="nav-pusher active">
-        <span class="nav-pusher__led" aria-hidden="true"></span>
-        <span class="nav-pusher__ch">CH-00</span>
-        <span class="nav-pusher__name">HOME</span>
-      </a>
-      <a href="/groups/hardware" class="nav-pusher">
-        <span class="nav-pusher__led" aria-hidden="true"></span>
-        <span class="nav-pusher__ch">CH-01</span>
-        <span class="nav-pusher__name">HW</span>
-      </a>
-      <a href="/groups/algorithm" class="nav-pusher">
-        <span class="nav-pusher__led" aria-hidden="true"></span>
-        <span class="nav-pusher__ch">CH-02</span>
-        <span class="nav-pusher__name">ALGO</span>
-      </a>
-      <a href="/groups/application" class="nav-pusher">
-        <span class="nav-pusher__led" aria-hidden="true"></span>
-        <span class="nav-pusher__ch">CH-03</span>
-        <span class="nav-pusher__name">APP</span>
-      </a>
-      <a href="/#projects" class="nav-pusher">
-        <span class="nav-pusher__led" aria-hidden="true"></span>
-        <span class="nav-pusher__ch">CH-04</span>
-        <span class="nav-pusher__name">PROJ</span>
-      </a>
-    </div>
+    <div class="nav-device__plate">DSTM-01</div>
   </div>
+
+  <!-- Divider -->
+  <div class="nav-device__seam" aria-hidden="true"></div>
+
+  <!-- Bottom: Channel buttons -->
+  <div class="nav-device__buttons">
+    {links.map(({ href, label, ch }) => (
+      <a
+        href={href}
+        class:list={[
+          'nav-device__btn',
+          { active: currentPath === href || (href !== '/' && currentPath.startsWith(href)) },
+        ]}
+      >
+        <span class="nav-device__btn-led"></span>
+        <span class="nav-device__btn-ch">{ch}</span>
+        <span class="nav-device__btn-label">{label}</span>
+      </a>
+    ))}
+  </div>
+
+  <!-- Screws -->
+  <span class="nav-device__screw nav-device__screw--tl" aria-hidden="true"></span>
+  <span class="nav-device__screw nav-device__screw--tr" aria-hidden="true"></span>
+  <span class="nav-device__screw nav-device__screw--bl" aria-hidden="true"></span>
+  <span class="nav-device__screw nav-device__screw--br" aria-hidden="true"></span>
 </nav>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const needle = document.getElementById('geigerNeedle');
-    const readout = document.getElementById('doseReadout');
-    const device = document.querySelector('.nav-device');
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (reducedMotion.matches) return;
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-    let baseAngle = -42;
-    let dose = 0.12;
-    let lastUpdate = 0;
-    let examining = false;
-    const STEP_IDLE = 100;      // slower when not looking
-    const STEP_EXAMINING = 50;  // faster, more sensitive when hovering
+  gsap.registerPlugin(ScrollTrigger);
 
-    // stepped needle animation — mechanical, not smooth
-    const tick = (now: number) => {
-      const interval = examining ? STEP_EXAMINING : STEP_IDLE;
-      if (now - lastUpdate < interval) {
-        requestAnimationFrame(tick);
-        return;
+  const canvas = document.getElementById('geigerDial') as HTMLCanvasElement;
+  const readout = document.getElementById('doseReadout');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (canvas && !reducedMotion.matches) {
+    const ctx = canvas.getContext('2d')!;
+    const size = 160;
+    const cx = size / 2;
+    const cy = size / 2;
+    const radius = 60;
+
+    const state = { angle: -45, dose: 0.12 };
+
+    function drawDial() {
+      ctx.clearRect(0, 0, size, size);
+
+      // Outer ring
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius + 4, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(0, 255, 65, 0.12)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Dial face
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0, 4, 0, 0.95)';
+      ctx.fill();
+
+      // Danger arc
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius - 3, (120 * Math.PI) / 180, (210 * Math.PI) / 180);
+      ctx.strokeStyle = 'rgba(200, 50, 50, 0.2)';
+      ctx.lineWidth = 8;
+      ctx.stroke();
+
+      // Tick marks
+      for (let i = 0; i < 24; i++) {
+        const a = (i * 15 * Math.PI) / 180 - Math.PI / 2;
+        const isMajor = i % 6 === 0;
+        const inner = isMajor ? radius - 16 : radius - 11;
+        const outer = radius - 5;
+        const inDanger = i >= 8 && i <= 14;
+
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(a) * inner, cy + Math.sin(a) * inner);
+        ctx.lineTo(cx + Math.cos(a) * outer, cy + Math.sin(a) * outer);
+        ctx.strokeStyle = inDanger
+          ? 'rgba(200, 50, 50, 0.5)'
+          : isMajor
+            ? 'rgba(0, 255, 65, 0.6)'
+            : 'rgba(0, 255, 65, 0.25)';
+        ctx.lineWidth = isMajor ? 2 : 1;
+        ctx.stroke();
       }
-      lastUpdate = now;
 
-      const jitterRange = examining ? 28 : 18;
-      const spikeChance = examining ? 0.88 : 0.94;
-      const spikeRange = examining ? 70 : 45;
+      // Scale labels
+      const labels = ['0', '25', '50', '75', '100'];
+      ctx.font = '7px "Press Start 2P", monospace';
+      ctx.fillStyle = 'rgba(0, 255, 65, 0.45)';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      labels.forEach((label, i) => {
+        const a = ((-60 + i * 30) * Math.PI) / 180;
+        const r = radius - 28;
+        ctx.fillText(label, cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+      });
 
-      const jitter = (Math.random() - 0.5) * jitterRange;
-      const spike = Math.random() > spikeChance ? (Math.random() * spikeRange - spikeRange/2) : 0;
-      baseAngle += (Math.random() - 0.5) * (examining ? 5 : 3);
-      baseAngle = Math.max(-60, Math.min(60, baseAngle));
+      // Unit
+      ctx.font = '6px "Press Start 2P", monospace';
+      ctx.fillStyle = 'rgba(0, 255, 65, 0.35)';
+      ctx.fillText('mSv/h', cx, cy + 22);
 
-      if (needle) {
-        needle.style.transform = `rotate(${baseAngle + jitter + spike}deg)`;
-      }
+      // Needle
+      const na = (state.angle * Math.PI) / 180;
+      const needleLen = radius - 12;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + Math.cos(na) * needleLen, cy + Math.sin(na) * needleLen);
+      ctx.strokeStyle = '#00ff41';
+      ctx.lineWidth = 2;
+      ctx.shadowColor = 'rgba(0, 255, 65, 0.5)';
+      ctx.shadowBlur = 8;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
 
-      dose += (Math.random() - 0.48) * (examining ? 0.04 : 0.02);
-      dose = Math.max(0.01, Math.min(3.0, dose));
-      if (readout) readout.textContent = dose.toFixed(2);
+      // Red tip
+      ctx.beginPath();
+      ctx.moveTo(
+        cx + Math.cos(na) * (needleLen - 10),
+        cy + Math.sin(na) * (needleLen - 10)
+      );
+      ctx.lineTo(cx + Math.cos(na) * needleLen, cy + Math.sin(na) * needleLen);
+      ctx.strokeStyle = '#ff2222';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
 
-      requestAnimationFrame(tick);
-    };
-
-    requestAnimationFrame(tick);
-
-    // track hover state — "examining the watch"
-    if (device) {
-      device.addEventListener('mouseenter', () => { examining = true; });
-      device.addEventListener('mouseleave', () => { examining = false; });
+      // Center
+      ctx.beginPath();
+      ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#00ff41';
+      ctx.shadowColor = 'rgba(0, 255, 65, 0.7)';
+      ctx.shadowBlur = 10;
+      ctx.fill();
+      ctx.shadowBlur = 0;
     }
 
-    // random LED flicker — degraded power
-    const leds = document.querySelectorAll('.nav-pusher__led, .nav-watch__led');
+    let examining = false;
+    let scrollBias = 0;
+
+    ScrollTrigger.create({
+      trigger: document.body,
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate(self) {
+        scrollBias = (self.progress - 0.5) * 60;
+        const velocity = Math.abs(self.getVelocity());
+        scrollBias += (Math.random() - 0.5) * Math.min(velocity / 500, 20);
+      },
+    });
+
+    function animateNeedle() {
+      const jitterRange = examining ? 25 : 15;
+      const spikeChance = examining ? 0.12 : 0.06;
+      const spikeRange = examining ? 60 : 40;
+
+      let targetAngle = state.angle + (Math.random() - 0.5) * jitterRange + scrollBias * 0.05;
+      if (Math.random() < spikeChance) {
+        targetAngle += (Math.random() - 0.5) * spikeRange;
+      }
+      targetAngle = Math.max(-75, Math.min(75, targetAngle));
+
+      gsap.to(state, {
+        angle: targetAngle,
+        dose: Math.max(0.01, Math.min(3.0, state.dose + (Math.random() - 0.48) * 0.03)),
+        duration: examining ? 0.08 : 0.15,
+        ease: 'power2.out',
+        onUpdate() {
+          drawDial();
+          if (readout) readout.textContent = state.dose.toFixed(2);
+        },
+        onComplete() {
+          animateNeedle();
+        },
+      });
+    }
+
+    drawDial();
+    animateNeedle();
+
+    const device = document.querySelector('.nav-device__head');
+    device?.addEventListener('mouseenter', () => { examining = true; });
+    device?.addEventListener('mouseleave', () => { examining = false; });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        gsap.killTweensOf(state);
+      } else {
+        animateNeedle();
+      }
+    });
+  }
+
+  // LED flicker
+  if (!reducedMotion.matches) {
+    const leds = document.querySelectorAll('.nav-device__btn-led, .nav-device__led');
     const flicker = () => {
-      leds.forEach(led => {
-        if (Math.random() > 0.93) {
-          (led as HTMLElement).style.opacity = '0.3';
-          setTimeout(() => {
-            (led as HTMLElement).style.opacity = '';
-          }, 50 + Math.random() * 100);
+      leds.forEach((led) => {
+        if (Math.random() > 0.92) {
+          (led as HTMLElement).style.opacity = '0.2';
+          setTimeout(() => { (led as HTMLElement).style.opacity = ''; }, 40 + Math.random() * 80);
         }
       });
-      setTimeout(flicker, 200 + Math.random() * 800);
+      setTimeout(flicker, 200 + Math.random() * 600);
     };
     flicker();
-  });
+  }
 </script>
+
+<style>
+  /* ── Device Shell — irregular, not a rectangle ── */
+  .nav-device {
+    position: fixed;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    width: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background:
+      linear-gradient(180deg, rgba(26, 29, 30, 0.95), rgba(20, 22, 23, 0.98));
+    border: 1px solid rgba(0, 255, 65, 0.1);
+    /* Irregular shape — not a rectangle */
+    clip-path: polygon(
+      8% 0%, 92% 0%,
+      100% 3%, 100% 97%,
+      92% 100%, 8% 100%,
+      0% 97%, 0% 3%
+    );
+    filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.5));
+    transition: opacity 300ms ease, transform 300ms ease;
+    opacity: 0.7;
+  }
+
+  .nav-device:hover {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-4px);
+  }
+
+  /* ── Screws ── */
+  .nav-device__screw {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, rgba(100, 105, 100, 0.6), rgba(40, 45, 40, 0.9));
+    border: 1px solid rgba(60, 65, 60, 0.5);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.06);
+    z-index: 5;
+  }
+
+  .nav-device__screw--tl { top: 6px; left: 10px; }
+  .nav-device__screw--tr { top: 6px; right: 10px; }
+  .nav-device__screw--bl { bottom: 6px; left: 10px; }
+  .nav-device__screw--br { bottom: 6px; right: 10px; }
+
+  /* ── Head: Dial area ── */
+  .nav-device__head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 12px 10px;
+    gap: 6px;
+    cursor: default;
+  }
+
+  #geigerDial {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 255, 65, 0.1);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  .nav-device__readout {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'Press Start 2P', monospace;
+  }
+
+  .nav-device__led {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px rgba(0, 255, 65, 0.6);
+  }
+
+  .nav-device__dose {
+    font-size: 11px;
+    color: var(--green);
+    text-shadow: 0 0 6px rgba(0, 255, 65, 0.3);
+    min-width: 36px;
+  }
+
+  .nav-device__unit {
+    font-size: 6px;
+    color: rgba(0, 255, 65, 0.4);
+  }
+
+  .nav-device__plate {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5px;
+    color: rgba(0, 255, 65, 0.3);
+    letter-spacing: 2px;
+  }
+
+  /* ── Seam divider ── */
+  .nav-device__seam {
+    width: 80%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.15), transparent);
+  }
+
+  /* ── Buttons ── */
+  .nav-device__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px 14px;
+    width: 100%;
+  }
+
+  .nav-device__btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 8px;
+    border: 1px solid rgba(0, 255, 65, 0.08);
+    border-radius: 3px;
+    background: rgba(0, 255, 65, 0.02);
+    text-decoration: none;
+    transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+    cursor: pointer;
+  }
+
+  .nav-device__btn:hover {
+    background: rgba(0, 255, 65, 0.06);
+    border-color: rgba(0, 255, 65, 0.2);
+  }
+
+  .nav-device__btn:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
+
+  .nav-device__btn.active {
+    background: rgba(0, 255, 65, 0.08);
+    border-color: rgba(0, 255, 65, 0.3);
+    box-shadow: inset 0 0 8px rgba(0, 255, 65, 0.04), 0 0 8px rgba(0, 255, 65, 0.08);
+  }
+
+  .nav-device__btn-led {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(0, 255, 65, 0.2);
+    flex-shrink: 0;
+    transition: background 120ms ease, box-shadow 120ms ease;
+  }
+
+  .nav-device__btn.active .nav-device__btn-led {
+    background: var(--green);
+    box-shadow: 0 0 6px rgba(0, 255, 65, 0.6);
+  }
+
+  .nav-device__btn-ch {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5px;
+    color: rgba(0, 255, 65, 0.3);
+    min-width: 14px;
+  }
+
+  .nav-device__btn-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--green-dim);
+    letter-spacing: 0.5px;
+  }
+
+  .nav-device__btn.active .nav-device__btn-label {
+    color: var(--green);
+  }
+
+  /* ── Responsive: hide on mobile ── */
+  @media (max-width: 768px) {
+    .nav-device {
+      display: none;
+    }
+  }
+</style>

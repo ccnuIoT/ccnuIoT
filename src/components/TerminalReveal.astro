@@ -1,0 +1,70 @@
+---
+interface Props {
+  class?: string;
+  delay?: number;
+}
+
+const { class: className, delay = 0 } = Astro.props;
+---
+
+<div
+  class:list={['term-reveal', className]}
+  style={delay > 0 ? `animation-delay: ${delay}ms` : undefined}
+>
+  <slot />
+</div>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll<HTMLElement>('.term-reveal').forEach((el) => {
+      gsap.fromTo(
+        el,
+        { opacity: 0, filter: 'brightness(0)' },
+        {
+          opacity: 1,
+          filter: 'brightness(1)',
+          duration: 0.6,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            once: true,
+          },
+          onStart() {
+            // Phosphor flicker effect
+            gsap.fromTo(
+              el,
+              { opacity: 0 },
+              {
+                opacity: 1,
+                duration: 0.08,
+                repeat: 3,
+                yoyo: true,
+                ease: 'steps(1)',
+                onComplete() {
+                  gsap.to(el, { opacity: 1, filter: 'brightness(1)', duration: 0.2 });
+                },
+              }
+            );
+          },
+        }
+      );
+    });
+  } else {
+    document.querySelectorAll<HTMLElement>('.term-reveal').forEach((el) => {
+      el.style.opacity = '1';
+      el.style.filter = 'none';
+    });
+  }
+</script>
+
+<style>
+  .term-reveal {
+    opacity: 0;
+  }
+</style>
