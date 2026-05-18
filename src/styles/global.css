@@ -455,6 +455,12 @@ body::after {
   border-color: var(--green-dim);
 }
 
+.btn-term:active {
+  transform: translateY(2px);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+  transition-duration: 50ms;
+}
+
 .geiger-bar {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

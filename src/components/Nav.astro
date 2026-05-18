@@ -10,7 +10,7 @@ const currentPath = Astro.url.pathname;
 ---
 
 <nav class="nav-device" aria-label="Primary">
-  <!-- Top: Geiger dial -->
+  <!-- Geiger dial (canvas) -->
   <div class="nav-device__head">
     <canvas id="geigerDial" width="160" height="160" aria-hidden="true"></canvas>
     <div class="nav-device__readout">
@@ -21,10 +21,9 @@ const currentPath = Astro.url.pathname;
     <div class="nav-device__plate">DSTM-01</div>
   </div>
 
-  <!-- Divider -->
   <div class="nav-device__seam" aria-hidden="true"></div>
 
-  <!-- Bottom: Channel buttons -->
+  <!-- Channel buttons -->
   <div class="nav-device__buttons">
     {links.map(({ href, label, ch }) => (
       <a
@@ -234,7 +233,6 @@ const currentPath = Astro.url.pathname;
 </script>
 
 <style>
-  /* ── Device Shell — irregular, not a rectangle ── */
   .nav-device {
     position: fixed;
     right: 16px;
@@ -248,7 +246,6 @@ const currentPath = Astro.url.pathname;
     background:
       linear-gradient(180deg, rgba(26, 29, 30, 0.95), rgba(20, 22, 23, 0.98));
     border: 1px solid rgba(0, 255, 65, 0.1);
-    /* Irregular shape — not a rectangle */
     clip-path: polygon(
       8% 0%, 92% 0%,
       100% 3%, 100% 97%,
@@ -265,7 +262,6 @@ const currentPath = Astro.url.pathname;
     transform: translateY(-50%) translateX(-4px);
   }
 
-  /* ── Screws ── */
   .nav-device__screw {
     position: absolute;
     width: 8px;
@@ -282,7 +278,6 @@ const currentPath = Astro.url.pathname;
   .nav-device__screw--bl { bottom: 6px; left: 10px; }
   .nav-device__screw--br { bottom: 6px; right: 10px; }
 
-  /* ── Head: Dial area ── */
   .nav-device__head {
     display: flex;
     flex-direction: column;
@@ -334,14 +329,12 @@ const currentPath = Astro.url.pathname;
     letter-spacing: 2px;
   }
 
-  /* ── Seam divider ── */
   .nav-device__seam {
     width: 80%;
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.15), transparent);
   }
 
-  /* ── Buttons ── */
   .nav-device__buttons {
     display: flex;
     flex-direction: column;
@@ -411,7 +404,6 @@ const currentPath = Astro.url.pathname;
     color: var(--green);
   }
 
-  /* ── Responsive: hide on mobile ── */
   @media (max-width: 768px) {
     .nav-device {
       display: none;

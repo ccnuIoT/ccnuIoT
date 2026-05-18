@@ -91,6 +91,11 @@
           `;
           burst.classList.add('is-active');
 
+          // Notify 3D scene
+          document.dispatchEvent(new CustomEvent('radburst', {
+            detail: { x: posX, y: posY },
+          }));
+
           // afterimage burn — stays briefly after flash
           setTimeout(() => {
             const phosphor = effectLayer.querySelector('.screen-fx__phosphor');

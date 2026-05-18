@@ -1,0 +1,159 @@
+---
+---
+
+<div class="hero-text-3d" id="heroText3D" aria-hidden="true">
+  <canvas class="hero-text-3d__canvas"></canvas>
+</div>
+
+<script>
+  import {
+    Scene, PerspectiveCamera, WebGLRenderer,
+    PlaneGeometry, BoxGeometry,
+    MeshStandardMaterial, MeshBasicMaterial,
+    Mesh, Group, AmbientLight, PointLight, Clock,
+    CanvasTexture,
+  } from 'three';
+  import {
+    createRenderer, setupResize, createVisibilityController,
+    prefersReducedMotion, isMobile,
+  } from '../lib/three-utils';
+
+  const container = document.getElementById('heroText3D');
+  const canvas = container?.querySelector('.hero-text-3d__canvas') as HTMLCanvasElement;
+
+  if (canvas && !isMobile() && !prefersReducedMotion()) {
+    const renderer = createRenderer(canvas);
+    const scene = new Scene();
+    const camera = new PerspectiveCamera(40, 1, 0.1, 30);
+    camera.position.set(0, 0, 5);
+
+    const group = new Group();
+    scene.add(group);
+
+    // Create 3D text using CanvasTexture on extruded planes
+    const textCanvas = document.createElement('canvas');
+    textCanvas.width = 1024;
+    textCanvas.height = 256;
+    const ctx = textCanvas.getContext('2d')!;
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, 1024, 256);
+    ctx.font = 'bold 72px "Press Start 2P", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#00ff41';
+    ctx.shadowColor = '#00ff41';
+    ctx.shadowBlur = 30;
+    ctx.fillText('CONNECT', 512, 80);
+    ctx.fillText('EVERYTHING', 512, 180);
+
+    const texture = new CanvasTexture(textCanvas);
+
+    // Front face
+    const frontMat = new MeshStandardMaterial({
+      map: texture,
+      emissive: 0x00ff41,
+      emissiveIntensity: 0.2,
+      emissiveMap: texture,
+      transparent: true,
+      roughness: 0.4,
+      metalness: 0.2,
+    });
+    const front = new Mesh(new PlaneGeometry(4, 1), frontMat);
+    front.position.z = 0.05;
+    group.add(front);
+
+    // Back face (darker)
+    const backMat = new MeshStandardMaterial({
+      map: texture,
+      emissive: 0x00ff41,
+      emissiveIntensity: 0.05,
+      emissiveMap: texture,
+      transparent: true,
+      roughness: 0.6,
+      metalness: 0.3,
+    });
+    const back = new Mesh(new PlaneGeometry(4, 1), backMat);
+    back.position.z = -0.05;
+    back.rotation.y = Math.PI;
+    group.add(back);
+
+    // Edge glow (thin box around text)
+    const edgeMat = new MeshBasicMaterial({
+      color: 0x00ff41,
+      transparent: true,
+      opacity: 0.06,
+    });
+    const edge = new Mesh(new BoxGeometry(4.1, 1.1, 0.12), edgeMat);
+    group.add(edge);
+
+    // Lighting
+    scene.add(new AmbientLight(0x112211, 0.3));
+    const light = new PointLight(0x00ff41, 1.0, 15);
+    light.position.set(0, 2, 5);
+    scene.add(light);
+
+    // Resize
+    const cleanupResize = setupResize(renderer, camera, canvas);
+
+    // Mouse parallax
+    let mouseX = 0;
+    let mouseY = 0;
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX - window.innerWidth / 2;
+      mouseY = e.clientY - window.innerHeight / 2;
+    });
+
+    // Animation
+    const clock = new Clock();
+    let running = true;
+    let animId: number | null = null;
+
+    function animate() {
+      if (!running) return;
+      const t = clock.getElapsedTime();
+
+      group.rotation.y = mouseX * 0.0002 + Math.sin(t * 0.3) * 0.02;
+      group.rotation.x = mouseY * 0.00015;
+
+      // Gentle float
+      group.position.y = Math.sin(t * 0.5) * 0.05;
+
+      // Edge glow pulse
+      edgeMat.opacity = 0.04 + Math.sin(t * 1.5) * 0.02;
+
+      renderer.render(scene, camera);
+      animId = requestAnimationFrame(animate);
+    }
+
+    const vis = createVisibilityController(
+      () => { running = true; animate(); },
+      () => { running = false; if (animId) cancelAnimationFrame(animId); }
+    );
+
+    animate();
+  }
+</script>
+
+<style>
+  .hero-text-3d {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-text-3d__canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    .hero-text-3d {
+      display: none;
+    }
+  }
+</style>

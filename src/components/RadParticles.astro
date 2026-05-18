@@ -11,7 +11,7 @@
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ── Config ──
-  const MAX_PARTICLES = prefersReducedMotion ? 20 : 50;
+  const MAX_PARTICLES = prefersReducedMotion ? 25 : 70;
   const CONNECTION_DIST = 100;
   const CURSOR_RADIUS = 120;
   const CURSOR_FORCE = 0.4;
@@ -116,8 +116,6 @@
   function drawFrame() {
     ctx.clearRect(0, 0, width, height);
 
-    ctx.font = '12px "VT323", monospace';
-
     // Draw connections
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
@@ -137,6 +135,7 @@
     }
 
     // Draw particles as characters
+    ctx.font = '12px "VT323", monospace';
     for (const p of particles) {
       ctx.fillStyle = `rgba(0, 255, 65, ${p.opacity})`;
       ctx.font = `${p.size}px "VT323", monospace`;

@@ -7,12 +7,14 @@
   import {
     Scene, PerspectiveCamera, WebGLRenderer,
     BoxGeometry, CylinderGeometry, SphereGeometry, TorusGeometry,
-    BufferGeometry, Float32BufferAttribute,
+    BufferGeometry, Float32BufferAttribute, EdgesGeometry, CanvasTexture,
     MeshStandardMaterial, MeshBasicMaterial,
-    Mesh, Group, LineSegments, LineBasicMaterial, Clock,
+    Mesh, Group, LineSegments, LineBasicMaterial, PointLight, Clock,
   } from 'three';
+  import gsap from 'gsap';
   import {
     createRenderer, setupResize, createVisibilityController,
+    createAmbientLight, createPointLight,
     prefersReducedMotion, isMobile, disposeScene,
   } from '../lib/three-utils';
 
@@ -75,13 +77,49 @@
   bezel.position.set(0, 0.4, 0.76);
   terminal.add(bezel);
 
-  // Screen
+  // Screen with dynamic CanvasTexture
+  const screenCanvas = document.createElement('canvas');
+  screenCanvas.width = 512;
+  screenCanvas.height = 360;
+  const screenCtx = screenCanvas.getContext('2d')!;
+  screenCtx.fillStyle = '#001a00';
+  screenCtx.fillRect(0, 0, 512, 360);
+
+  const screenTexture = new CanvasTexture(screenCanvas);
+  const dynamicScreenMat = new MeshStandardMaterial({
+    map: screenTexture,
+    emissive: 0x00ff41,
+    emissiveIntensity: 0.15,
+    emissiveMap: screenTexture,
+    roughness: 0.6,
+    metalness: 0.1,
+  });
+
   const screen = new Mesh(
     new BoxGeometry(1.4, 1.0, 0.02),
-    screenMat
+    dynamicScreenMat
   );
   screen.position.set(0, 0.4, 0.82);
   terminal.add(screen);
+
+  // Boot text on 3D screen
+  let bootLineIndex = 0;
+  document.addEventListener('boot-text-line', ((e: CustomEvent) => {
+    const { text } = e.detail;
+    screenCtx.fillStyle = '#001a00';
+    screenCtx.fillRect(0, 0, 512, 360);
+
+    // Redraw all previous lines + new line
+    const lines = e.detail.allLines || [text];
+    screenCtx.font = '14px "VT323", monospace';
+    screenCtx.fillStyle = '#00ff41';
+    lines.forEach((line: string, i: number) => {
+      screenCtx.fillText(line, 20, 30 + i * 18);
+    });
+
+    screenTexture.needsUpdate = true;
+    dynamicScreenMat.emissiveIntensity = 0.3;
+  }) as EventListener);
 
   // Screen scanline overlay (wireframe)
   const scanOverlay = new Mesh(
@@ -156,7 +194,7 @@
   terminal.add(ring);
 
   // ── Edge Wireframe ──
-  const edges = new (await import('three')).EdgesGeometry(new BoxGeometry(2, 2.5, 1.5));
+  const edges = new EdgesGeometry(new BoxGeometry(2, 2.5, 1.5));
   const edgeLines = new LineSegments(
     edges,
     new LineBasicMaterial({ color: 0x00ff41, transparent: true, opacity: 0.15 })
@@ -251,6 +289,25 @@
     document.addEventListener('mousemove', (e) => {
       mouseX = e.clientX - window.innerWidth / 2;
       mouseY = e.clientY - window.innerHeight / 2;
+    });
+  }
+
+  // ── Radiation burst sync ──
+  if (!reduced) {
+    document.addEventListener('radburst', () => {
+      const light = new PointLight(0x00ff41, 4, 12);
+      light.position.set(
+        (Math.random() - 0.5) * 4,
+        (Math.random() - 0.5) * 3,
+        2 + Math.random() * 2
+      );
+      scene.add(light);
+      gsap.to(light, {
+        intensity: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+        onComplete: () => scene.remove(light),
+      });
     });
   }
 

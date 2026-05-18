@@ -102,8 +102,13 @@
     }
 
     async function run() {
+      const typedLines: string[] = [];
       for (const line of Array.from(lines)) {
         await typeLine(line);
+        typedLines.push(line.textContent || '');
+        document.dispatchEvent(new CustomEvent('boot-text-line', {
+          detail: { text: line.textContent || '', allLines: [...typedLines] },
+        }));
       }
 
       sessionStorage.setItem('booted', '1');
