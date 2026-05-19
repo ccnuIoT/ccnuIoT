@@ -17,13 +17,15 @@ import HeroText3D from './HeroText3D.astro';
     <span class="type-line">华中师范大学物联网协会。</span>
   </p>
   <div class="hero-actions" id="heroActions" style="opacity:0">
-    <button class="btn-term primary">[ JOIN ]</button>
-    <button class="btn-term">[ PROJECTS ]</button>
-    <button class="btn-term">[ HELP ]</button>
+    <a href="#join" class="btn-term primary magnetic-btn">[ JOIN ]</a>
+    <a href="#projects" class="btn-term magnetic-btn">[ PROJECTS ]</a>
+    <a href="#divisions" class="btn-term magnetic-btn">[ DIVISIONS ]</a>
   </div>
 </section>
 
 <script>
+  import gsap from 'gsap';
+
   document.addEventListener('DOMContentLoaded', () => {
     const heroSection = document.getElementById('heroSection');
     const lines = document.querySelectorAll<HTMLElement>('.hero .type-line');
@@ -106,6 +108,26 @@ import HeroText3D from './HeroText3D.astro';
 
       document.dispatchEvent(new CustomEvent('hero-typed'));
     }
+
+    // Magnetic buttons
+    document.querySelectorAll<HTMLElement>('.magnetic-btn').forEach((btn) => {
+      const xTo = gsap.quickTo(btn, 'x', { duration: 1, ease: 'elastic.out(1, 0.3)' });
+      const yTo = gsap.quickTo(btn, 'y', { duration: 1, ease: 'elastic.out(1, 0.3)' });
+
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const dx = e.clientX - (rect.left + rect.width / 2);
+        const dy = e.clientY - (rect.top + rect.height / 2);
+        xTo(dx * 0.3);
+        yTo(dy * 0.3);
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        gsap.to(btn, { x: 0, y: 0, duration: 1, ease: 'elastic.out(1, 0.3)' });
+        xTo(0);
+        yTo(0);
+      });
+    });
 
     document.addEventListener('boot-typed', () => {
       // Brief beat after CRT flash, then start hero

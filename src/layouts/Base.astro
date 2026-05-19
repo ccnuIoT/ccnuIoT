@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import SmoothScroll from '../components/SmoothScroll.astro';
 
 interface Props {
   title?: string;
@@ -22,6 +23,7 @@ const { title = 'CCNU IoT — 华中师范大学物联网协会' } = Astro.props
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 </head>
 <body>
+  <SmoothScroll />
   <a href="#main" class="skip-link">Skip to content</a>
   <slot />
 </body>

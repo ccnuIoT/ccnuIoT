@@ -61,7 +61,8 @@ const groups = [
 <script>
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.querySelectorAll<HTMLElement>('.group-block').forEach((card) => {
-      card.style.transition = 'transform 200ms ease';
+      card.style.transition = 'transform 400ms cubic-bezier(0.03, 0.98, 0.52, 0.99)';
+      card.style.transformStyle = 'preserve-3d';
 
       card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
