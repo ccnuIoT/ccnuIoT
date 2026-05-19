@@ -1,7 +1,6 @@
 <div class="screen-fx" aria-hidden="true">
   <span class="screen-fx__noise"></span>
   <span class="screen-fx__bloom"></span>
-  <span class="screen-fx__sweep"></span>
   <span class="screen-fx__scanlines"></span>
   <span class="screen-fx__radburst"></span>
   <span class="screen-fx__phosphor"></span>
@@ -13,27 +12,8 @@
     if (!(effectLayer instanceof HTMLElement)) return;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let nextSweepId = 0;
-    let clearSweepId = 0;
     let nextScanId = 0;
     let nextRadId = 0;
-
-    /* --- retinal sweep (existing) --- */
-    const scheduleSweep = () => {
-      window.clearTimeout(nextSweepId);
-      if (reducedMotion.matches) {
-        effectLayer.classList.remove('is-sweeping');
-        return;
-      }
-      const delay = 7000 + Math.random() * 13000;
-      nextSweepId = window.setTimeout(() => {
-        effectLayer.classList.add('is-sweeping');
-        clearSweepId = window.setTimeout(() => {
-          effectLayer.classList.remove('is-sweeping');
-          scheduleSweep();
-        }, 1300);
-      }, delay);
-    };
 
     /* --- random scanline interference — harsh, sharp --- */
     const scheduleScanline = () => {
@@ -93,7 +73,7 @@
 
           // Notify 3D scene
           document.dispatchEvent(new CustomEvent('radburst', {
-            detail: { x: posX, y: posY },
+            detail: { x, y },
           }));
 
           // afterimage burn — stays briefly after flash
@@ -149,17 +129,12 @@
     };
 
     const handleMotionChange = () => {
-      window.clearTimeout(nextSweepId);
-      window.clearTimeout(clearSweepId);
       window.clearTimeout(nextScanId);
       window.clearTimeout(nextRadId);
-      effectLayer.classList.remove('is-sweeping');
-      scheduleSweep();
       scheduleScanline();
       scheduleRadBurst();
     };
 
-    scheduleSweep();
     scheduleScanline();
     scheduleRadBurst();
     schedulePhosphor();
