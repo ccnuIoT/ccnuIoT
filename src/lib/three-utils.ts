@@ -5,7 +5,6 @@ import {
   AmbientLight,
   PointLight,
   NoToneMapping,
-  MeshStandardMaterial,
 } from 'three';
 
 // ── Cached checks ──
@@ -91,18 +90,6 @@ export function createPointLight(
   const light = new PointLight(color, intensity, distance);
   light.position.set(x, y, z);
   return light;
-}
-
-// ── Fallout-themed material ──
-
-export function createGreenPhosphorMaterial(intensity = 0.3): MeshStandardMaterial {
-  return new MeshStandardMaterial({
-    color: 0x00ff41,
-    emissive: 0x00ff41,
-    emissiveIntensity: intensity,
-    roughness: 0.3,
-    metalness: 0.2,
-  });
 }
 
 // ── Disposal ──
