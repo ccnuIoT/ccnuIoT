@@ -2,10 +2,10 @@
 ---
 
 <button
-  class="sound-toggle"
+  class="sound-toggle is-active"
   id="fallout-sound-toggle"
   aria-label="Toggle sound effects"
-  aria-pressed="false"
+  aria-pressed="true"
 >
   <svg class="sound-icon sound-icon--off" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
@@ -22,8 +22,10 @@
 <script>
   class FalloutSoundSystem {
     private ctx: AudioContext | null = null;
-    private enabled = false;
+    private enabled = true;
     private toggle: HTMLButtonElement;
+    private humOsc: OscillatorNode | null = null;
+    private humGain: GainNode | null = null;
 
     constructor() {
       this.toggle = document.getElementById('fallout-sound-toggle') as HTMLButtonElement;
@@ -34,19 +36,22 @@
         return;
       }
 
-      // Restore state from sessionStorage
       const saved = sessionStorage.getItem('fallout-sound-enabled');
-      if (saved === 'true') {
+      if (saved === 'false') {
+        this.enabled = false;
+        this.toggle.setAttribute('aria-pressed', 'false');
+        this.toggle.classList.remove('is-active');
+      } else {
         this.enabled = true;
-        this.ctx = new AudioContext();
         this.toggle.setAttribute('aria-pressed', 'true');
         this.toggle.classList.add('is-active');
+        this.ctx = new AudioContext();
+        this.startHum();
       }
 
       this.toggle.addEventListener('click', () => this.toggleSound());
-      this.setupClickSounds();
+      this.setupHoverAndClickSounds();
       this.setupBootSound();
-      this.setupSectionSounds();
     }
 
     private toggleSound() {
@@ -56,18 +61,66 @@
       this.enabled = !this.enabled;
       this.toggle.setAttribute('aria-pressed', String(this.enabled));
       this.toggle.classList.toggle('is-active', this.enabled);
-
-      // Persist state
       sessionStorage.setItem('fallout-sound-enabled', String(this.enabled));
 
-      if (this.enabled) this.playClick();
+      if (this.enabled) {
+        this.startHum();
+        this.playClick();
+      } else {
+        this.stopHum();
+      }
     }
 
-    private setupClickSounds() {
+    private startHum() {
+      if (!this.ctx || !this.enabled) return;
+      try {
+        this.stopHum();
+        this.humOsc = this.ctx.createOscillator();
+        this.humGain = this.ctx.createGain();
+
+        this.humOsc.type = 'sine';
+        this.humOsc.frequency.setValueAtTime(60, this.ctx.currentTime); // 60Hz mains hum
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(90, this.ctx.currentTime);
+
+        this.humOsc.connect(filter);
+        filter.connect(this.humGain);
+        this.humGain.connect(this.ctx.destination);
+
+        this.humGain.gain.setValueAtTime(0.003, this.ctx.currentTime);
+        this.humOsc.start();
+      } catch (e) {
+        console.error('Failed to start ambient hum', e);
+      }
+    }
+
+    private stopHum() {
+      if (this.humOsc) {
+        try { this.humOsc.stop(); } catch(e){}
+        this.humOsc.disconnect();
+        this.humOsc = null;
+      }
+      if (this.humGain) {
+        this.humGain.disconnect();
+        this.humGain = null;
+      }
+    }
+
+    private setupHoverAndClickSounds() {
+      document.addEventListener('mouseover', (e) => {
+        if (!this.enabled || !this.ctx) return;
+        const target = e.target as HTMLElement;
+        if (target.closest('a, button, .nav-device__btn, .group-block, .project-row')) {
+          this.playTick();
+        }
+      });
+
       document.addEventListener('click', (e) => {
         if (!this.enabled || !this.ctx) return;
         const target = e.target as HTMLElement;
-        if (target.closest('a, button, .nav-pusher, .btn-term')) {
+        if (target.closest('a, button, .nav-device__btn, .group-block, .project-row')) {
           this.playClick();
         }
       });
@@ -80,29 +133,27 @@
       });
     }
 
-    private setupSectionSounds() {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting && this.enabled && this.ctx) {
-              this.playPhosphorFlick();
-            }
-          });
-        },
-        { threshold: 0.3 }
-      );
+    playTick() {
+      if (!this.ctx || !this.enabled) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
 
-      document.querySelectorAll('.container > section, .container > .group-block').forEach((el) => {
-        observer.observe(el);
-      });
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(2400, now);
+      gain.gain.setValueAtTime(0.006, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.012);
+
+      osc.start(now);
+      osc.stop(now + 0.012);
     }
-
-    // ── Sound Synthesis ──
 
     playClick() {
       if (!this.ctx || !this.enabled) return;
       const now = this.ctx.currentTime;
-
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
 
@@ -110,11 +161,11 @@
       gain.connect(this.ctx.destination);
 
       osc.type = 'square';
-      osc.frequency.setValueAtTime(1200, now);
-      osc.frequency.exponentialRampToValueAtTime(200, now + 0.05);
+      osc.frequency.setValueAtTime(800, now);
+      osc.frequency.exponentialRampToValueAtTime(150, now + 0.06);
 
-      gain.gain.setValueAtTime(0.04, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+      gain.gain.setValueAtTime(0.02, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
 
       osc.start(now);
       osc.stop(now + 0.06);
@@ -123,7 +174,6 @@
     private playBootHum() {
       if (!this.ctx || !this.enabled) return;
       const now = this.ctx.currentTime;
-
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
 
@@ -131,34 +181,14 @@
       gain.connect(this.ctx.destination);
 
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(60, now);
+      osc.frequency.setValueAtTime(55, now);
 
       gain.gain.setValueAtTime(0.001, now);
-      gain.gain.linearRampToValueAtTime(0.03, now + 0.3);
+      gain.gain.linearRampToValueAtTime(0.025, now + 0.3);
       gain.gain.linearRampToValueAtTime(0.001, now + 0.8);
 
       osc.start(now);
       osc.stop(now + 0.8);
-    }
-
-    private playPhosphorFlick() {
-      if (!this.ctx || !this.enabled) return;
-      const now = this.ctx.currentTime;
-
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(100, now);
-
-      gain.gain.setValueAtTime(0.02, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
-
-      osc.start(now);
-      osc.stop(now + 0.1);
     }
   }
 

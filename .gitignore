@@ -21,6 +21,7 @@ aider*
 .claude-code/
 .opencode/
 .agents/
+.antigravitycli/
 
 # IDE / Editor
 .vscode/

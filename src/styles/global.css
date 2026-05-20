@@ -246,10 +246,10 @@ body::after {
 }
 
 @keyframes crtOff {
-  0%   { clip-path: inset(0); opacity: 1; }
-  30%  { clip-path: inset(35% 0 35% 0); opacity: 1; }
-  60%  { clip-path: inset(48% 0 48% 0); opacity: 0.6; }
-  100% { clip-path: inset(50% 0 50% 0); opacity: 0; }
+  0%   { transform: scaleY(1) scaleX(1); opacity: 1; filter: brightness(1); }
+  40%  { transform: scaleY(0.004) scaleX(1.05); opacity: 1; filter: brightness(3); }
+  80%  { transform: scaleY(0.004) scaleX(0.004); opacity: 0.8; filter: brightness(8); }
+  100% { transform: scaleY(0) scaleX(0); opacity: 0; filter: brightness(15); }
 }
 
 .boot-line {
@@ -1074,4 +1074,66 @@ footer a:focus-visible {
   .cohort-section__title {
     font-size: 14px;
   }
+}
+
+/* Bento Panels with Corner Brackets */
+.term-panel {
+  position: relative;
+  border: 1px dashed rgba(0, 255, 65, 0.22);
+  background: rgba(2, 8, 3, 0.72);
+  backdrop-filter: blur(4px);
+  padding: 24px 20px;
+  margin-bottom: 24px;
+}
+
+.term-panel .corner {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border: 2px solid var(--green);
+  pointer-events: none;
+}
+
+.term-panel .corner-tl { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+.term-panel .corner-tr { top: -2px; right: -2px; border-left: none; border-bottom: none; }
+.term-panel .corner-bl { bottom: -2px; left: -2px; border-right: none; border-top: none; }
+.term-panel .corner-br { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+
+/* Coordinates legend label */
+.term-panel-legend {
+  position: absolute;
+  bottom: 4px;
+  right: 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 5px;
+  color: rgba(0, 255, 65, 0.25);
+  letter-spacing: 1px;
+}
+
+/* Phosphor Glow Trail (Slow Decay) */
+.phosphor-glow-text {
+  transition: text-shadow 0.6s cubic-bezier(0.1, 0.8, 0.2, 1), color 0.3s ease;
+}
+
+.phosphor-glow-text:hover {
+  text-shadow: 0 0 6px var(--green), 0 0 15px rgba(0, 255, 65, 0.4);
+}
+
+.btn-term {
+  transition: text-shadow 0.6s cubic-bezier(0.1, 0.8, 0.2, 1), background-color 160ms ease, border-color 160ms ease, box-shadow 0.6s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+
+.btn-term:hover {
+  box-shadow: 0 0 16px var(--green-soft), inset 0 0 8px rgba(0, 255, 65, 0.2);
+}
+
+/* CRT Screen glitch */
+.crt-screen.is-glitching {
+  animation: crtScreenGlitch 120ms steps(2) infinite;
+}
+
+@keyframes crtScreenGlitch {
+  0% { transform: translate(1px, -1px); filter: hue-rotate(5deg) contrast(1.2); }
+  50% { transform: translate(-1px, 2px) skewX(2deg); filter: hue-rotate(-5deg) saturate(1.4); }
+  100% { transform: translate(2px, 1px); filter: none; }
 }

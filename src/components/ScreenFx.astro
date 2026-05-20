@@ -139,5 +139,36 @@
     scheduleRadBurst();
     schedulePhosphor();
     reducedMotion.addEventListener?.('change', handleMotionChange);
+
+    // Click glitch trigger logic
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('a, button, .nav-device__btn, .group-block, .project-row')) {
+        const screen = document.querySelector('.crt-screen');
+        if (screen) {
+          screen.classList.add('is-glitching');
+          setTimeout(() => {
+            screen.classList.remove('is-glitching');
+          }, 120);
+        }
+      }
+    });
+
+    // Scheduled periodic glitch interference
+    const triggerPeriodicGlitch = () => {
+      if (reducedMotion.matches) return;
+      const delay = 22000 + Math.random() * 15000;
+      setTimeout(() => {
+        const screen = document.querySelector('.crt-screen');
+        if (screen) {
+          screen.classList.add('is-glitching');
+          setTimeout(() => {
+            screen.classList.remove('is-glitching');
+          }, 180);
+        }
+        triggerPeriodicGlitch();
+      }, delay);
+    };
+    triggerPeriodicGlitch();
   });
 </script>

@@ -7,6 +7,13 @@
   <div class="boot-line dim">CHECKING STORAGE... <span class="ok">[OK] 20MB</span></div>
   <div class="boot-line dim">LOADING KERNEL... <span class="ok">[OK]</span></div>
   <div class="boot-line dim">INITIALIZING NETWORK... <span class="ok">[OK]</span></div>
+  <div class="boot-line instant px font-mono" style="line-height:1.2; font-size: 7px; color: var(--green); margin: 6px 0;">   ______   ______  .__   __.  __    __      __    ______   .__________.</div>
+  <div class="boot-line instant px font-mono" style="line-height:1.2; font-size: 7px; color: var(--green); margin: 6px 0;">  /      | /      | |  \ |  | |  |  |  |    |  |  /  __  \  |          |</div>
+  <div class="boot-line instant px font-mono" style="line-height:1.2; font-size: 7px; color: var(--green); margin: 6px 0;"> |  ,----'|  ,----' |   \|  | |  |  |  |    |  | |  |  |  | `---|  |`---|</div>
+  <div class="boot-line instant px font-mono" style="line-height:1.2; font-size: 7px; color: var(--green); margin: 6px 0;"> |  |     |  |      |  . `  | |  |  |  |    |  | |  |  |  |     |  |     </div>
+  <div class="boot-line instant px font-mono" style="line-height:1.2; font-size: 7px; color: var(--green); margin: 6px 0;"> |  `----.|  `----' |  |\   | |  `--'  |    |  | |  `--'  |     |  |     </div>
+  <div class="boot-line instant px font-mono" style="line-height:1.2; font-size: 7px; color: var(--green); margin: 6px 0;">  \______| \______| |__| \__|  \______/     |__|  \______/      |__|     </div>
+  <div class="boot-line instant px font-mono" style="line-height:1.2; font-size: 7px; color: var(--green); margin: 6px 0;">====================== CCNU IoT ASSOCIATION =======================</div>
   <div class="boot-line">&nbsp;</div>
   <div class="boot-line amber px">SYSTEM DIAGNOSTICS:</div>
   <div class="boot-line dim">&nbsp; RADIATION: <span class="ok">0.12 mSv/h [SAFE]</span></div>
@@ -83,6 +90,10 @@
 
     async function typeLine(el: HTMLElement) {
       el.style.visibility = 'visible';
+      if (el.classList.contains('instant')) {
+        await sleep(35); // quick delay for row-by-row rendering
+        return;
+      }
       const segs = parseSegments(el);
       if (segs.length === 0) { await sleep(LINE_GAP); return; }
 

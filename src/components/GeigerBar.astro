@@ -11,25 +11,35 @@ const totalMembers = Object.values(membersData).reduce(
 const projectCount = 0; // No projects yet
 ---
 
-<div class="geiger-bar" role="status" aria-label="Statistics">
-  <div class="geiger-item">
-    <div class="geiger-label">DIVISIONS</div>
-    <div class="geiger-value glow">{divisions}</div>
-    <div class="geiger-pulse"></div>
+<div class="term-panel" role="status" aria-label="Statistics">
+  <!-- Corners -->
+  <span class="corner corner-tl"></span>
+  <span class="corner corner-tr"></span>
+  <span class="corner corner-bl"></span>
+  <span class="corner corner-br"></span>
+
+  <div class="geiger-bar" style="border: none; margin-bottom: 0;">
+    <div class="geiger-item">
+      <div class="geiger-label">DIVISIONS</div>
+      <div class="geiger-value glow phosphor-glow-text">{divisions}</div>
+      <div class="geiger-pulse"></div>
+    </div>
+    <div class="geiger-item">
+      <div class="geiger-label">MEMBERS</div>
+      <div class="geiger-value glow phosphor-glow-text">{totalMembers}<span class="unit">+</span></div>
+      <div class="geiger-pulse" style="animation-delay:0.4s;"></div>
+    </div>
+    <div class="geiger-item">
+      <div class="geiger-label">PROJECTS</div>
+      <div class="geiger-value glow phosphor-glow-text">{projectCount}</div>
+      <div class="geiger-pulse" style="animation-delay:0.8s;"></div>
+    </div>
+    <div class="geiger-item">
+      <div class="geiger-label">STATUS</div>
+      <div class="geiger-value glow phosphor-glow-text" style="color:var(--green);">ON</div>
+      <div class="geiger-pulse" style="animation-delay:1.2s;width:100%;"></div>
+    </div>
   </div>
-  <div class="geiger-item">
-    <div class="geiger-label">MEMBERS</div>
-    <div class="geiger-value glow">{totalMembers}<span class="unit">+</span></div>
-    <div class="geiger-pulse" style="animation-delay:0.4s;"></div>
-  </div>
-  <div class="geiger-item">
-    <div class="geiger-label">PROJECTS</div>
-    <div class="geiger-value glow">{projectCount}</div>
-    <div class="geiger-pulse" style="animation-delay:0.8s;"></div>
-  </div>
-  <div class="geiger-item">
-    <div class="geiger-label">STATUS</div>
-    <div class="geiger-value glow" style="color:var(--green);">ON</div>
-    <div class="geiger-pulse" style="animation-delay:1.2s;width:100%;"></div>
-  </div>
+  
+  <span class="term-panel-legend">DST-MONITOR // SYS.ONLINE</span>
 </div>
