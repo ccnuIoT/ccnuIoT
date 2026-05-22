@@ -223,6 +223,7 @@ body::after {
 
 .boot-overlay {
   position: fixed;
+  contain: layout style paint;
   inset: 0;
   background: var(--bg);
   z-index: 10000;
