@@ -22,6 +22,7 @@ aider*
 .opencode/
 .agents/
 .antigravitycli/
+.omc
 
 # IDE / Editor
 .vscode/
