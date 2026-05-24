@@ -1,5 +1,26 @@
 {
   "hardware": [
+      {
+      "cohort":"2025",
+      "members":[
+        {
+          "name": "董小鑫",
+          "avatar": "",
+          "roleTags": [],
+          "focus": "",
+          "bio": "对嵌入式感兴趣",
+          "links": { "github": "", "bilibili": "", "blog": "" }
+        },
+        {
+          "name": "杨冰冰",
+          "avatar": "",
+          "roleTags": [],
+          "focus": "",
+          "bio": "嵌入式 代码工具",
+          "links": { "github": "https://jimo07.github.io", "bilibili": "", "blog": "" }
+        }
+      ]
+    },
     {
       "cohort": "2024",
       "members": [
@@ -28,11 +49,11 @@
           "links": { "github": "", "bilibili": "", "blog": "" }
         },
         {
-          "name": "邢卓涵",
+          "name": "邢卓函",
           "avatar": "",
           "roleTags": ["卫生委员"],
           "focus": "",
-          "bio": "物联网的mac独苗，头号反贼",
+          "bio": "安卓人想过上苹果人生",
           "links": { "github": "", "bilibili": "", "blog": "" }
         },
         {
@@ -42,11 +63,45 @@
           "focus": "",
           "bio": "混子一个",
           "links": { "github": "", "bilibili": "", "blog": "" }
+        },
+        {
+          "name": "骆枫",
+          "avatar": "",
+          "roleTags": [],
+          "focus": "",
+          "bio": "嵌入式领域低手，什么都想学。",
+          "links": { "github": "", "bilibili": "", "blog": "" }
+        }
+      ]
+    },
+    {
+      "cohort": "2023",
+      "members": [
+        {
+          "name": "叶冀宇",
+          "avatar": "/avatars/yejiyu.png",
+          "roleTags": [],
+          "focus": "",
+          "bio": "AAA嵌入式叶总，接ESP32/CH32/AT32/STM32全栈开发",
+          "links": { "github": "", "bilibili": "", "blog": "" }
         }
       ]
     }
   ],
   "algorithm": [
+    {
+      "cohort":"2025",
+      "members":[
+        {
+          "name": "程焌韬",
+          "avatar": "",
+          "roleTags": [],
+          "focus": "",
+          "bio": "",
+          "links": { "github": "", "bilibili": "", "blog": "" }
+        }
+      ]
+    },
     {
       "cohort": "2024",
       "members": [
@@ -65,11 +120,48 @@
           "focus": "",
           "bio": "",
           "links": { "github": "", "bilibili": "", "blog": "" }
+        },
+        {
+          "name": "程文悦",
+          "avatar": "",
+          "roleTags": [],
+          "focus": "",
+          "bio": "对图像处理，深度学习感兴趣",
+          "links": { "github": "", "bilibili": "", "blog": "" }
         }
       ]
     }
   ],
   "application": [
+    {
+      "cohort":"2025",
+      "members":[
+        {
+          "name": "阮成智",
+          "avatar": "",
+          "roleTags": [],
+          "focus": "",
+          "bio": "主业钻研技术，副业快乐摸鱼\n动手能力在线。性格随和超好相处，组队干活超合拍。不断解锁新技能，在码代码的路上慢慢升级，对vibecoding有着相对浓厚的兴趣，期待和各位大佬一起交流进步！ ",
+          "links": { "github": "", "bilibili": "", "blog": "" }
+        },
+        {
+          "name": "季星辰",
+          "avatar": "",
+          "roleTags": [],
+          "focus": "",
+          "bio": "目前主要研究web前端开发、响应式布局。技术栈：HTML5/CSS3、JavaScript 、Vue3，目前正在精进技术。",
+          "links": { "github": "", "bilibili": "", "blog": "https://jimo07.github.io" }
+        },
+        {
+          "name": "王紫喧",
+          "avatar": "",
+          "roleTags": [],
+          "focus": "",
+          "bio": "",
+          "links": { "github": "", "bilibili": "", "blog": "" }
+        }
+      ]
+    },
     {
       "cohort": "2024",
       "members": [
