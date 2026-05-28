@@ -71,6 +71,14 @@ body {
   cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%2300ff41' stroke-width='1.5' opacity='0.7'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%2300ff41' opacity='0.9'/%3E%3Cline x1='12' y1='1' x2='12' y2='6' stroke='%2300ff41' stroke-width='1' opacity='0.6'/%3E%3Cline x1='12' y1='18' x2='12' y2='23' stroke='%2300ff41' stroke-width='1' opacity='0.6'/%3E%3Cline x1='1' y1='12' x2='6' y2='12' stroke='%2300ff41' stroke-width='1' opacity='0.6'/%3E%3Cline x1='18' y1='12' x2='23' y2='12' stroke='%2300ff41' stroke-width='1' opacity='0.6'/%3E%3C/svg%3E") 12 12, crosshair;
 }
 
+/* Hide native cursor when custom crosshair is active */
+@media (min-width: 1024px) and (pointer: fine) {
+  body { cursor: none !important; }
+  .btn-term, .group-block, .project-row, footer a, .nav-device__btn {
+    cursor: none !important;
+  }
+}
+
 body::before {
   content: '';
   position: fixed;

@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import SmoothScroll from '../components/SmoothScroll.astro';
+import CustomCursor from '../components/CustomCursor.astro';
 
 interface Props {
   title?: string;
@@ -24,6 +25,7 @@ const { title = 'CCNU IoT — 华中师范大学物联网协会' } = Astro.props
 </head>
 <body>
   <SmoothScroll />
+  <CustomCursor />
   <a href="#main" class="skip-link">Skip to content</a>
   <slot />
 </body>

@@ -1,0 +1,320 @@
+---
+---
+
+<div class="xhair" aria-hidden="true">
+  <div class="xhair__h"></div>
+  <div class="xhair__v"></div>
+  <div class="xhair__dot"></div>
+  <div class="xhair__label"></div>
+</div>
+
+<script>
+  const root = document.querySelector('.xhair') as HTMLElement;
+  if (!root) throw new Error('CustomCursor root not found');
+
+  const hLine = root.querySelector('.xhair__h') as HTMLElement;
+  const vLine = root.querySelector('.xhair__v') as HTMLElement;
+  const dot = root.querySelector('.xhair__dot') as HTMLElement;
+  const label = root.querySelector('.xhair__label') as HTMLElement;
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) {
+    root.style.display = 'none';
+  } else {
+    // ── Config ──
+    const INTERACTIVE = 'a, button, .btn-term, [role="button"], .group-block, .project-row, .nav-device__btn';
+
+    // ── State ──
+    let mouseX = -1000;
+    let mouseY = -1000;
+    let dotX = -1000;
+    let dotY = -1000;
+    let isHovering = false;
+    let hoveredEl: Element | null = null;
+    let lockX = 0;
+    let lockY = 0;
+    let visible = false;
+    let running = true;
+    let rafId = 0;
+
+    interface CachedEl {
+      el: Element;
+      cx: number;
+      cy: number;
+      rect: { left: number; top: number; right: number; bottom: number };
+    }
+    let cachedEls: CachedEl[] = [];
+
+    function cacheInteractiveEls() {
+      cachedEls = Array.from(document.querySelectorAll(INTERACTIVE)).map(el => {
+        const r = el.getBoundingClientRect();
+        return { el, cx: r.left + r.width / 2, cy: r.top + r.height / 2, rect: { left: r.left, top: r.top, right: r.right, bottom: r.bottom } };
+      });
+    }
+    cacheInteractiveEls();
+    window.addEventListener('resize', cacheInteractiveEls);
+    window.addEventListener('scroll', cacheInteractiveEls, { passive: true });
+
+    function applyPosition(x: number, y: number) {
+      hLine.style.transform = `translateY(${y}px)`;
+      vLine.style.transform = `translateX(${x}px)`;
+      dot.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    function showCursor() {
+      if (!visible) {
+        visible = true;
+        root.classList.remove('is-hidden');
+      }
+    }
+
+    function hideCursor() {
+      if (visible) {
+        visible = false;
+        root.classList.add('is-hidden');
+      }
+    }
+
+    function enterHover(el: Element) {
+      if (hoveredEl === el) return;
+      hoveredEl = el;
+      isHovering = true;
+
+      const rect = el.getBoundingClientRect();
+      const w = rect.width + 12;
+      const h = rect.height + 12;
+      dot.style.width = w + 'px';
+      dot.style.height = h + 'px';
+      dot.style.marginLeft = -w / 2 + 'px';
+      dot.style.marginTop = -h / 2 + 'px';
+
+      const lbl = el.getAttribute('data-cursor-label') || el.getAttribute('aria-label') || '';
+      if (lbl) {
+        label.textContent = lbl;
+        label.style.opacity = '1';
+      }
+
+      root.classList.add('is-hover');
+    }
+
+    function leaveHover() {
+      if (!isHovering) return;
+      isHovering = false;
+      hoveredEl = null;
+
+      dot.style.width = '24px';
+      dot.style.height = '24px';
+      dot.style.marginLeft = '-12px';
+      dot.style.marginTop = '-12px';
+      label.style.opacity = '0';
+
+      root.classList.remove('is-hover');
+    }
+
+    function insideRect(x: number, y: number, r: { left: number; top: number; right: number; bottom: number }) {
+      return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+    }
+
+    function loop() {
+      if (!running) return;
+      rafId = requestAnimationFrame(loop);
+
+      if (isHovering) {
+        // ── Locked to element center, check if mouse left the element ──
+        const c = cachedEls.find(c => c.el === hoveredEl);
+        if (!c || !insideRect(mouseX, mouseY, c.rect)) {
+          leaveHover();
+          dotX = mouseX;
+          dotY = mouseY;
+          applyPosition(dotX, dotY);
+        }
+        // else: stay locked, don't update position
+      } else {
+        // ── Track mouse directly ──
+        dotX = mouseX;
+        dotY = mouseY;
+        applyPosition(dotX, dotY);
+
+        // ── Check if mouse is inside any interactive element ──
+        for (const c of cachedEls) {
+          if (insideRect(mouseX, mouseY, c.rect)) {
+            enterHover(c.el);
+            lockX = c.cx;
+            lockY = c.cy;
+            dotX = lockX;
+            dotY = lockY;
+            applyPosition(dotX, dotY);
+            break;
+          }
+        }
+      }
+    }
+
+    // ── Events ──
+    let initialized = false;
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (!initialized) {
+        initialized = true;
+        dotX = mouseX;
+        dotY = mouseY;
+        showCursor();
+      }
+    });
+
+    document.addEventListener('mouseleave', hideCursor);
+    document.addEventListener('mouseenter', showCursor);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        running = false;
+        cancelAnimationFrame(rafId);
+      } else {
+        running = true;
+        loop();
+      }
+    });
+
+    root.classList.add('is-hidden');
+    loop();
+  }
+</script>
+
+<style>
+  .xhair {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .xhair__h {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 1px;
+    background: rgba(0, 255, 65, 0.3);
+    will-change: transform;
+    transition: opacity 0.2s ease;
+  }
+
+  .xhair__v {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: rgba(0, 255, 65, 0.3);
+    will-change: transform;
+    transition: opacity 0.2s ease;
+  }
+
+  .xhair__dot {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    margin-left: -12px;
+    margin-top: -12px;
+    will-change: transform;
+    transition: width 0.25s ease, height 0.25s ease, margin 0.25s ease;
+  }
+
+  /* Crosshair bars */
+  .xhair__dot::before,
+  .xhair__dot::after {
+    content: '';
+    position: absolute;
+    background: rgba(0, 255, 65, 0.7);
+    transition: opacity 0.2s ease;
+  }
+
+  .xhair__dot::before {
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 2px;
+    margin-top: -1px;
+  }
+
+  .xhair__dot::after {
+    left: 50%;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    margin-left: -1px;
+  }
+
+  /* Corner brackets on hover */
+  .xhair.is-hover .xhair__dot {
+    border: 1px solid rgba(0, 255, 65, 0.7);
+    background:
+      linear-gradient(rgba(0, 255, 65, 0.7), rgba(0, 255, 65, 0.7)) 0 0 / 5px 1px no-repeat,
+      linear-gradient(rgba(0, 255, 65, 0.7), rgba(0, 255, 65, 0.7)) 0 0 / 1px 5px no-repeat,
+      linear-gradient(rgba(0, 255, 65, 0.7), rgba(0, 255, 65, 0.7)) 100% 0 / 5px 1px no-repeat,
+      linear-gradient(rgba(0, 255, 65, 0.7), rgba(0, 255, 65, 0.7)) 100% 0 / 1px 5px no-repeat,
+      linear-gradient(rgba(0, 255, 65, 0.7), rgba(0, 255, 65, 0.7)) 0 100% / 5px 1px no-repeat,
+      linear-gradient(rgba(0, 255, 65, 0.7), rgba(0, 255, 65, 0.7)) 0 100% / 1px 5px no-repeat,
+      linear-gradient(rgba(0, 255, 65, 0.7), rgba(0, 255, 65, 0.7)) 100% 100% / 5px 1px no-repeat,
+      linear-gradient(rgba(0, 255, 65, 0.7), rgba(0, 255, 65, 0.7)) 100% 100% / 1px 5px no-repeat;
+  }
+
+  .xhair.is-hover .xhair__dot::before,
+  .xhair.is-hover .xhair__dot::after {
+    opacity: 0;
+  }
+
+  /* Dim lines on hover */
+  .xhair.is-hover .xhair__h {
+    opacity: 0.15;
+  }
+
+  .xhair.is-hover .xhair__v {
+    opacity: 0.15;
+  }
+
+  /* Label */
+  .xhair__label {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-family: 'VT323', monospace;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(0, 255, 65, 0.85);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    transform: translate(12px, -24px);
+  }
+
+  .xhair.is-hover .xhair__label {
+    transform: translate(0, -24px);
+  }
+
+  /* Hidden state */
+  .xhair.is-hidden .xhair__h,
+  .xhair.is-hidden .xhair__v,
+  .xhair.is-hidden .xhair__dot {
+    opacity: 0;
+  }
+
+  /* Hide on mobile */
+  @media (max-width: 1023px) {
+    .xhair {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .xhair {
+      display: none;
+    }
+  }
+</style>
