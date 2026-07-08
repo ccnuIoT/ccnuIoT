@@ -9,14 +9,16 @@
 
   const ctx = canvas.getContext('2d')!;
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile = window.matchMedia('(max-width: 767px)').matches;
 
   // ── Config ──
-  const MAX_PARTICLES = prefersReducedMotion ? 25 : 70;
-  const CONNECTION_DIST = 100;
+  const MAX_PARTICLES = prefersReducedMotion ? 18 : isMobile ? 28 : 45;
+  const CONNECTION_DIST = isMobile ? 76 : 92;
   const CURSOR_RADIUS = 120;
   const CURSOR_FORCE = 0.4;
   const PARTICLE_SPEED = 0.2;
-  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  const DPR = Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 1.25);
+  const FRAME_MS = 1000 / 30;
 
   const CHARS = '01ABCDEF!@#$%&'.split('');
 
@@ -26,6 +28,8 @@
   let mouseX = -1000;
   let mouseY = -1000;
   let running = true;
+  let rafId = 0;
+  let lastFrame = 0;
 
   interface Particle {
     x: number;
@@ -145,9 +149,12 @@
 
   function loop() {
     if (!running) return;
+    rafId = requestAnimationFrame(loop);
+    const now = performance.now();
+    if (now - lastFrame < FRAME_MS) return;
+    lastFrame = now;
     update();
     drawFrame();
-    requestAnimationFrame(loop);
   }
 
   // ── Events ──
@@ -170,9 +177,14 @@
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       running = false;
+      cancelAnimationFrame(rafId);
+      rafId = 0;
     } else {
       running = true;
-      if (!prefersReducedMotion) loop();
+      if (!prefersReducedMotion && rafId === 0) {
+        lastFrame = 0;
+        rafId = requestAnimationFrame(loop);
+      }
     }
   });
 

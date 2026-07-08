@@ -500,6 +500,9 @@ const assetPath = (path: string) => path.startsWith('/') ? `${basePath}${path.re
 
     const ctx = canvas.getContext('2d');
     const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = matchMedia('(max-width: 720px)').matches;
+    const staticMode = reduceMotion || isMobile;
+    const FRAME_MS = 1000 / 30;
 
     const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF(){}[]<>fn=>vec::';
     const charArr = Array.from(chars);
@@ -511,7 +514,7 @@ const assetPath = (path: string) => path.startsWith('/') ? `${basePath}${path.re
 
     function resize() {
       const rect = canvas.parentElement.getBoundingClientRect();
-      const dpr = Math.min(devicePixelRatio || 1, 2);
+      const dpr = Math.min(devicePixelRatio || 1, isMobile ? 1 : 1.25);
       w = rect.width;
       h = rect.height;
       canvas.width = w * dpr;
@@ -523,7 +526,7 @@ const assetPath = (path: string) => path.startsWith('/') ? `${basePath}${path.re
     }
 
     function initColumns() {
-      const colCount = Math.floor(w / fontSize);
+      const colCount = Math.floor(w / (isMobile ? fontSize * 1.5 : fontSize));
       columns = [];
       for (let i = 0; i < colCount; i++) {
         columns.push({
@@ -582,22 +585,63 @@ const assetPath = (path: string) => path.startsWith('/') ? `${basePath}${path.re
         }
       }
 
-      if (!reduceMotion) {
-        requestAnimationFrame(drawFrame);
-      }
+
+    }
+
+    let running = false;
+    let rafId = 0;
+    let lastFrame = 0;
+
+    function loop(time = 0) {
+      if (!running) return;
+      rafId = requestAnimationFrame(loop);
+      if (time - lastFrame < FRAME_MS) return;
+      lastFrame = time;
+      drawFrame();
+    }
+
+    function drawStaticFrame() {
+      for (let i = 0; i < 28; i++) drawFrame();
+    }
+
+    function start() {
+      if (running || staticMode) return;
+      running = true;
+      lastFrame = 0;
+      rafId = requestAnimationFrame(loop);
+    }
+
+    function stop() {
+      running = false;
+      cancelAnimationFrame(rafId);
+      rafId = 0;
     }
 
     resize();
-    if (reduceMotion) {
-      for (let i = 0; i < 80; i++) drawFrame();
+    if (staticMode) {
+      drawStaticFrame();
     } else {
-      requestAnimationFrame(drawFrame);
+      const visibility = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !document.hidden) start();
+          else stop();
+        });
+      }, { threshold: 0.05 });
+      visibility.observe(canvas);
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stop();
+        else if (canvas.getBoundingClientRect().bottom > 0 && canvas.getBoundingClientRect().top < innerHeight) start();
+      });
     }
 
     let resizeTimer;
     const ro = new ResizeObserver(() => {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(resize, 200);
+      resizeTimer = setTimeout(() => {
+        resize();
+        if (staticMode) drawStaticFrame();
+      }, 200);
     });
     ro.observe(canvas.parentElement);
   })();
@@ -605,6 +649,9 @@ const assetPath = (path: string) => path.startsWith('/') ? `${basePath}${path.re
   // ── Scroll blur-in effect (SEGC pattern) ──
   (() => {
     const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = matchMedia('(max-width: 720px)').matches;
+    const staticMode = reduceMotion || isMobile;
+    const FRAME_MS = 1000 / 30;
     if (reduceMotion) return;
 
     const observer = new IntersectionObserver(

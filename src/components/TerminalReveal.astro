@@ -15,56 +15,41 @@ const { class: className, delay = 0 } = Astro.props;
 </div>
 
 <script>
-  import gsap from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  const items = document.querySelectorAll<HTMLElement>('.term-reveal');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  gsap.registerPlugin(ScrollTrigger);
-
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.querySelectorAll<HTMLElement>('.term-reveal').forEach((el) => {
-      gsap.fromTo(
-        el,
-        { opacity: 0, filter: 'brightness(0)' },
-        {
-          opacity: 1,
-          filter: 'brightness(1)',
-          duration: 0.6,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 85%',
-            once: true,
-          },
-          onStart() {
-            // Phosphor flicker effect
-            gsap.fromTo(
-              el,
-              { opacity: 0 },
-              {
-                opacity: 1,
-                duration: 0.08,
-                repeat: 3,
-                yoyo: true,
-                ease: 'steps(1)',
-                onComplete() {
-                  gsap.to(el, { opacity: 1, filter: 'brightness(1)', duration: 0.2 });
-                },
-              }
-            );
-          },
-        }
-      );
+  if (reduced || !('IntersectionObserver' in window)) {
+    items.forEach((el) => {
+      el.style.opacity = '1';
+      el.classList.add('is-visible');
     });
   } else {
-    document.querySelectorAll<HTMLElement>('.term-reveal').forEach((el) => {
-      el.style.opacity = '1';
-      el.style.filter = 'none';
-    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: '0px 0px -15% 0px', threshold: 0.01 }
+    );
+
+    items.forEach((el) => observer.observe(el));
   }
 </script>
 
 <style>
   .term-reveal {
     opacity: 0;
+    filter: brightness(0.72);
+    transform: translateY(8px);
+    transition: opacity 420ms ease, filter 420ms ease, transform 420ms ease;
+  }
+
+  .term-reveal.is-visible {
+    opacity: 1;
+    filter: brightness(1);
+    transform: translateY(0);
   }
 </style>

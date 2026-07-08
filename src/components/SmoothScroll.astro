@@ -3,10 +3,6 @@
 
 <script>
   import Lenis from 'lenis';
-  import gsap from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-  gsap.registerPlugin(ScrollTrigger);
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -19,12 +15,25 @@
       touchMultiplier: 2,
     });
 
-    lenis.on('scroll', ScrollTrigger.update);
+    let rafId = 0;
+    let running = true;
 
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
+    function raf(time: number) {
+      if (!running) return;
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      running = !document.hidden;
+      if (running && rafId === 0) {
+        rafId = requestAnimationFrame(raf);
+      } else if (!running) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
     });
 
-    gsap.ticker.lagSmoothing(0);
+    rafId = requestAnimationFrame(raf);
   }
 </script>

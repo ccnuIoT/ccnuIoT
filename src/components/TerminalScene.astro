@@ -23,6 +23,8 @@
 
   const reduced = prefersReducedMotion();
   const mobile = isMobile();
+  const staticMode = reduced || mobile;
+  const FRAME_MS = 1000 / 30;
 
   const renderer = createRenderer(canvas);
   const scene = new Scene();
@@ -285,7 +287,7 @@
   // ── Mouse tracking ──
   let mouseX = 0;
   let mouseY = 0;
-  if (!reduced) {
+  if (!staticMode) {
     document.addEventListener('mousemove', (e) => {
       mouseX = e.clientX - window.innerWidth / 2;
       mouseY = e.clientY - window.innerHeight / 2;
@@ -293,7 +295,7 @@
   }
 
   // ── Radiation burst sync ──
-  if (!reduced) {
+  if (!staticMode) {
     document.addEventListener('radburst', () => {
       const light = new PointLight(0x00ff41, 4, 12);
       light.position.set(
@@ -315,9 +317,13 @@
   const clock = new Clock();
   let running = true;
   let animId: number | null = null;
+  let lastFrame = 0;
 
-  function animate() {
+  function animate(time = 0) {
     if (!running) return;
+    animId = requestAnimationFrame(animate);
+    if (time - lastFrame < FRAME_MS) return;
+    lastFrame = time;
     const t = clock.getElapsedTime();
 
     // Data nodes orbit
@@ -343,16 +349,20 @@
     sceneGroup.rotation.x = mouseY * 0.00015;
 
     renderer.render(scene, camera);
-    animId = requestAnimationFrame(animate);
   }
 
   // ── Visibility ──
   const vis = createVisibilityController(
-    () => { running = true; animate(); },
+    () => {
+      if (running || staticMode) return;
+      running = true;
+      lastFrame = 0;
+      animate();
+    },
     () => { running = false; if (animId) cancelAnimationFrame(animId); }
   );
 
-  if (reduced) {
+  if (staticMode) {
     // Static frame
     for (const node of dataNodes) {
       node.mesh.position.x = Math.cos(node.phase) * node.radius;

@@ -23,6 +23,8 @@ const canonicalUrl = new URL(normalizedCanonicalPath, `${siteConfig.liveUrl}/`).
 const faviconHref = `${basePath}favicon.svg`;
 const faviconIcoHref = `${basePath}favicon.ico`;
 const ogImageUrl = ogImage ? new URL(ogImage.replace(/^\//, ''), `${siteConfig.liveUrl}/`).toString() : undefined;
+const normalizedPathname = Astro.url.pathname.replace(new RegExp(`^${basePath.replace(/\/$/, '')}`), '/');
+const enableSmoothScroll = normalizedPathname === '/' || normalizedPathname === '';
 ---
 
 <!DOCTYPE html>
@@ -51,7 +53,7 @@ const ogImageUrl = ogImage ? new URL(ogImage.replace(/^\//, ''), `${siteConfig.l
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 </head>
 <body>
-  <SmoothScroll />
+  {enableSmoothScroll && <SmoothScroll />}
   <CustomCursor />
   <a href="#main" class="skip-link">跳到正文</a>
   <slot />

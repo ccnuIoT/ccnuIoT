@@ -36,6 +36,8 @@
     let visible = false;
     let running = true;
     let rafId = 0;
+    let dirty = false;
+    let initialized = false;
 
     interface CachedEl {
       el: Element;
@@ -116,8 +118,15 @@
     }
 
     function loop() {
-      if (!running) return;
-      rafId = requestAnimationFrame(loop);
+      if (!running) {
+        rafId = 0;
+        return;
+      }
+      if (!dirty && !isHovering) {
+        rafId = 0;
+        return;
+      }
+      dirty = false;
 
       if (isHovering) {
         // ── Locked to element center, check if mouse left the element ──
@@ -129,6 +138,7 @@
           applyPosition(dotX, dotY);
         }
         // else: stay locked, don't update position
+        rafId = requestAnimationFrame(loop);
       } else {
         // ── Track mouse directly ──
         dotX = mouseX;
@@ -147,20 +157,22 @@
             break;
           }
         }
+        rafId = isHovering ? requestAnimationFrame(loop) : 0;
       }
     }
 
     // ── Events ──
-    let initialized = false;
     document.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
+      dirty = true;
       if (!initialized) {
         initialized = true;
         dotX = mouseX;
         dotY = mouseY;
         showCursor();
       }
+      if (rafId === 0) rafId = requestAnimationFrame(loop);
     });
 
     document.addEventListener('mouseleave', hideCursor);
@@ -170,14 +182,14 @@
       if (document.hidden) {
         running = false;
         cancelAnimationFrame(rafId);
+        rafId = 0;
       } else {
         running = true;
-        loop();
+        if (initialized && rafId === 0) rafId = requestAnimationFrame(loop);
       }
     });
 
     root.classList.add('is-hidden');
-    loop();
   }
 </script>
 

@@ -143,7 +143,7 @@ body::after {
     );
   mix-blend-mode: multiply;
   opacity: 0.9;
-  animation: scanlineJump 0.25s steps(1) infinite;
+  animation: scanlineJump 1.6s steps(1) infinite;
 }
 
 .screen-fx::after {
@@ -159,7 +159,7 @@ body::after {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect x='0' y='0' width='1' height='1' fill='%23fff' opacity='0.03'/%3E%3Crect x='2' y='1' width='1' height='1' fill='%23fff' opacity='0.02'/%3E%3Crect x='1' y='3' width='1' height='1' fill='%23fff' opacity='0.04'/%3E%3C/svg%3E");
   background-size: 4px 4px;
   opacity: 0.8;
-  animation: noiseFlicker 0.15s steps(2) infinite;
+  animation: noiseFlicker 1.2s steps(2) infinite;
 }
 
 .screen-fx__bloom {
@@ -365,14 +365,14 @@ body::after {
   color: var(--cyan);
   z-index: -1;
   opacity: 0;
-  animation: glitch1 3s infinite linear alternate-reverse;
+  animation: glitch1 8s steps(2) infinite alternate-reverse;
 }
 
 .hero-title::after {
   color: var(--red);
   z-index: -2;
   opacity: 0;
-  animation: glitch2 2s infinite linear alternate-reverse;
+  animation: glitch2 9s steps(2) infinite alternate-reverse;
 }
 
 .hero-title.is-typed::before,
@@ -973,7 +973,8 @@ footer a:focus-visible {
   .screen-fx::after,
   .screen-fx__noise,
   .screen-fx__bloom {
-    opacity: 0.72;
+    opacity: 0.38;
+    animation: none;
   }
 }
 
@@ -1058,6 +1059,7 @@ footer a:focus-visible {
 
 .group-summary {
   margin-top: 24px;
+  contain: layout paint style;
   padding: 22px;
 }
 
@@ -1090,6 +1092,8 @@ footer a:focus-visible {
 
 .cohort-section {
   margin-top: 24px;
+  content-visibility: auto;
+  contain-intrinsic-size: 360px;
   border: 1px solid rgba(0, 255, 65, 0.18);
   background: rgba(0, 0, 0, 0.38);
 }

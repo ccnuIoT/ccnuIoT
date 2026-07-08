@@ -21,6 +21,10 @@ export function isMobile(): boolean {
   return window.innerWidth < 768;
 }
 
+export function rendererPixelRatio(): number {
+  return Math.min(window.devicePixelRatio || 1, isMobile() ? 1 : 1.5);
+}
+
 // ── Renderer factory ──
 
 export function createRenderer(canvas: HTMLCanvasElement): WebGLRenderer {
@@ -28,9 +32,9 @@ export function createRenderer(canvas: HTMLCanvasElement): WebGLRenderer {
     canvas,
     alpha: true,
     antialias: !isMobile(),
-    powerPreference: 'high-performance',
+    powerPreference: isMobile() ? 'low-power' : 'high-performance',
   });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(rendererPixelRatio());
   renderer.toneMapping = NoToneMapping;
   return renderer;
 }
