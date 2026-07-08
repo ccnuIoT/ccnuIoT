@@ -4,7 +4,7 @@
 
 ## Live Site
 
-https://ccnu-iot.github.io/site
+https://ccnuIoT.github.io
 
 ## Tech Stack
 

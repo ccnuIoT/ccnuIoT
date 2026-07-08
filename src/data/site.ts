@@ -3,7 +3,7 @@ export const siteConfig = {
   title: 'CCNU IoT - 华中师范大学物联网协会',
   description:
     '华中师范大学物联网协会官网。聚焦嵌入式硬件、机器学习算法、Web 与移动应用开发，用真实项目连接设备、数据与人。',
-  liveUrl: 'https://ccnu-iot.github.io/site',
+  liveUrl: 'https://ccnuIoT.github.io',
   contact: {
     applyLabel: '[ APPLY_PENDING ]',
     contactLabel: '[ CONTACT_PENDING ]',
