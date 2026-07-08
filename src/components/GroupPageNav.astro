@@ -12,14 +12,16 @@ const links: { slug: GroupSlug; label: string; href: string }[] = [
   { slug: 'algorithm', label: 'ALGO', href: '/groups/algorithm' },
   { slug: 'application', label: 'APP', href: '/groups/application' },
 ];
+const basePath = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+const withBase = (href: string) => `${basePath}${href.replace(/^\//, '')}`;
 ---
 
 <nav class="group-page-nav" aria-label="Group page navigation">
-  <a href="/" class="group-page-nav__home">← HOME</a>
+  <a href={withBase('/')} class="group-page-nav__home">← HOME</a>
   <div class="group-page-nav__links">
     {links.map((link) => (
       <a
-        href={link.href}
+        href={withBase(link.href)}
         class:list={['group-page-nav__link', { 'is-current': link.slug === current }]}
         aria-current={link.slug === current ? 'page' : undefined}
       >

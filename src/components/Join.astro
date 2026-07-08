@@ -1,12 +1,29 @@
+---
+import { siteConfig } from '../data/site';
+
+const { contact } = siteConfig;
+const hasApply = Boolean(contact.applyUrl);
+const hasContact = Boolean(contact.contactUrl);
+---
+
 <section class="join" aria-label="Join us">
   <h2 class="join-title glow-hard">[ JOIN_US ]</h2>
   <p class="join-desc">
-    > 无论你是硬件爱好者、算法工程师，还是 App 开发者。<br>
-    > 这里都有属于你的位置。<br>
-    > RECRUITMENT: OPEN
+    > 无论你更接近电路、模型，还是界面与服务。<br>
+    > 这里需要能把想法接到真实设备上的人。<br>
+    > RECRUITMENT: CONFIG_PENDING
   </p>
+  <p class="join-note">{contact.placeholder}</p>
   <div class="hero-actions" style="justify-content:center;">
-    <button class="btn-term primary">[ APPLY ]</button>
-    <button class="btn-term">[ CONTACT ]</button>
+    {hasApply ? (
+      <a class="btn-term primary" href={contact.applyUrl}>{contact.applyLabel}</a>
+    ) : (
+      <span class="btn-term primary is-disabled" aria-disabled="true">{contact.applyLabel}</span>
+    )}
+    {hasContact ? (
+      <a class="btn-term" href={contact.contactUrl}>{contact.contactLabel}</a>
+    ) : (
+      <span class="btn-term is-disabled" aria-disabled="true">{contact.contactLabel}</span>
+    )}
   </div>
 </section>

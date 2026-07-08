@@ -1,24 +1,35 @@
 ---
 import SectionHead from './SectionHead.astro';
-
-const projects = [
-
-];
+import { projects } from '../data/site';
 ---
 
 <section class="projects" id="projects" aria-label="Projects">
   <SectionHead marker="SEC.02" label="PROJECTS" />
+  <div class="project-intel">
+    <div class="project-intel__readout">
+      <span class="project-intel__label">ARCHIVE STATUS</span>
+      <strong>{String(projects.length).padStart(2, '0')} SLOTS</strong>
+    </div>
+    <p>
+      项目成果区已预留数据结构。后续把真实项目写入 <code>src/data/site.ts</code>，
+      即可归档硬件、算法与应用协同产物。
+    </p>
+  </div>
   {projects.map((p) => (
-    <div class="project-row">
+    <article class="project-row">
       <div class="project-idx">{p.idx}</div>
       <div class="project-body">
         <div class="project-name glow">{p.name}</div>
         <div class="project-desc">{p.desc}</div>
+        <div class="project-stack" aria-label="Project stack">
+          {p.stack.map((item) => <span>{item}</span>)}
+        </div>
       </div>
       <div class="project-meta">
         <span class={`project-badge ${p.badgeClass}`}>{p.badge}</span>
         <span class="project-year">{p.year}</span>
+        <span class="project-status">{p.status}</span>
       </div>
-    </div>
+    </article>
   ))}
 </section>

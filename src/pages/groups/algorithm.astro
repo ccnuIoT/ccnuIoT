@@ -7,6 +7,8 @@ import { getGroupCohorts } from '../../data/members';
 
 const cohorts = getGroupCohorts('algorithm');
 const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
+const basePath = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+const assetPath = (path: string) => path.startsWith('/') ? `${basePath}${path.replace(/^\//, '')}` : path;
 ---
 
 <Base title="Algorithm Division — CCNU IoT">
@@ -75,7 +77,7 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
                 <div class="algo-card__scan" aria-hidden="true"></div>
                 <div class="algo-card__avatar-wrap">
                   {member.avatar ? (
-                    <img class="member-avatar" src={member.avatar} alt={`${member.name} avatar`} loading="lazy" />
+                    <img class="member-avatar" src={assetPath(member.avatar)} alt={`${member.name} avatar`} loading="lazy" />
                   ) : (
                     <div class="member-avatar-fallback algo-avatar-fb" aria-hidden="true">
                       {member.name.slice(0, 1)}
@@ -94,9 +96,9 @@ const chips = ['ML', 'CV', 'DATA', 'INFERENCE'];
                   </div>
                   {member.links && Object.values(member.links).some(Boolean) && (
                     <div class="member-links">
-                      {member.links.github && <a href={member.links.github}>GitHub</a>}
-                      {member.links.bilibili && <a href={member.links.bilibili}>Bilibili</a>}
-                      {member.links.blog && <a href={member.links.blog}>Blog</a>}
+                      {member.links.github && <a href={member.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>}
+                      {member.links.bilibili && <a href={member.links.bilibili} target="_blank" rel="noopener noreferrer">Bilibili</a>}
+                      {member.links.blog && <a href={member.links.blog} target="_blank" rel="noopener noreferrer">Blog</a>}
                     </div>
                   )}
                 </div>

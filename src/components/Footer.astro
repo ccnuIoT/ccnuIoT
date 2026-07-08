@@ -1,8 +1,23 @@
+---
+import { siteConfig } from '../data/site';
+
+const { contact, socialLinks } = siteConfig;
+const footerLinks = [
+  { label: 'GITHUB', href: socialLinks.github },
+  { label: 'BILIBILI', href: socialLinks.bilibili },
+  { label: 'CONTACT', href: contact.contactUrl },
+];
+---
+
 <footer>
-  <span>CCNU IoT ASSOC — ROBCO TERMINAL v4.0</span>
+  <span>CCNU IoT ASSOC - LAB NETWORK DISPLAY v4.1</span>
   <div class="footer-links">
-    <a href="#">GITHUB</a>
-    <a href="#">BILIBILI</a>
-    <a href="#">CONTACT</a>
+    {footerLinks.map((link) => (
+      link.href ? (
+        <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+      ) : (
+        <span class="footer-link-disabled" aria-disabled="true">{link.label}</span>
+      )
+    ))}
   </div>
 </footer>

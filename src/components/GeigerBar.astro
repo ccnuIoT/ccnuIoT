@@ -1,6 +1,7 @@
 ---
 import rawMembers from '../data/members.json';
 import type { MembersData } from '../data/members';
+import { projects } from '../data/site';
 
 const membersData = rawMembers as MembersData;
 const divisions = Object.keys(membersData).length; // 3
@@ -8,7 +9,7 @@ const totalMembers = Object.values(membersData).reduce(
   (sum, cohorts) => sum + cohorts.reduce((s, c) => s + c.members.length, 0),
   0
 );
-const projectCount = 0; // No projects yet
+const projectCount = projects.length;
 ---
 
 <div class="term-panel" role="status" aria-label="Statistics">
@@ -30,7 +31,7 @@ const projectCount = 0; // No projects yet
       <div class="geiger-pulse" style="animation-delay:0.4s;"></div>
     </div>
     <div class="geiger-item">
-      <div class="geiger-label">PROJECTS</div>
+      <div class="geiger-label">PROJECT SLOTS</div>
       <div class="geiger-value glow phosphor-glow-text">{projectCount}</div>
       <div class="geiger-pulse" style="animation-delay:0.8s;"></div>
     </div>

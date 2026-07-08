@@ -4,6 +4,6 @@ import { defineConfig } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
-  site: 'https://ccnuiot.github.io',
-  base: '/',
+  site: 'https://ccnu-iot.github.io',
+  base: '/site',
 });

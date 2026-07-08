@@ -7,6 +7,10 @@ const links = [
 ];
 
 const currentPath = Astro.url.pathname;
+const basePath = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+const basePathNoSlash = basePath.replace(/\/$/, '');
+const withBase = (href: string) => `${basePath}${href.replace(/^\//, '')}`;
+const normalizedPath = currentPath.replace(basePathNoSlash, '') || '/';
 ---
 
 <nav class="nav-device" aria-label="Primary">
@@ -27,10 +31,10 @@ const currentPath = Astro.url.pathname;
   <div class="nav-device__buttons">
     {links.map(({ href, label, ch }) => (
       <a
-        href={href}
+        href={withBase(href)}
         class:list={[
           'nav-device__btn',
-          { active: currentPath === href || (href !== '/' && currentPath.startsWith(href)) },
+          { active: normalizedPath === href || (href !== '/' && normalizedPath.startsWith(href)) },
         ]}
       >
         <span class="nav-device__btn-led"></span>
@@ -51,10 +55,10 @@ const currentPath = Astro.url.pathname;
 <nav class="mobile-nav" aria-label="Primary">
   {links.map(({ href, label }) => (
     <a
-      href={href}
+      href={withBase(href)}
       class:list={[
         'mobile-nav__tab',
-        { active: currentPath === href || (href !== '/' && currentPath.startsWith(href)) },
+        { active: normalizedPath === href || (href !== '/' && normalizedPath.startsWith(href)) },
       ]}
     >
       {label}

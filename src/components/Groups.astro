@@ -1,41 +1,15 @@
 ---
 import SectionHead from './SectionHead.astro';
+import { divisions } from '../data/site';
 
-const groups = [
-  {
-    idx: '01',
-    slug: 'hardware',
-    href: '/groups/hardware',
-    name: 'HARDWARE',
-    nameEn: 'DIVISION_01',
-    desc: '> 从电路设计到嵌入式开发。PCB 绘制、传感器调试、单片机编程。',
-    tags: ['STM32', 'ESP32', 'PCB', 'SENSOR'],
-  },
-  {
-    idx: '02',
-    slug: 'algorithm',
-    href: '/groups/algorithm',
-    name: 'ALGORITHM',
-    nameEn: 'DIVISION_02',
-    desc: '> 机器学习、计算机视觉、数据分析。',
-    tags: ['ML', 'CV', 'SIGNAL', 'PYTHON', 'PYTORCH'],
-  },
-  {
-    idx: '03',
-    slug: 'application',
-    href: '/groups/application',
-    name: 'APPLICATION',
-    nameEn: 'DIVISION_03',
-    desc: '> 构建用户界面、开发移动应用、搭建后端服务。',
-    tags: ['FLUTTER', 'VUE', 'BACKEND', 'UI', 'NODE'],
-  },
-];
+const basePath = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+const withBase = (href: string) => `${basePath}${href.replace(/^\//, '')}`;
 ---
 
 <section class="groups" id="divisions" aria-label="Divisions">
   <SectionHead marker="SEC.01" label="DIVISIONS" />
-  {groups.map((g) => (
-    <a href={g.href} class="group-block group-block--link">
+  {divisions.map((g) => (
+    <a href={withBase(g.href)} class="group-block group-block--link">
       <div class="group-header">
         <div class="group-idx">{g.idx}</div>
         <div class="group-title-area">

@@ -692,6 +692,68 @@ body::after {
   line-height: 1.4;
 }
 
+.project-intel {
+  display: grid;
+  grid-template-columns: minmax(140px, 180px) 1fr;
+  gap: 16px;
+  align-items: center;
+  border: 2px solid rgba(0, 255, 65, 0.32);
+  border-bottom: none;
+  background:
+    linear-gradient(90deg, rgba(0, 255, 65, 0.08), transparent),
+    rgba(0, 0, 0, 0.52);
+  padding: 14px 16px;
+}
+
+.project-intel p {
+  line-height: 1.45;
+  color: rgba(0, 255, 65, 0.86);
+}
+
+.project-intel code {
+  color: var(--cyan);
+  font-family: 'VT323', monospace;
+  font-size: 17px;
+}
+
+.project-intel__readout {
+  border: 1px solid rgba(0, 255, 65, 0.25);
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.46);
+}
+
+.project-intel__label,
+.project-status {
+  display: block;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  letter-spacing: 1px;
+  color: rgba(0, 255, 65, 0.58);
+}
+
+.project-intel__readout strong {
+  display: block;
+  margin-top: 6px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: var(--green);
+}
+
+.project-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.project-stack span {
+  border: 1px solid rgba(0, 255, 65, 0.28);
+  padding: 2px 6px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  color: rgba(0, 255, 65, 0.74);
+}
+
 .project-meta {
   padding: 12px;
   border-left: 2px solid var(--green);
@@ -718,6 +780,10 @@ body::after {
   font-family: 'Press Start 2P', monospace;
   font-size: 7px;
   color: var(--green);
+}
+
+.project-status {
+  color: var(--amber);
 }
 
 .term-block {
@@ -765,6 +831,30 @@ body::after {
   margin: 0 auto 20px;
 }
 
+.join-note {
+  max-width: 560px;
+  margin: -6px auto 18px;
+  color: rgba(0, 255, 65, 0.68);
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.btn-term.is-disabled {
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.52;
+  cursor: not-allowed;
+  border-style: dashed;
+}
+
+.btn-term.is-disabled:hover,
+.btn-term.is-disabled:focus-visible {
+  background: transparent;
+  color: var(--green);
+  transform: none;
+  box-shadow: none;
+}
+
 footer {
   border-top: 2px solid var(--green);
   padding: 12px 0;
@@ -795,6 +885,11 @@ footer a:focus-visible {
 }
 
 .footer-links { display: flex; gap: 12px; }
+
+.footer-link-disabled {
+  color: rgba(0, 255, 65, 0.42);
+  cursor: not-allowed;
+}
 
 @keyframes blink {
   0%, 100% { opacity: 1; }
@@ -871,6 +966,7 @@ footer a:focus-visible {
   .group-body { padding-left: 36px; }
   .project-row { grid-template-columns: 36px 1fr; }
   .project-meta { display: none; }
+  .project-intel { grid-template-columns: 1fr; }
   footer { flex-direction: column; gap: 8px; }
 
   .screen-fx::before,

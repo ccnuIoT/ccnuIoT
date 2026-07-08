@@ -2,10 +2,10 @@
 ---
 
 <button
-  class="sound-toggle is-active"
+  class="sound-toggle"
   id="fallout-sound-toggle"
   aria-label="Toggle sound effects"
-  aria-pressed="true"
+  aria-pressed="false"
 >
   <svg class="sound-icon sound-icon--off" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
@@ -22,7 +22,7 @@
 <script>
   class FalloutSoundSystem {
     private ctx: AudioContext | null = null;
-    private enabled = true;
+    private enabled = false;
     private toggle: HTMLButtonElement;
     private humOsc: OscillatorNode | null = null;
     private humGain: GainNode | null = null;
@@ -37,21 +37,20 @@
       }
 
       const saved = sessionStorage.getItem('fallout-sound-enabled');
-      if (saved === 'false') {
-        this.enabled = false;
-        this.toggle.setAttribute('aria-pressed', 'false');
-        this.toggle.classList.remove('is-active');
-      } else {
+      if (saved === 'true') {
         this.enabled = true;
         this.toggle.setAttribute('aria-pressed', 'true');
         this.toggle.classList.add('is-active');
-        this.ctx = new AudioContext();
-        this.startHum();
+      } else {
+        this.enabled = false;
+        this.toggle.setAttribute('aria-pressed', 'false');
+        this.toggle.classList.remove('is-active');
       }
 
       this.toggle.addEventListener('click', () => this.toggleSound());
       this.setupHoverAndClickSounds();
       this.setupBootSound();
+      this.setupUserGestureUnlock();
     }
 
     private toggleSound() {
@@ -64,6 +63,7 @@
       sessionStorage.setItem('fallout-sound-enabled', String(this.enabled));
 
       if (this.enabled) {
+        this.ctx?.resume();
         this.startHum();
         this.playClick();
       } else {
@@ -131,6 +131,17 @@
         if (!this.enabled || !this.ctx) return;
         this.playBootHum();
       });
+    }
+
+    private setupUserGestureUnlock() {
+      const unlock = () => {
+        if (!this.enabled || this.ctx) return;
+        this.ctx = new AudioContext();
+        this.ctx.resume();
+        this.startHum();
+      };
+      document.addEventListener('pointerdown', unlock, { once: true });
+      document.addEventListener('keydown', unlock, { once: true });
     }
 
     playTick() {

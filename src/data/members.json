@@ -50,7 +50,7 @@
         },
         {
           "name": "邢卓函",
-          "avatar": "/avatars/xingzhuohan.jpg",
+          "avatar": "/avatars/xingzhuohan.webp",
           "roleTags": ["卫生委员"],
           "focus": "",
           "bio": "安卓人想过上苹果人生",
@@ -79,7 +79,7 @@
       "members": [
         {
           "name": "叶冀宇",
-          "avatar": "/avatars/yejiyu.png",
+          "avatar": "/avatars/yejiyu.webp",
           "roleTags": [],
           "focus": "",
           "bio": "AAA嵌入式叶总，接ESP32/CH32/AT32/STM32全栈开发",
@@ -167,7 +167,7 @@
       "members": [
         {
           "name": "赵启文",
-          "avatar": "/avatars/Nishimiya.png",
+          "avatar": "/avatars/Nishimiya.webp",
           "roleTags": ["组长", "副会长"],
           "focus": "",
           "bio": "协会最菜的大摆子，啥都不会，怎么进来的？",
