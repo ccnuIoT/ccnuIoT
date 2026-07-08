@@ -7,47 +7,64 @@ import { getGroupCohorts } from '../../data/members';
 
 const cohorts = getGroupCohorts('hardware');
 const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
+const basePath = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+const assetPath = (path: string) => path.startsWith('/') ? `${basePath}${path.replace(/^\//, '')}` : path;
 ---
 
-<Base title="Hardware Division — CCNU IoT">
+<Base title="Hardware Division - CCNU IoT">
   <main class="group-page group-page--hardware">
     <div class="hw-fx" aria-hidden="true">
-      <div class="hw-fx__noise"></div>
+      <div class="hw-fx__blueprint"></div>
       <span class="hw-fx__trace hw-fx__trace--a"></span>
       <span class="hw-fx__trace hw-fx__trace--b"></span>
       <span class="hw-fx__trace hw-fx__trace--c"></span>
-      <span class="hw-fx__trace hw-fx__trace--d"></span>
-      <span class="hw-fx__trace hw-fx__trace--e"></span>
-      <span class="hw-fx__via hw-fx__via--a"></span>
-      <span class="hw-fx__via hw-fx__via--b"></span>
-      <span class="hw-fx__via hw-fx__via--c"></span>
-      <span class="hw-fx__via hw-fx__via--d"></span>
-      <span class="hw-fx__led hw-fx__led--a"></span>
-      <span class="hw-fx__led hw-fx__led--b"></span>
-      <span class="hw-fx__led hw-fx__led--c"></span>
-      <span class="hw-fx__orbit hw-fx__orbit--2"></span>
-      <span class="hw-fx__orbit hw-fx__orbit--3"></span>
-      <span class="hw-fx__glow hw-fx__glow--tr"></span>
-      <span class="hw-fx__glow hw-fx__glow--bl"></span>
+      <span class="hw-fx__mark hw-fx__mark--a">TP-12</span>
+      <span class="hw-fx__mark hw-fx__mark--b">GND BUS</span>
+      <span class="hw-fx__mark hw-fx__mark--c">REV 0.4</span>
     </div>
+
     <GroupPageNav current="hardware" />
 
-    <section class="hw-hero group-shell">
-      <div class="hw-hero__traces" aria-hidden="true"></div>
-      <div class="hw-hero__heat" aria-hidden="true"></div>
-      <div class="hw-hero__copy">
-        <p class="hw-hero__eyebrow px">DIVISION 01 / HARDWARE</p>
-        <h1 class="hw-hero__title glow-hard">CIRCUIT / SIGNAL / CONTROL</h1>
-        <p class="hw-hero__desc">
-          Board files, solder heat, signal checks, field-ready modules.
-        </p>
+    <section class="hw-hero" aria-labelledby="hardware-title">
+      <div class="hw-hero__plate">
+        <div class="hw-hero__copy">
+          <p class="hw-hero__eyebrow px">DIVISION 01 / HARDWARE LAB</p>
+          <h1 id="hardware-title" class="hw-hero__title">BOARD / SIGNAL / DEBUG</h1>
+          <p class="hw-hero__desc">
+            Board bring-up, field wiring, sensor checks, and the parts that make ideas survive outside the editor.
+          </p>
+          <div class="hw-hero__readouts" aria-hidden="true">
+            <span>VIN 5.0V</span>
+            <span>BUS OK</span>
+            <span>CAL 03</span>
+          </div>
+        </div>
+
+        <div class="hw-instrument" aria-hidden="true">
+          <div class="hw-instrument__scope">
+            <div class="hw-instrument__grid"></div>
+            <svg class="hw-instrument__wave" viewBox="0 0 360 160" preserveAspectRatio="none">
+              <path d="M0 92 C28 92 28 54 56 54 S84 130 112 130 S140 70 168 70 S196 98 224 98 S252 42 280 42 S308 118 336 118 S348 84 360 84" />
+            </svg>
+            <span class="hw-instrument__sweep"></span>
+          </div>
+          <div class="hw-instrument__controls">
+            <span class="hw-knob hw-knob--a"></span>
+            <span class="hw-knob hw-knob--b"></span>
+            <span class="hw-port"></span>
+            <span class="hw-led"></span>
+          </div>
+          <div class="hw-fixture">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
       </div>
     </section>
 
     <section class="group-summary group-shell hw-summary">
-      <SectionHead marker="SEC.H1" label="BOARD OVERVIEW" />
+      <SectionHead marker="CAL.H1" label="BENCH CHECKLIST" />
       <p class="group-summary__lede">
-        Archived by cohort. Roles stay on the card.
+        Cohorts are logged like calibration records. Each profile keeps its role, links, and working notes.
       </p>
       <div class="group-summary__chips">
         {chips.map((chip) => <span class="group-summary__chip hw-chip">{chip}</span>)}
@@ -61,46 +78,46 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
     ) : (
       cohorts.map((entry) => (
         <CohortSection cohort={entry.cohort} memberCount={entry.members.length}>
-          <div class="hw-card-grid">
-            {entry.members.map((member, i) => (
-              <article class="hw-card">
-                <span class="hw-card__pad hw-card__pad--tl" aria-hidden="true"></span>
-                <span class="hw-card__pad hw-card__pad--tr" aria-hidden="true"></span>
-                <span class="hw-card__pad hw-card__pad--bl" aria-hidden="true"></span>
-                <span class="hw-card__pad hw-card__pad--br" aria-hidden="true"></span>
-                <div class="hw-card__ic">
-                  {member.avatar ? (
-                    <img class="member-avatar" src={member.avatar} alt={`${member.name} avatar`} loading="lazy" />
-                  ) : (
-                    <div class="member-avatar-fallback hw-avatar-fb" aria-hidden="true">
-                      {member.name.slice(0, 1)}
-                    </div>
-                  )}
-                </div>
-                <div class="hw-card__body">
-                  <div class="hw-card__header">
-                    <h3>{member.name}</h3>
-                    <span class="hw-card__focus">{member.focus}</span>
+          <div class="hw-record-list">
+            {entry.members.map((member, i) => {
+              const focusLabel = member.focus || 'HARDWARE DEV';
+              return (
+                <article class="hw-record">
+                  <div class="hw-record__index px">CH-{String(i + 1).padStart(2, '0')}</div>
+                  <div class="hw-record__socket">
+                    {member.avatar ? (
+                      <img class="member-avatar" src={assetPath(member.avatar)} alt={`${member.name} avatar`} loading="lazy" />
+                    ) : (
+                      <div class="member-avatar-fallback hw-avatar-fb" aria-hidden="true">
+                        {member.name.slice(0, 1)}
+                      </div>
+                    )}
                   </div>
-                  <p class="hw-card__bio">{member.bio}</p>
-                  <div class="member-role-tags">
-                    {member.roleTags.map((tag, ti) => (
-                      <span class="member-role-tag hw-tag">
-                        <span class="hw-tag__ref">{String.fromCharCode(82 + ti)}{i + 1}</span>
-                        {tag}
-                      </span>
-                    ))}
+                  <div class="hw-record__main">
+                    <div class="hw-record__header">
+                      <h3>{member.name}</h3>
+                      <span>{focusLabel}</span>
+                    </div>
+                    <p class="hw-record__bio">{member.bio}</p>
+                    <div class="member-role-tags">
+                      {member.roleTags.map((tag, ti) => (
+                        <span class="member-role-tag hw-tag">
+                          <span class="hw-tag__ref">TP-{i + 1}{ti + 1}</span>
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                   {member.links && Object.values(member.links).some(Boolean) && (
-                    <div class="member-links">
-                      {member.links.github && <a href={member.links.github}>GitHub</a>}
-                      {member.links.bilibili && <a href={member.links.bilibili}>Bilibili</a>}
-                      {member.links.blog && <a href={member.links.blog}>Blog</a>}
+                    <div class="member-links hw-record__links">
+                      {member.links.github && <a href={member.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>}
+                      {member.links.bilibili && <a href={member.links.bilibili} target="_blank" rel="noopener noreferrer">Bilibili</a>}
+                      {member.links.blog && <a href={member.links.blog} target="_blank" rel="noopener noreferrer">Blog</a>}
                     </div>
                   )}
-                </div>
-              </article>
-            ))}
+                </article>
+              );
+            })}
           </div>
         </CohortSection>
       ))
@@ -109,546 +126,541 @@ const chips = ['PCB', 'EMBEDDED', 'SENSORS', 'DEBUG'];
 </Base>
 
 <style>
-  /* ── Palette ── */
   .group-page--hardware {
-    --hw-copper: #8b6914;
-    --hw-copper-lt: #c4962a;
-    --hw-solder: #ffcc73;
-    --hw-mask: #3a5a28;
-    --hw-silk: #c4c4c4;
-    --hw-fr4: #4a3f20;
-    --hw-bg: #0d0a04;
-    color: #dfffe8;
+    --hw-steel: #d8d3c7;
+    --hw-paper: #e7e2d6;
+    --hw-panel: #c8c2b6;
+    --hw-ink: #181c1b;
+    --hw-muted: #59645f;
+    --hw-olive: #415247;
+    --hw-copper: #9b6a2f;
+    --hw-amber: #d1912c;
+    --hw-scope: #39a86b;
+    color: var(--hw-ink);
+    padding-top: 76px;
   }
 
-  /* ── Noise overlay ── */
+  .group-page--hardware::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    background:
+      linear-gradient(90deg, rgba(24, 28, 27, 0.05) 1px, transparent 1px),
+      linear-gradient(rgba(24, 28, 27, 0.04) 1px, transparent 1px),
+      linear-gradient(180deg, #d8d3c7 0%, #e7e2d6 46%, #cfd6d0 100%);
+    background-size: 52px 52px, 52px 52px, auto;
+  }
+
+  .group-page--hardware :global(.group-page-nav__home),
+  .group-page--hardware :global(.group-page-nav__link) {
+    color: var(--hw-ink);
+    border: 1px solid rgba(24, 28, 27, 0.42);
+    background: rgba(231, 226, 214, 0.9);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) inset;
+  }
+
+  .group-page--hardware :global(.group-page-nav__home:hover),
+  .group-page--hardware :global(.group-page-nav__link:hover),
+  .group-page--hardware :global(.group-page-nav__link.is-current) {
+    border-color: var(--hw-olive);
+    background: #c8c2b6;
+  }
+
   .hw-fx {
     position: absolute;
     inset: 0;
-    pointer-events: none;
     z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
   }
 
-  .hw-fx__noise {
-    position: absolute;
-    inset: -20%;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' fill='%23ffffff' opacity='0.05'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%23ffffff' opacity='0.04'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 4px 4px;
-    opacity: 0.14;
-    mix-blend-mode: screen;
-  }
-
-  /* ── Grid overlay (structured background grid) ── */
-  .hw-fx::before {
-    content: '';
+  .hw-fx__blueprint {
     position: absolute;
     inset: 0;
-    opacity: 0.08;
-    background-image:
-      linear-gradient(rgba(139, 105, 20, 0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(139, 105, 20, 0.06) 1px, transparent 1px),
-      /* intersection dots */
-      radial-gradient(circle 1px, rgba(139, 105, 20, 0.12) 1px, transparent 1px);
-    background-size: 60px 60px, 60px 60px, 60px 60px;
-    pointer-events: none;
+    background:
+      repeating-linear-gradient(90deg, transparent 0 86px, rgba(65, 82, 71, 0.08) 86px 88px),
+      repeating-linear-gradient(0deg, transparent 0 86px, rgba(65, 82, 71, 0.06) 86px 88px);
+    opacity: 0.7;
+    mask-image: linear-gradient(180deg, #000, transparent 78%);
   }
 
-  /* ── Traces (broken PCB traces scattered across page) ── */
   .hw-fx__trace {
     position: absolute;
-    display: block;
-    background: linear-gradient(90deg, rgba(139, 105, 20, 0.25), rgba(139, 105, 20, 0.05));
-    height: 2px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(155, 106, 47, 0.62), transparent);
   }
 
-  .hw-fx__trace--a { top: 180px; left: 2%; width: 28%; transform: rotate(0deg); }
-  .hw-fx__trace--b { top: 420px; right: 4%; width: 22%; transform: rotate(0deg); }
-  .hw-fx__trace--c { top: 700px; left: 10%; width: 35%; transform: rotate(2deg); }
-  .hw-fx__trace--d { top: 950px; right: 8%; width: 18%; transform: rotate(-1deg); }
-  .hw-fx__trace--e { top: 1200px; left: 25%; width: 40%; transform: rotate(0deg); }
+  .hw-fx__trace--a { top: 210px; left: 4%; width: 34%; }
+  .hw-fx__trace--b { top: 620px; right: 8%; width: 28%; }
+  .hw-fx__trace--c { top: 1040px; left: 18%; width: 42%; }
 
-  /* ── Vias (small ring shapes) ── */
-  .hw-fx__via {
+  .hw-fx__mark {
     position: absolute;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 2px solid rgba(139, 105, 20, 0.35);
-    background: transparent;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: rgba(24, 28, 27, 0.34);
   }
 
-  .hw-fx__via--a { top: 260px; left: 28%; }
-  .hw-fx__via--b { top: 550px; right: 22%; }
-  .hw-fx__via--c { top: 840px; left: 42%; }
-  .hw-fx__via--d { top: 1100px; right: 38%; }
+  .hw-fx__mark--a { top: 270px; left: 11%; }
+  .hw-fx__mark--b { top: 760px; right: 12%; }
+  .hw-fx__mark--c { top: 1180px; left: 36%; }
 
-  /* ── LEDs (flickering test points) ── */
-  .hw-fx__led {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--hw-solder);
-    box-shadow: 0 0 8px rgba(255, 204, 115, 0.5), 0 0 20px rgba(255, 204, 115, 0.2);
-  }
-
-  .hw-fx__led--a { top: 300px; left: 30%; }
-  .hw-fx__led--b { top: 680px; right: 24%; }
-  .hw-fx__led--c { top: 1050px; left: 50%; }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .hw-fx__led--a { animation: hw-pulse 2.5s ease-in-out infinite; }
-    .hw-fx__led--b { animation: hw-pulse 3s ease-in-out infinite 0.8s; }
-    .hw-fx__led--c { animation: hw-pulse 2.2s ease-in-out infinite 1.5s; }
-    .hw-fx__noise { animation: hw-noise-drift 8s linear infinite; }
-    .hw-hero::before { animation: hw-orbit 20s linear infinite; }
-  }
-
-  @keyframes hw-pulse {
-    0%, 100% { opacity: 0.4; box-shadow: 0 0 4px rgba(255, 204, 115, 0.2); }
-    50% { opacity: 1; box-shadow: 0 0 12px rgba(255, 204, 115, 0.6), 0 0 28px rgba(255, 204, 115, 0.25); }
-  }
-
-  @keyframes hw-orbit {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-
-  @keyframes hw-noise-drift {
-    0% { transform: translate(0, 0); }
-    50% { transform: translate(-10px, -8px); }
-    100% { transform: translate(0, 0); }
-  }
-
-  /* ── Hero — full-bleed PCB board, no visible border ── */
   .hw-hero {
+    margin: 0 auto;
+  }
+
+  .hw-hero__plate {
     position: relative;
-    overflow: hidden;
-    padding: 48px 36px 36px;
-    min-height: 380px;
-    display: flex;
-    align-items: flex-end;
-    border: none;
+    display: grid;
+    grid-template-columns: minmax(280px, 0.9fr) minmax(360px, 1.1fr);
+    gap: clamp(20px, 4vw, 48px);
+    min-height: 430px;
+    padding: clamp(22px, 4.2vw, 44px);
+    border: 1px solid rgba(24, 28, 27, 0.7);
     background:
-      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(139, 105, 20, 0.18), transparent 70%),
-      radial-gradient(circle at 30% 60%, rgba(143, 126, 119, 0.12), transparent 50%),
-      radial-gradient(ellipse at 70% 20%, rgba(58, 90, 40, 0.2), transparent 50%),
-      radial-gradient(ellipse at 20% 80%, rgba(139, 105, 20, 0.15), transparent 40%),
-      radial-gradient(ellipse at 85% 65%, rgba(58, 90, 40, 0.12), transparent 45%),
-      linear-gradient(180deg, #1a1208, #0d0a04);
+      linear-gradient(135deg, rgba(255, 255, 255, 0.32), transparent 32%),
+      linear-gradient(180deg, #c8c2b6, #aeb6af);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      inset 0 -1px 0 rgba(24, 28, 27, 0.18),
+      0 24px 48px rgba(24, 28, 27, 0.2);
   }
 
-  .hw-hero__traces {
+  .hw-hero__plate::before {
+    content: 'OSC-CTRL / BOARD BRING-UP BENCH';
     position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(0deg, transparent 49.5%, rgba(139, 105, 20, 0.12) 49.5%, rgba(139, 105, 20, 0.12) 50.5%, transparent 50.5%),
-      linear-gradient(90deg, transparent 49.5%, rgba(139, 105, 20, 0.08) 49.5%, rgba(139, 105, 20, 0.08) 50.5%, transparent 50.5%);
-    background-size: 48px 48px;
-    opacity: 0.6;
-    pointer-events: none;
-    mask-image: linear-gradient(135deg, black 30%, transparent 35%, black 45%, transparent 50%, black 65%, transparent 70%, black 80%);
-    -webkit-mask-image: linear-gradient(135deg, black 30%, transparent 35%, black 45%, transparent 50%, black 65%, transparent 70%, black 80%);
-  }
-
-  .hw-hero__heat {
-    position: absolute;
-    width: 350px;
-    height: 350px;
-    border-radius: 50%;
-    top: 20%;
-    right: 15%;
-    background: radial-gradient(circle, rgba(139, 105, 20, 0.25), rgba(90, 50, 10, 0.15), transparent 70%);
-    filter: blur(80px);
-    pointer-events: none;
+    top: 12px;
+    left: 16px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: rgba(24, 28, 27, 0.46);
   }
 
   .hw-hero__copy {
-    position: relative;
-    max-width: 760px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid rgba(139, 105, 20, 0.3);
+    align-self: end;
+    max-width: 640px;
+    padding-top: 56px;
   }
 
   .hw-hero__eyebrow {
-    color: var(--hw-copper-lt);
     margin-bottom: 18px;
-    font-size: 10px;
+    color: var(--hw-olive);
+    font-size: 9px;
   }
 
   .hw-hero__title {
-    font-size: clamp(34px, 7vw, 76px);
-    line-height: 1;
-    margin-bottom: 18px;
-    color: var(--hw-silk);
-    text-shadow:
-      0 0 40px rgba(139, 105, 20, 0.2),
-      0 0 80px rgba(139, 105, 20, 0.08),
-      2px 2px 0 rgba(139, 105, 20, 0.3),
-      -1px -1px 0 rgba(0, 0, 0, 0.5);
+    max-width: 620px;
+    margin-bottom: 22px;
+    color: var(--hw-ink);
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(26px, 5vw, 56px);
+    line-height: 1.18;
+    letter-spacing: 0;
   }
 
   .hw-hero__desc {
-    max-width: 620px;
-    font-size: 24px;
-    line-height: 1.4;
-    color: rgba(223, 255, 232, 0.85);
+    max-width: 560px;
+    color: #35413b;
+    font-size: 22px;
+    line-height: 1.42;
   }
 
-  /* ── Orbital ring (animated circle around hero center) ── */
-  .hw-hero::before {
-    content: '';
+  .hw-hero__readouts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 26px;
+  }
+
+  .hw-hero__readouts span {
+    padding: 6px 9px;
+    border: 1px solid rgba(24, 28, 27, 0.5);
+    background: rgba(231, 226, 214, 0.7);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: #2f3c36;
+  }
+
+  .hw-instrument {
+    position: relative;
+    align-self: stretch;
+    display: grid;
+    grid-template-rows: 1fr auto auto;
+    gap: 16px;
+    min-width: 0;
+    padding: 18px;
+    border: 1px solid rgba(24, 28, 27, 0.72);
+    background: linear-gradient(180deg, #252a28, #151817);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  .hw-instrument__scope {
+    position: relative;
+    min-height: 220px;
+    overflow: hidden;
+    border: 1px solid rgba(57, 168, 107, 0.32);
+    background: #09110d;
+  }
+
+  .hw-instrument__grid {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 420px;
-    height: 420px;
-    margin-top: -210px;
-    margin-left: -210px;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(57, 168, 107, 0.13) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(57, 168, 107, 0.13) 1px, transparent 1px);
+    background-size: 36px 32px;
+  }
+
+  .hw-instrument__wave {
+    position: absolute;
+    inset: 18px;
+    width: calc(100% - 36px);
+    height: calc(100% - 36px);
+  }
+
+  .hw-instrument__wave path {
+    fill: none;
+    stroke: var(--hw-scope);
+    stroke-width: 3;
+    vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 0 8px rgba(57, 168, 107, 0.55));
+  }
+
+  .hw-instrument__sweep {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(57, 168, 107, 0.45);
+    box-shadow: 0 0 18px rgba(57, 168, 107, 0.4);
+  }
+
+  .hw-instrument__controls {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    align-items: center;
+  }
+
+  .hw-knob,
+  .hw-port,
+  .hw-led {
+    display: block;
+    justify-self: center;
+  }
+
+  .hw-knob {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #050706;
     border-radius: 50%;
-    border: 1px solid rgba(139, 105, 20, 0.15);
-    box-shadow:
-      inset 0 0 40px rgba(139, 105, 20, 0.1),
-      0 0 20px rgba(139, 105, 20, 0.08);
-    pointer-events: none;
+    background:
+      linear-gradient(90deg, transparent 47%, rgba(255, 255, 255, 0.25) 47% 53%, transparent 53%),
+      radial-gradient(circle, #6b716b, #2c312f);
+    box-shadow: inset 0 2px 2px rgba(255, 255, 255, 0.18), inset 0 -4px 8px rgba(0, 0, 0, 0.42);
   }
 
-  /* ── Mist / fog layer ── */
-  .hw-hero::after {
-    content: '';
-    position: absolute;
-    bottom: -20%;
-    left: -10%;
-    width: 80%;
-    height: 60%;
-    background: radial-gradient(ellipse, rgba(139, 105, 20, 0.06), transparent 70%);
-    filter: blur(60px);
-    pointer-events: none;
+  .hw-knob--b {
+    transform: rotate(42deg);
   }
 
-  /* ── Summary section ── */
+  .hw-port {
+    width: 42px;
+    height: 42px;
+    border: 6px solid #0b0d0c;
+    border-radius: 50%;
+    background: #c8c2b6;
+  }
+
+  .hw-led {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #050706;
+    border-radius: 50%;
+    background: var(--hw-amber);
+    box-shadow: 0 0 16px rgba(209, 145, 44, 0.5);
+  }
+
+  .hw-fixture {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.18);
+  }
+
+  .hw-fixture span {
+    height: 28px;
+    border: 1px solid rgba(24, 28, 27, 0.85);
+    background: var(--hw-copper);
+  }
+
   .hw-summary {
-    border-color: rgba(139, 105, 20, 0.25);
-    background: rgba(13, 10, 4, 0.85);
+    margin-top: 28px;
+    border: 1px solid rgba(24, 28, 27, 0.62);
+    border-radius: 0;
+    background: rgba(231, 226, 214, 0.88);
+    color: var(--hw-ink);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.48);
+  }
+
+  .hw-summary :global(.section-head) { color: var(--hw-ink); }
+  .hw-summary :global(.section-head .marker) { background: var(--hw-ink); color: var(--hw-steel); border-color: var(--hw-ink); }
+  .hw-summary :global(.section-head .line) { background: rgba(24, 28, 27, 0.62); }
+
+  .hw-summary .group-summary__lede {
+    color: var(--hw-muted);
   }
 
   .hw-chip {
-    border-color: rgba(139, 105, 20, 0.35);
-    color: var(--hw-copper-lt);
+    border: 1px solid rgba(24, 28, 27, 0.62);
+    background: rgba(216, 211, 199, 0.72);
+    color: var(--hw-ink);
   }
 
-  /* ── Card grid ── */
-  .hw-card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 18px;
-  }
-
-  .hw-card {
-    position: relative;
-    display: flex;
-    gap: 18px;
-    padding: 22px;
-    border: 2px solid rgba(139, 105, 20, 0.4);
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(139, 105, 20, 0.06), transparent 60%),
-      linear-gradient(145deg, rgba(26, 18, 8, 0.97), rgba(13, 10, 4, 0.98));
-    box-shadow:
-      inset 0 0 0 1px rgba(58, 90, 40, 0.15),
-      0 2px 12px rgba(0, 0, 0, 0.4);
-    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
-  }
-
-  /* ── Solder pads (corner dots) ── */
-  .hw-card__pad {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--hw-solder);
-    box-shadow: 0 0 6px rgba(255, 204, 115, 0.4);
-    opacity: 0.6;
-    transition: opacity 200ms ease, box-shadow 200ms ease;
-  }
-
-  .hw-card__pad--tl { top: 6px; left: 6px; }
-  .hw-card__pad--tr { top: 6px; right: 6px; }
-  .hw-card__pad--bl { bottom: 6px; left: 6px; }
-  .hw-card__pad--br { bottom: 6px; right: 6px; }
-
-  /* ── Corner bracket ornaments (Astral Frontier style) ── */
-  .hw-card::before {
-    content: '';
-    position: absolute;
-    top: -4px;
-    left: -4px;
-    width: 18px;
-    height: 18px;
-    border-top: 2px solid var(--hw-copper);
-    border-left: 2px solid var(--hw-copper);
-    opacity: 0.3;
-    transition: opacity 200ms ease, box-shadow 200ms ease;
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  .hw-card::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    right: -4px;
-    width: 18px;
-    height: 18px;
-    border-bottom: 2px solid var(--hw-copper);
-    border-right: 2px solid var(--hw-copper);
-    opacity: 0.3;
-    transition: opacity 200ms ease, box-shadow 200ms ease;
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  /* ── IC chip frame for avatar ── */
-  .hw-card__ic {
-    flex: 0 0 auto;
-    position: relative;
-    border: 2px solid rgba(139, 105, 20, 0.5);
-    padding: 4px;
-    background: rgba(74, 63, 32, 0.3);
-  }
-
-  .hw-card__ic::before,
-  .hw-card__ic::after {
-    content: '';
-    position: absolute;
-    background: rgba(139, 105, 20, 0.3);
-  }
-
-  /* IC pin markers — left side */
-  .hw-card__ic::before {
-    left: -6px;
-    top: 15%;
-    width: 4px;
-    height: 8px;
-    box-shadow:
-      0 16px 0 rgba(139, 105, 20, 0.3),
-      0 32px 0 rgba(139, 105, 20, 0.3),
-      0 48px 0 rgba(139, 105, 20, 0.3);
-  }
-
-  /* IC pin markers — right side */
-  .hw-card__ic::after {
-    right: -6px;
-    top: 15%;
-    width: 4px;
-    height: 8px;
-    box-shadow:
-      0 16px 0 rgba(139, 105, 20, 0.3),
-      0 32px 0 rgba(139, 105, 20, 0.3),
-      0 48px 0 rgba(139, 105, 20, 0.3);
-  }
-
-  .hw-card__ic .member-avatar,
-  .hw-card__ic .member-avatar-fallback {
-    width: 72px;
-    height: 72px;
+  .group-page--hardware :global(.cohort-section) {
+    border: 1px solid rgba(24, 28, 27, 0.62);
     border-radius: 0;
-    border: none;
+    background: rgba(216, 211, 199, 0.68);
+  }
+
+  .group-page--hardware :global(.cohort-section__header) {
+    border-bottom: 1px solid rgba(24, 28, 27, 0.62);
+    background: rgba(200, 194, 182, 0.86);
+    color: var(--hw-ink);
+  }
+
+  .group-page--hardware :global(.cohort-section__count) {
+    color: var(--hw-muted);
+  }
+
+  .hw-record-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .hw-record {
+    position: relative;
+    display: grid;
+    grid-template-columns: 64px 90px minmax(0, 1fr) auto;
+    gap: 18px;
+    align-items: start;
+    padding: 16px;
+    border: 1px solid rgba(24, 28, 27, 0.58);
+    background:
+      linear-gradient(90deg, rgba(65, 82, 71, 0.13), transparent 34%),
+      rgba(231, 226, 214, 0.82);
+    box-shadow: inset 4px 0 0 var(--hw-olive);
+    transition: background-color 160ms ease, border-color 160ms ease;
+  }
+
+  .hw-record::after {
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: 14px;
+    width: 70px;
+    height: 1px;
+    background: rgba(155, 106, 47, 0.6);
+  }
+
+  .hw-record__index {
+    color: var(--hw-copper);
+    font-size: 7px;
+    line-height: 1.7;
+  }
+
+  .hw-record__socket {
+    position: relative;
+    padding: 5px;
+    border: 1px solid rgba(24, 28, 27, 0.72);
+    background: #b8b2a7;
+  }
+
+  .hw-record__socket::before,
+  .hw-record__socket::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    width: 4px;
+    height: 8px;
+    background: var(--hw-copper);
+    box-shadow: 0 14px 0 var(--hw-copper), 0 28px 0 var(--hw-copper), 0 42px 0 var(--hw-copper);
+  }
+
+  .hw-record__socket::before { left: -6px; }
+  .hw-record__socket::after { right: -6px; }
+
+  .hw-record__socket .member-avatar,
+  .hw-record__socket .member-avatar-fallback {
+    width: 78px;
+    height: 78px;
+    border: 0;
+    border-radius: 0;
   }
 
   .hw-avatar-fb {
-    background: linear-gradient(180deg, rgba(139, 105, 20, 0.25), rgba(58, 90, 40, 0.15));
-    color: var(--hw-solder);
-    border: 1px solid rgba(139, 105, 20, 0.3);
+    display: grid;
+    place-items: center;
+    background: #d8d3c7;
+    color: var(--hw-olive);
     font-size: 22px;
   }
 
-  .hw-card__body {
+  .hw-record__main {
     min-width: 0;
-    flex: 1;
   }
 
-  .hw-card__header {
+  .hw-record__header {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 10px;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
   }
 
-  .hw-card__header h3 {
+  .hw-record__header h3 {
+    color: var(--hw-ink);
     font-size: 28px;
     line-height: 1;
-    color: var(--hw-silk);
+    overflow-wrap: anywhere;
   }
 
-  .hw-card__focus {
-    color: var(--hw-copper-lt);
-    letter-spacing: 0.06em;
-    font-size: 15px;
+  .hw-record__header span {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--hw-olive);
+    overflow-wrap: anywhere;
   }
 
-  .hw-card__bio {
-    line-height: 1.5;
-    color: rgba(223, 255, 232, 0.8);
+  .hw-record__bio {
+    color: #3d4843;
+    font-size: 18px;
+    line-height: 1.44;
   }
 
-  /* ── Tags as component reference designators ── */
   .hw-tag {
-    border-color: rgba(139, 105, 20, 0.4);
-    background: rgba(74, 63, 32, 0.2);
-    font-size: 13px;
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    border: 1px solid rgba(24, 28, 27, 0.55);
+    background: rgba(216, 211, 199, 0.72);
+    color: var(--hw-ink);
   }
 
   .hw-tag__ref {
     font-family: 'Press Start 2P', monospace;
-    font-size: 8px;
-    color: var(--hw-solder);
-    opacity: 0.7;
+    font-size: 7px;
+    color: var(--hw-copper);
   }
 
-  /* ── Empty state ── */
+  .hw-record__links {
+    align-self: center;
+    justify-content: flex-end;
+    margin-top: 0;
+  }
+
+  .group-page--hardware :global(.member-links a) {
+    display: inline-block;
+    padding: 5px 8px;
+    border: 1px solid rgba(24, 28, 27, 0.62);
+    background: rgba(200, 194, 182, 0.72);
+    color: var(--hw-ink);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    line-height: 1.4;
+  }
+
   .hw-empty {
-    border-color: rgba(139, 105, 20, 0.35);
-    color: var(--hw-copper-lt);
-    background: rgba(13, 10, 4, 0.6);
-  }
-
-  /* ── Hover effects ── */
-  @media (prefers-reduced-motion: no-preference) {
-    .hw-card:hover {
-      transform: translateY(-3px);
-      border-color: rgba(139, 105, 20, 0.65);
-      box-shadow:
-        inset 0 0 0 1px rgba(58, 90, 40, 0.25),
-        0 0 20px rgba(139, 105, 20, 0.15),
-        0 8px 32px rgba(0, 0, 0, 0.5);
-    }
-
-    .hw-card:hover .hw-card__pad {
-      opacity: 1;
-      box-shadow: 0 0 10px rgba(255, 204, 115, 0.6);
-    }
-
-    .hw-card:hover::before,
-    .hw-card:hover::after {
-      opacity: 1;
-      box-shadow: 0 0 8px rgba(139, 105, 20, 0.4);
-    }
-  }
-
-  /* ── Additional orbital rings ── */
-  .hw-fx__orbit {
-    position: absolute;
-    border-radius: 50%;
-    border: 1px solid rgba(139, 105, 20, 0.2);
-    pointer-events: none;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-  .hw-fx__orbit--2 {
-    width: 560px;
-    height: 560px;
-    border-style: dashed;
-    opacity: 0.3;
-  }
-
-  .hw-fx__orbit--3 {
-    width: 720px;
-    height: 720px;
-    border-style: dotted;
-    opacity: 0.15;
+    border: 1px dashed rgba(24, 28, 27, 0.62);
+    background: rgba(231, 226, 214, 0.78);
+    color: var(--hw-ink);
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .hw-fx__orbit--2 { animation: hw-orbit 14s linear infinite reverse; }
-    .hw-fx__orbit--3 { animation: hw-orbit 25s linear infinite; }
-  }
+    .hw-instrument__sweep {
+      animation: hw-sweep 3.8s linear infinite;
+    }
 
-  /* ── Page-level glow blobs ── */
-  .hw-fx__glow {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    mix-blend-mode: screen;
-  }
+    .hw-led {
+      animation: hw-led 2.8s ease-in-out infinite;
+    }
 
-  .hw-fx__glow--tr {
-    width: 500px;
-    height: 500px;
-    top: 10%;
-    right: -10%;
-    background: radial-gradient(circle, rgba(143, 126, 119, 0.08), transparent 70%);
-    filter: blur(100px);
-  }
-
-  .hw-fx__glow--bl {
-    width: 400px;
-    height: 400px;
-    bottom: 10%;
-    left: -10%;
-    background: radial-gradient(circle, rgba(139, 105, 20, 0.06), transparent 70%);
-    filter: blur(80px);
-  }
-
-  /* ── Card solder-pad pulse ── */
-  @media (prefers-reduced-motion: no-preference) {
-    .hw-card__pad {
-      animation: hw-pad-pulse 4s ease-in-out infinite;
+    .hw-record:hover {
+      background-color: rgba(231, 226, 214, 0.96);
+      border-color: rgba(24, 28, 27, 0.82);
     }
   }
 
-  @keyframes hw-pad-pulse {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 0.7; }
+  @keyframes hw-sweep {
+    from { left: 0; }
+    to { left: 100%; }
   }
 
-  /* ── Hero copy corner brackets ── */
-  .hw-hero__copy::before,
-  .hw-hero__copy::after {
-    content: '';
-    position: absolute;
-    width: 24px;
-    height: 24px;
-    border-color: rgba(139, 105, 20, 0.4);
-    border-style: solid;
-    pointer-events: none;
+  @keyframes hw-led {
+    0%, 100% { opacity: 0.48; }
+    50% { opacity: 1; }
   }
 
-  .hw-hero__copy::before {
-    top: -12px;
-    left: -12px;
-    border-width: 2px 0 0 2px;
+  @media (max-width: 840px) {
+    .hw-hero__plate {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+
+    .hw-instrument__scope {
+      min-height: 180px;
+    }
+
+    .hw-record {
+      grid-template-columns: 48px 86px minmax(0, 1fr);
+    }
+
+    .hw-record__links {
+      grid-column: 3;
+      justify-content: flex-start;
+    }
   }
 
-  .hw-hero__copy::after {
-    bottom: -12px;
-    right: -12px;
-    border-width: 0 2px 2px 0;
-  }
+  @media (max-width: 640px) {
+    .group-page--hardware {
+      padding-top: 64px;
+    }
 
-  /* ── Responsive ── */
-  @media (max-width: 720px) {
-    .hw-hero,
-    .hw-card {
+    .hw-hero__plate {
       padding: 18px;
     }
 
-    .hw-card {
-      flex-direction: column;
+    .hw-hero__title {
+      font-size: 24px;
     }
 
     .hw-hero__desc {
-      font-size: 20px;
+      font-size: 18px;
     }
 
-    .hw-card__ic::before,
-    .hw-card__ic::after {
-      display: none;
+    .hw-record {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .hw-record__links {
+      grid-column: auto;
+    }
+
+    .hw-record__socket {
+      width: max-content;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hw-instrument__sweep,
+    .hw-led,
+    .hw-record {
+      animation: none !important;
+      transition: none !important;
     }
   }
 </style>
